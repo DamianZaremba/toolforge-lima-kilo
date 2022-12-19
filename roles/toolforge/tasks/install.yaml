@@ -1,0 +1,7 @@
+---
+- name: create fake toolforge directories
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: directory
+  loop:
+    "{{ directories }}"

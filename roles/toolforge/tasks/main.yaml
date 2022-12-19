@@ -1,0 +1,4 @@
+---
+- name: install fake toolforge
+  include_tasks: install.yaml
+  when: state == 'install'

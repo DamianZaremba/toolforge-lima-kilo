@@ -1,0 +1,26 @@
+---
+- name: verify if kind is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/kind
+  register: filecheck
+
+- name: verify kind version
+  ansible.builtin.shell: kind --version
+  when: filecheck.stat.executable is defined and filecheck.stat.executable
+  register: kindversion
+  changed_when: false
+
+- name: download and install kind
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ kind.url }}"
+    dest: /usr/local/bin/kind
+    mode: "0755"
+    checksum: "{{ kind.checksum }}"
+  when: filecheck.stat.executable is not defined or not filecheck.stat.executable or kind.version not in kindversion.stdout
+
+- name: kind configuration file
+  ansible.builtin.copy:
+    src: kind.yaml
+    dest: ~/.kind.yaml
+    mode: "0644"

@@ -1,0 +1,8 @@
+---
+- name: install kind
+  include_tasks: install.yaml
+  when: state == 'install'
+
+- name: unistall kind
+  include_tasks: uninstall.yaml
+  when: state == 'uninstall'

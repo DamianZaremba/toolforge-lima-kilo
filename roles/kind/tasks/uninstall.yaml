@@ -1,0 +1,6 @@
+---
+- name: delete kind
+  become: true
+  ansible.builtin.file:
+    dest: /usr/local/bin/kind
+    state: absent

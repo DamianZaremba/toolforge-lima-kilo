@@ -1,0 +1,38 @@
+---
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+featureGates:
+  TTLAfterFinished: true
+nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 30001
+        hostPort: 30001
+        protocol: TCP
+    extraMounts:
+      - hostPath: /etc/wmcs-project
+        containerPath: /etc/wmcs-project
+      - hostPath: /etc/ldap.conf
+        containerPath: /etc/ldap.conf
+      - hostPath: /etc/ldap.yaml
+        containerPath: /etc/ldap.yaml
+      - hostPath: /etc/novaobserver.yaml
+        containerPath: /etc/novaobserver.yaml
+      - hostPath: /data/project/
+        containerPath: /data/project/
+      - hostPath: /data/scratch/
+        containerPath: /data/scratch/
+      - hostPath: /public/dumps/
+        containerPath: /public/dumps/
+      - hostPath: /mnt/nfs/dumps-clouddumps1001.wikimedia.org/
+        containerPath: /mnt/nfs/dumps-clouddumps1001.wikimedia.org/
+      - hostPath: /mnt/nfs/dumps-clouddumps1002.wikimedia.org/
+        containerPath: /mnt/nfs/dumps-clouddumps1002.wikimedia.org/
+      - hostPath: /var/lib/sss/pipes/
+        containerPath: /var/lib/sss/pipes/

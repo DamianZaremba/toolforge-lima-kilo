@@ -1,0 +1,8 @@
+---
+directories:
+  - /var/lib/sss/pipes/
+  - /data/project/
+  - /data/scratch/
+  - /mnt/nfs/dumps-clouddumps1001.wikimedia.org/
+  - /mnt/nfs/dumps-clouddumps1002.wikimedia.org/
+  - /public/dumps/

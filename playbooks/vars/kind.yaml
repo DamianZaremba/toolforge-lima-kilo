@@ -1,0 +1,6 @@
+---
+kind:
+  # refresh versions from https://github.com/kubernetes-sigs/kind/releases
+  version: 0.17.0
+  url: https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
+  checksum: sha256:a8c045856db33f839908b6acb90dc8ec397253ffdaef7baf058f5a542e009b9c

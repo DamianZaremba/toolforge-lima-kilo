@@ -1,0 +1,4 @@
+= Toolforge lima kilo =
+
+This is a repository that contains logic to setup a fake Toolforge kubernetes environment in a given machine.
+A *L*ocal *K*ubernetes deployment to help develop some of the Toolforge internal components.
