@@ -10,7 +10,7 @@ nodes:
         kind: InitConfiguration
         nodeRegistration:
           kubeletExtraArgs:
-            node-labels: "ingress-ready=true"
+            node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
     extraPortMappings:
       - containerPort: {{ kind.ingress.port }}
         hostPort: {{ kind.ingress.port }}
