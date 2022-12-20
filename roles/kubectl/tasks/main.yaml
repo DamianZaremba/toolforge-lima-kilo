@@ -1,0 +1,10 @@
+---
+- name: install kubectl
+  include_tasks: "{{ role_path }}/../apt/tasks/apt-install-from-repository.yaml"
+  vars:
+    conf:
+      shortname: kubectl
+      repo_spec: https://apt.kubernetes.io/ kubernetes-xenial main
+      key_url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      packages:
+        - kubectl

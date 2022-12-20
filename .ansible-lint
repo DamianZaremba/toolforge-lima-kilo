@@ -1,3 +1,5 @@
 skip_list:
   # Use shell only when shell functionality is required
   - command-instead-of-shell
+  # Using command rather than module
+  - command-instead-of-module
