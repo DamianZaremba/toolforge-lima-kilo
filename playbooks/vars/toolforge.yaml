@@ -1,5 +1,8 @@
 ---
 toolforge:
+  tool_accounts:
+    - test
+    - test2
   special_directories:
     - /data/
     - /public/
