@@ -1,0 +1,3 @@
+---
+- name: install custom components
+  include_tasks: custom_components.yaml

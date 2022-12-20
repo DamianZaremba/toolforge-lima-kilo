@@ -1,0 +1,11 @@
+---
+k8s_custom_components:
+  - name: volume-admission
+    git_url: https://gerrit.wikimedia.org/r/cloud/toolforge/volume-admission-controller
+    deploy: ./deploy.sh local
+  - name: jobs-api
+    git_url: https://gerrit.wikimedia.org/r/cloud/toolforge/jobs-framework-api
+    deploy: ./deploy.sh
+  - name: jobs-emailer
+    git_url: https://gerrit.wikimedia.org/r/cloud/toolforge/jobs-framework-emailer
+    deploy: ./deploy.sh
