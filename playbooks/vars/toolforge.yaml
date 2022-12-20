@@ -1,8 +1,25 @@
 ---
-directories:
-  - /var/lib/sss/pipes/
-  - /data/project/
-  - /data/scratch/
-  - /mnt/nfs/dumps-clouddumps1001.wikimedia.org/
-  - /mnt/nfs/dumps-clouddumps1002.wikimedia.org/
-  - /public/dumps/
+toolforge:
+  special_directories:
+    - /data/
+    - /public/
+  directories:
+    - /var/lib/sss/pipes/
+    - /data/project/
+    - /data/scratch/
+    - /mnt/nfs/dumps-clouddumps1001.wikimedia.org/
+    - /mnt/nfs/dumps-clouddumps1002.wikimedia.org/
+    - /public/dumps/
+  files:
+    - path: /etc/wmcs-project
+      content: |
+        toolsbeta
+    - path: /etc/ldap.yaml
+      content: |
+        # whatever
+    - path: /etc/ldap.conf
+      content: |
+        # whatever
+    - path: /etc/novaobserver.yaml
+      content: |
+        # whatever

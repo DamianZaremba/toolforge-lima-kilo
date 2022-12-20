@@ -1,5 +1,21 @@
 ---
-- name: delete kind
+- name: verify if kind is installed
+  ansible.builtin.stat:
+    path: /usr/local/bin/kind
+  register: filecheck
+
+- name: verify if kind cluster exists
+  ansible.builtin.shell: kind get clusters
+  when: filecheck.stat.executable is defined and filecheck.stat.executable
+  register: kind_get_clusters
+  changed_when: false
+
+- name: delete kind cluster
+  ansible.builtin.shell:
+    cmd: kind delete clusters "{{ kind.cluster.name }}"
+  when: filecheck.stat.executable is defined and filecheck.stat.executable and kind.cluster.name in kind_get_clusters.stdout
+
+- name: delete kind itself
   become: true
   ansible.builtin.file:
     dest: /usr/local/bin/kind

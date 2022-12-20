@@ -20,7 +20,18 @@
   when: filecheck.stat.executable is not defined or not filecheck.stat.executable or kind.version not in kindversion.stdout
 
 - name: kind configuration file
-  ansible.builtin.copy:
-    src: kind.yaml
-    dest: ~/.kind.yaml
+  ansible.builtin.template:
+    src: kind.yaml.j2
+    dest: "{{ kind.config }}"
     mode: "0644"
+
+- name: verify if kind cluster exists
+  ansible.builtin.shell: kind get clusters
+  register: kind_get_clusters
+  changed_when: false
+
+- name: bootstrap kind cluster
+  ansible.builtin.shell:
+    cmd: >
+      kind create cluster -n "{{ kind.cluster.name }}" --config "{{ kind.config }}" --image "{{ kind.cluster.image.name }}"@"{{ kind.cluster.image.checksum }}"
+  when: kind.cluster.name not in kind_get_clusters.stdout

@@ -1,0 +1,8 @@
+---
+- name: delete fake toolforge files
+  become: true
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop:
+    "{{ toolforge.files }}"

@@ -1,8 +1,8 @@
 ---
-- name: install kind
+- name: target action -> install kind
   include_tasks: install.yaml
-  when: state == 'install'
+  when: target == 'install'
 
-- name: unistall kind
+- name: target action -> uninstall kind
   include_tasks: uninstall.yaml
-  when: state == 'uninstall'
+  when: target == 'uninstall'

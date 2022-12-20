@@ -1,7 +1,9 @@
 ---
-- name: create fake toolforge directories
-  ansible.builtin.file:
-    dest: "{{ item }}"
-    state: directory
+- name: install fake toolforge files
+  become: true
+  ansible.builtin.copy:
+    dest: "{{ item.path }}"
+    content: "{{ item.content }}"
+    mode: "0644"
   loop:
-    "{{ directories }}"
+    "{{ toolforge.files }}"
