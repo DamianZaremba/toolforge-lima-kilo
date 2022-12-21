@@ -10,17 +10,23 @@
     cmd: git clone --quiet {{ item.git_url }} {{ tempdir.path }}/{{ item.name }}
     creates: "{{ tempdir.path }}/{{ item.name }}/.git"
   loop: "{{ k8s_custom_components }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: build docker image
   ansible.builtin.shell:  # noqa no-changed-when
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: docker build --tag {{ item.name }}:latest .
   loop: "{{ k8s_custom_components }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: load docker image into kind (if using kind)
   ansible.builtin.shell:
     cmd: kind load docker-image {{ item.name }}:latest --name {{ kind.cluster.name }}
   loop: "{{ k8s_custom_components }}"
+  loop_control:
+    label: "{{ item.name }}"
   when: kind is defined
 
 - name: deploy custom component into k8s
@@ -28,6 +34,8 @@
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: "{{ item.deploy }}"
   loop: "{{ k8s_custom_components }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: remove the temp dir
   ansible.builtin.file:
