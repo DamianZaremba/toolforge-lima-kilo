@@ -1,30 +1,20 @@
 ---
 - name: load fake_maintain_kubeusers.yaml
-  ansible.builtin.shell:
-    cmd: kubectl apply -f {{ role_path }}/files/fake_maintain_kubeusers.yaml
-
-- name: create temp directory
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: -toolforge-lima-kilo
-  register: tempdir
-
-- name: create tool user accounts template file
-  ansible.builtin.template:
-    src: tool_account.yaml.j2
-    dest: "{{ tempdir.path }}/tool_account_{{ item }}.yaml"
-    mode: "0644"
-  loop: "{{ toolforge.tool_accounts }}"
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ role_path }}/files/fake_maintain_kubeusers.yaml"
 
 - name: load tool user accounts
-  ansible.builtin.shell:
-    cmd: kubectl apply -f {{ tempdir.path }}/tool_account_{{ item }}.yaml
+  kubernetes.core.k8s:
+    state: present
+    template: tool_account.yaml.j2
   loop: "{{ toolforge.tool_accounts }}"
 
 - name: obtain kubernetes CA
   ansible.builtin.shell:
     cmd: kubectl config view --raw -o json | jq -r '.clusters[0].cluster."certificate-authority-data"' | tr -d '"' | base64 --decode | base64 -w0
   register: kubernetes_ca_shell
+  changed_when: False
 
 - name: generate credentials
   include_tasks: "{{ role_path }}/tasks/generate_credentials.yaml"
@@ -33,10 +23,3 @@
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
     loop_var: tool_account
-
-- name: remove the temp dir
-  ansible.builtin.file:
-    path: "{{ tempdir.path }}"
-    state: absent
-  when: tempdir.path is defined
-  diff: false

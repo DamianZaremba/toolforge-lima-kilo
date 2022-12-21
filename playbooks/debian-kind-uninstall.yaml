@@ -10,3 +10,4 @@
     - { role: kind }
     - { role: toolforge }
     - { role: kubectl }
+    - { role: k8s }
