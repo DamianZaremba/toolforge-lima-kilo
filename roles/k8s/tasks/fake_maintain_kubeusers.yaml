@@ -17,7 +17,7 @@
   ansible.builtin.shell:
     cmd: kubectl config view --raw -o json | jq -r '.clusters[0].cluster."certificate-authority-data"' | tr -d '"' | base64 --decode | base64 -w0
   register: kubernetes_ca_shell
-  changed_when: False
+  changed_when: false
 
 - name: generate credentials
   include_tasks: "{{ role_path }}/tasks/generate_credentials.yaml"

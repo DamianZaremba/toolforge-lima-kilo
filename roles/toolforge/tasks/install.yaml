@@ -5,8 +5,7 @@
     dest: "{{ item.path }}"
     content: "{{ item.content }}"
     mode: "0644"
-  loop:
-    "{{ toolforge.files }}"
+  loop: "{{ toolforge.files }}"
 
 - name: create files for tool accounts
   include_tasks: install_tool_account_files.yaml

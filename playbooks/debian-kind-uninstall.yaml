@@ -2,7 +2,7 @@
 - name: uninstall a kind-based fake Toolforge in a Debian-based machine
   hosts: localhost
   vars:
-    target: 'uninstall'
+    target: uninstall
   vars_files:
     - vars/kind.yaml
     - vars/toolforge.yaml

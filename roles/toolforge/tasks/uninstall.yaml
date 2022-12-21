@@ -4,5 +4,4 @@
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
-  loop:
-    "{{ toolforge.files }}"
+  loop: "{{ toolforge.files }}"
