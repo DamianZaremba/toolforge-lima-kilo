@@ -4,7 +4,9 @@
   ansible.builtin.file:
     dest: "{{ item }}"
     state: "{{ 'directory' if target == 'install' else 'absent' }}"
-    mode: "0644"
+    mode: "0755"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
   loop:
     "{{ toolforge.special_directories + toolforge.directories }}"
 
