@@ -6,12 +6,6 @@
     name: python3-kubernetes
     state: "{{ 'latest' if target == 'install' else 'absent' }}"
 
-- name: install custom components
-  include_tasks: custom_components.yaml
-  when: target == 'install'
-
-# running maintain_kubeusers for real might be an option, but it requires an
-# actual LDAP directory. Replicating just a few bits here seems OK for now.
-- name: install fake/generic maintain-kubeusers bits
-  include_tasks: fake_maintain_kubeusers.yaml
+- name: target action -> install k8s things
+  include_tasks: install.yaml
   when: target == 'install'

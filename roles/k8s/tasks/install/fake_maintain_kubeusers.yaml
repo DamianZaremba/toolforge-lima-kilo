@@ -20,7 +20,7 @@
   changed_when: false
 
 - name: generate credentials
-  include_tasks: "{{ role_path }}/tasks/generate_credentials.yaml"
+  include_tasks: "{{ role_path }}/tasks/install/generate_credentials.yaml"
   vars:
     kubernetes_ca: "{{ kubernetes_ca_shell.stdout }}"
   loop: "{{ toolforge.tool_accounts }}"

@@ -1,0 +1,16 @@
+---
+- name: install PSP
+  kubernetes.core.k8s:
+    state: present
+    src: "{{ role_path }}/files/base-pod-security-policies.yaml"
+  when: target == 'install'
+
+- name: install custom components
+  include_tasks: "{{ role_path }}/tasks/install/custom_components.yaml"
+  when: target == 'install'
+
+# running maintain_kubeusers for real might be an option, but it requires an
+# actual LDAP directory. Replicating just a few bits here seems OK for now.
+- name: install fake/generic maintain-kubeusers bits
+  include_tasks: "{{ role_path }}/tasks/install/fake_maintain_kubeusers.yaml"
+  when: target == 'install'
