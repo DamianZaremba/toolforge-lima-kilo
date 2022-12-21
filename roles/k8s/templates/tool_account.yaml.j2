@@ -2,12 +2,12 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: tool-{{ item }}
+  name: tool-{{ tool_account.name }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: tools-{{ item }}
+  name: tools-{{ tool_account.name }}
 rules:
   - apiGroups:
     - ""
@@ -155,8 +155,8 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ item }}-tool-binding
-  namespace: tool-{{ item }}
+  name: {{ tool_account.name }}-tool-binding
+  namespace: tool-{{ tool_account.name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -164,7 +164,7 @@ roleRef:
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
-  name: {{ item }}
+  name: {{ tool_account.name }}
 ---
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
@@ -172,7 +172,7 @@ metadata:
   annotations:
     seccomp.security.alpha.kubernetes.io/allowedProfileNames: runtime/default
     seccomp.security.alpha.kubernetes.io/defaultProfileName: runtime/default
-  name: tool-{{ item }}-psp
+  name: tool-{{ tool_account.name }}-psp
 spec:
   allowPrivilegeEscalation: false
   allowedHostPaths:
@@ -225,13 +225,13 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: tool-{{ item }}-psp
-  namespace: tool-{{ item }}
+  name: tool-{{ tool_account.name }}-psp
+  namespace: tool-{{ tool_account.name }}
 rules:
 - apiGroups:
   - extensions
   resourceNames:
-  - tool-{{ item }}-psp
+  - tool-{{ tool_account.name }}-psp
   resources:
   - podsecuritypolicies
   verbs:
@@ -240,22 +240,22 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: tool-{{ item }}-psp-binding
-  namespace: tool-{{ item }}
+  name: tool-{{ tool_account.name }}-psp-binding
+  namespace: tool-{{ tool_account.name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: tool-{{ item }}-psp
+  name: tool-{{ tool_account.name }}-psp
 subjects:
 - apiGroup: rbac.authorization.k8s.io
   kind: User
-  name: {{ item }}
+  name: {{ tool_account.name }}
 ---
 apiVersion: v1
 kind: LimitRange
 metadata:
-  name: tool-{{ item }}
-  namespace: tool-{{ item }}
+  name: tool-{{ tool_account.name }}
+  namespace: tool-{{ tool_account.name }}
 spec:
   limits:
     - type: Container
@@ -275,8 +275,8 @@ spec:
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: tool-{{ item }}
-  namespace: tool-{{ item }}
+  name: tool-{{ tool_account.name }}
+  namespace: tool-{{ tool_account.name }}
 spec:
   hard:
     configmaps: "10"

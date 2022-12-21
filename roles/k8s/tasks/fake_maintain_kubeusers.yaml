@@ -9,6 +9,9 @@
     state: present
     template: tool_account.yaml.j2
   loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"
 
 - name: obtain kubernetes CA
   ansible.builtin.shell:
@@ -23,3 +26,4 @@
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
     loop_var: tool_account
+    label: "{{ tool_account.name }}"

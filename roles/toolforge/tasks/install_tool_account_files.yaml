@@ -1,0 +1,20 @@
+---
+- name: create home dir for tool account '{{ tool_account.name }}'
+  become: true
+  ansible.builtin.file:
+    path: /data/project/{{ tool_account.name }}
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_env.USER }}"
+    group: "{{ ansible_env.USER }}"
+
+- name: install files for tool account '{{ tool_account.name }}'
+  become: true
+  ansible.builtin.copy:
+    dest: /data/project/{{ tool_account.name }}/{{ item.name }}
+    content: "{{ item.content }}"
+    mode: "{{ item.mode }}"
+  loop: "{{ tool_account.files }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: tool_account.files is defined

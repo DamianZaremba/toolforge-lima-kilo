@@ -1,8 +1,5 @@
 ---
 toolforge:
-  tool_accounts:
-    - test
-    - test2
   special_directories:
     - /data/
     - /public/
@@ -26,3 +23,13 @@ toolforge:
     - path: /etc/novaobserver.yaml
       content: |
         # whatever
+  tool_accounts:
+    - name: test
+      files:
+        - name: sleep40.sh
+          mode: "0755"
+          content: |
+            #!/bin/sh
+            echo "Waiting 40"
+            sleep 40
+    - name: test2
