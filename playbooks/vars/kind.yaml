@@ -12,3 +12,5 @@ kind:
     image:
       name: kindest/node:v1.21.14
       checksum: sha256:9d9eb5fb26b4fbc0c6d95fa8c790414f9750dd583f5d7cee45d92e8c26670aa1
+
+tool_account_kubeconfig_server_url: https://{{ kind.cluster.name }}-control-plane:6443
