@@ -5,147 +5,147 @@ metadata:
   name: tools-user
 rules:
   - apiGroups:
-    - ""
+      - ""
     resources:
-    - bindings
-    - events
-    - limitranges
-    - namespaces
-    - namespaces/status
-    - persistentvolumeclaims
-    - pods/log
-    - pods/status
-    - replicationcontrollers/status
-    - resourcequotas
-    - resourcequotas/status
+      - bindings
+      - events
+      - limitranges
+      - namespaces
+      - namespaces/status
+      - persistentvolumeclaims
+      - pods/log
+      - pods/status
+      - replicationcontrollers/status
+      - resourcequotas
+      - resourcequotas/status
     verbs:
-    - get
-    - list
-    - watch
+      - get
+      - list
+      - watch
   - apiGroups:
-    - ""
+      - ""
     resources:
-    - configmaps
-    - endpoints
-    - pods
-    - pods/attach
-    - pods/exec
-    - pods/portforward
-    - pods/proxy
-    - replicationcontrollers
-    - replicationcontrollers/scale
-    - secrets
-    - services
-    - services/proxy
+      - configmaps
+      - endpoints
+      - pods
+      - pods/attach
+      - pods/exec
+      - pods/portforward
+      - pods/proxy
+      - replicationcontrollers
+      - replicationcontrollers/scale
+      - secrets
+      - services
+      - services/proxy
     verbs:
-    - get
-    - list
-    - watch
-    - create
-    - delete
-    - deletecollection
-    - patch
-    - update
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
   - apiGroups:
-    - apps
+      - apps
     resources:
-    - controllerrevisions
-    - daemonsets
+      - controllerrevisions
+      - daemonsets
     verbs:
-    - get
-    - list
-    - watch
+      - get
+      - list
+      - watch
   - apiGroups:
-    - apps
+      - apps
     resources:
-    - deployments
-    - deployments/rollback
-    - deployments/scale
-    - replicasets
-    - replicasets/scale
-    - statefulsets
-    - statefulsets/scale
+      - deployments
+      - deployments/rollback
+      - deployments/scale
+      - replicasets
+      - replicasets/scale
+      - statefulsets
+      - statefulsets/scale
     verbs:
-    - get
-    - list
-    - watch
-    - create
-    - delete
-    - deletecollection
-    - patch
-    - update
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
   - apiGroups:
-    - autoscaling
+      - autoscaling
     resources:
-    - horizontalpodautoscalers
+      - horizontalpodautoscalers
     verbs:
-    - get
-    - list
-    - watch
+      - get
+      - list
+      - watch
   - apiGroups:
-    - batch
+      - batch
     resources:
-    - cronjobs
-    - jobs
+      - cronjobs
+      - jobs
     verbs:
-    - get
-    - list
-    - watch
-    - create
-    - delete
-    - deletecollection
-    - patch
-    - update
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
   - apiGroups:
-    - extensions
+      - extensions
     resources:
-    - daemonsets
+      - daemonsets
     verbs:
-    - get
-    - list
-    - watch
+      - get
+      - list
+      - watch
   - apiGroups:
-    - extensions
+      - extensions
     resources:
-    - deployments
-    - deployments/rollback
-    - deployments/scale
-    - ingresses
-    - networkpolicies
-    - replicasets
-    - replicasets/scale
-    - replicationcontrollers/scale
+      - deployments
+      - deployments/rollback
+      - deployments/scale
+      - ingresses
+      - networkpolicies
+      - replicasets
+      - replicasets/scale
+      - replicationcontrollers/scale
     verbs:
-    - get
-    - list
-    - watch
-    - create
-    - delete
-    - deletecollection
-    - patch
-    - update
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
   - apiGroups:
-    - networking.k8s.io
+      - networking.k8s.io
     resources:
-    - ingresses
-    - networkpolicies
+      - ingresses
+      - networkpolicies
     verbs:
-    - get
-    - list
-    - watch
-    - create
-    - delete
-    - deletecollection
-    - patch
-    - update
+      - get
+      - list
+      - watch
+      - create
+      - delete
+      - deletecollection
+      - patch
+      - update
   - apiGroups:
-    - policy
+      - policy
     resources:
-    - poddisruptionbudgets
+      - poddisruptionbudgets
     verbs:
-    - get
-    - list
-    - watch
+      - get
+      - list
+      - watch
 ---
 # This has been copied from ops/puppet.git
 # specifically: modules/kubeadm/files/psp/base-pod-security-policies.yaml
@@ -160,15 +160,15 @@ apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   annotations:
-    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'runtime/default'
-    seccomp.security.alpha.kubernetes.io/defaultProfileName: 'runtime/default'
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: "runtime/default"
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: "runtime/default"
   name: default
 spec:
   requiredDropCapabilities:
     - ALL
   allowPrivilegeEscalation: false
   fsGroup:
-    rule: 'MustRunAs'
+    rule: "MustRunAs"
     ranges:
       # Forbid adding the root group.
       - min: 1
@@ -179,38 +179,38 @@ spec:
   privileged: false
   readOnlyRootFilesystem: false
   runAsUser:
-    rule: 'MustRunAsNonRoot'
+    rule: "MustRunAsNonRoot"
   seLinux:
-    rule: 'RunAsAny'
+    rule: "RunAsAny"
   supplementalGroups:
-    rule: 'MustRunAs'
+    rule: "MustRunAs"
     ranges:
       # Forbid adding the root group.
       - min: 1
         max: 65535
   volumes:
-    - 'configMap'
-    - 'downwardAPI'
-    - 'emptyDir'
-    - 'projected'
-    - 'secret'
+    - "configMap"
+    - "downwardAPI"
+    - "emptyDir"
+    - "projected"
+    - "secret"
   # Restrict host paths by default
   allowedHostPaths:
-    - pathPrefix: '/var/lib/sss/pipes'
+    - pathPrefix: "/var/lib/sss/pipes"
       readOnly: false
-    - pathPrefix: '/data/project'
+    - pathPrefix: "/data/project"
       readOnly: false
-    - pathPrefix: '/public/dumps'
+    - pathPrefix: "/public/dumps"
       readOnly: false
-    - pathPrefix: '/public/scratch'
+    - pathPrefix: "/public/scratch"
       readOnly: false
-    - pathPrefix: '/etc/wmcs-project'
+    - pathPrefix: "/etc/wmcs-project"
       readOnly: true
-    - pathPrefix: '/etc/ldap.yaml'
+    - pathPrefix: "/etc/ldap.yaml"
       readOnly: true
-    - pathPrefix: '/etc/novaobserver.yaml'
+    - pathPrefix: "/etc/novaobserver.yaml"
       readOnly: true
-    - pathPrefix: '/etc/ldap.conf'
+    - pathPrefix: "/etc/ldap.conf"
       readOnly: true
 ---
 apiVersion: rbac.authorization.k8s.io/v1
