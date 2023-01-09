@@ -1,28 +1,6 @@
 ---
 - name: cycle a kind-based fake Toolforge in a Debian-based machine (uninstall target)
-  hosts: localhost
-  vars_files:
-    - vars/kind.yaml
-    - vars/toolforge.yaml
-    - vars/k8s.yaml
-  vars:
-    target: uninstall
-  roles:
-    - { role: toolforge }
-    - { role: kind }
-    - { role: kubectl }
-    - { role: k8s }
+  ansible.builtin.import_playbook: debian-kind-uninstall.yaml
 
 - name: cycle a kind-based fake Toolforge in a Debian-based machine (install target)
-  hosts: localhost
-  vars_files:
-    - vars/kind.yaml
-    - vars/toolforge.yaml
-    - vars/k8s.yaml
-  vars:
-    target: install
-  roles:
-    - { role: toolforge }
-    - { role: kind }
-    - { role: kubectl }
-    - { role: k8s }
+  ansible.builtin.import_playbook: debian-kind-install.yaml
