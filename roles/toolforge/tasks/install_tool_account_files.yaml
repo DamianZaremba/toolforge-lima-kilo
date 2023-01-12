@@ -5,8 +5,8 @@
     path: /data/project/{{ tool_account.name }}
     state: directory
     mode: "0755"
-    owner: "{{ ansible_env.USER }}"
-    group: "{{ ansible_env.USER }}"
+    owner: "{{ tool_account.name }}"
+    group: "{{ tool_account.name }}"
 
 - name: install files for tool account '{{ tool_account.name }}'
   become: true
@@ -14,6 +14,8 @@
     dest: /data/project/{{ tool_account.name }}/{{ item.name }}
     content: "{{ item.content }}"
     mode: "{{ item.mode }}"
+    owner: "{{ tool_account.name }}"
+    group: "{{ tool_account.name }}"
   loop: "{{ tool_account.files }}"
   loop_control:
     label: "{{ item.name }}"

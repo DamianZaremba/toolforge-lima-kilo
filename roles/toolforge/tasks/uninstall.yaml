@@ -5,3 +5,23 @@
     path: "{{ item.path }}"
     state: absent
   loop: "{{ toolforge.files }}"
+
+- name: delete tool accounts unix users
+  become: true
+  ansible.builtin.user:
+    name: "{{ tool_account.name }}"
+    state: absent
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"
+
+- name: delete tool accounts unix groups
+  become: true
+  ansible.builtin.group:
+    name: "{{ tool_account.name }}"
+    state: absent
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"

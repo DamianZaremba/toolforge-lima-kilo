@@ -7,6 +7,26 @@
     mode: "0644"
   loop: "{{ toolforge.files }}"
 
+- name: create tool accounts unix groups
+  become: true
+  ansible.builtin.group:
+    name: "{{ tool_account.name }}"
+    state: present
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"
+
+- name: create tool accounts unix users
+  become: true
+  ansible.builtin.user:
+    name: "{{ tool_account.name }}"
+    state: present
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"
+
 - name: create files for tool accounts
   include_tasks: install_tool_account_files.yaml
   loop: "{{ toolforge.tool_accounts }}"

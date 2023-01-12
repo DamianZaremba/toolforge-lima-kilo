@@ -24,7 +24,7 @@ toolforge:
       content: |
         # whatever
   tool_accounts:
-    - name: test
+    - name: tf-test
       files:
         - name: sleep40.sh
           mode: "0755"
@@ -32,4 +32,4 @@ toolforge:
             #!/bin/sh
             echo "Waiting 40"
             sleep 40
-    - name: test2
+    - name: tf-test2
