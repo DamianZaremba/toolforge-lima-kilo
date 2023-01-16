@@ -4,7 +4,7 @@
   ansible.builtin.file:
     path: /data/project/{{ tool_account.name }}
     state: directory
-    mode: "0755"
+    mode: "0777"
     owner: "{{ tool_account.name }}"
     group: "{{ tool_account.name }}"
 
