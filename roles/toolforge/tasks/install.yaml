@@ -21,6 +21,7 @@
   become: true
   ansible.builtin.user:
     name: "{{ tool_account.name }}"
+    group: "{{ tool_account.name }}"
     state: present
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:

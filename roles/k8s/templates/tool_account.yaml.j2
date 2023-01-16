@@ -4,20 +4,6 @@ kind: Namespace
 metadata:
   name: tool-{{ tool_account.name }}
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: {{ tool_account.name }}-tool-binding
-  namespace: tool-{{ tool_account.name }}
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: tools-user
-subjects:
-- apiGroup: rbac.authorization.k8s.io
-  kind: User
-  name: {{ tool_account.name }}
----
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
@@ -45,18 +31,18 @@ spec:
     readOnly: true
   fsGroup:
     ranges:
-    - max: 54201
-      min: 54201
+    - max: {{ tool_account_gid }}
+      min: {{ tool_account_gid }}
     rule: MustRunAs
   runAsGroup:
     ranges:
-    - max: 54201
-      min: 54201
+    - max: {{ tool_account_gid }}
+      min: {{ tool_account_gid }}
     rule: MustRunAs
   runAsUser:
     ranges:
-    - max: 54201
-      min: 54201
+    - max: {{ tool_account_uid }}
+      min: {{ tool_account_uid }}
     rule: MustRunAs
   seLinux:
     rule: RunAsAny
@@ -88,6 +74,33 @@ rules:
   - podsecuritypolicies
   verbs:
   - use
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default-{{ tool_account.name }}-psp-binding
+  namespace: tool-{{ tool_account.name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tool-test-psp
+subjects:
+- kind: ServiceAccount
+  name: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ tool_account.name }}-tool-binding
+  namespace: tool-{{ tool_account.name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tools-user
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: {{ tool_account.name }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding

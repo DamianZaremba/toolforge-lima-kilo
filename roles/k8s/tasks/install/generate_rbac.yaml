@@ -1,0 +1,20 @@
+---
+- name: "get tool account '{{ tool_account.name }}' uid number"
+  ansible.builtin.command:
+    cmd: id -u {{ tool_account.name }}
+  register: uid
+  changed_when: false
+
+- name: "get tool account '{{ tool_account.name }}' gid number"
+  ansible.builtin.command:
+    cmd: id -g {{ tool_account.name }}
+  register: gid
+  changed_when: false
+
+- name: "load tool account RBAC for '{{ tool_account.name }}'"
+  kubernetes.core.k8s:
+    state: "present"
+    template: "tool_account.yaml.j2"
+  vars:
+    tool_account_uid: "{{ uid.stdout_lines[0] }}"
+    tool_account_gid: "{{ gid.stdout_lines[0] }}"

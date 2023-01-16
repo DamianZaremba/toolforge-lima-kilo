@@ -4,10 +4,8 @@
     state: present
     src: "{{ role_path }}/files/fake_maintain_kubeusers.yaml"
 
-- name: load tool user accounts
-  kubernetes.core.k8s:
-    state: present
-    template: tool_account.yaml.j2
+- name: generate RBAC
+  include_tasks: "{{ role_path }}/tasks/install/generate_rbac.yaml"
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
     loop_var: tool_account
