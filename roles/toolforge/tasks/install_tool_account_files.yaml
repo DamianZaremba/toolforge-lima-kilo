@@ -1,5 +1,5 @@
 ---
-- name: create home dir for tool account '{{ tool_account.name }}'
+- name: Create home dir for tool account '{{ tool_account.name }}'
   become: true
   ansible.builtin.file:
     path: /data/project/{{ tool_account.name }}
@@ -8,9 +8,9 @@
     owner: "{{ tool_account.name }}"
     group: "{{ tool_account.name }}"
 
-- name: install files for tool account '{{ tool_account.name }}'
+- name: Install files for tool account '{{ tool_account.name }}'
   become: true
-  ansible.builtin.copy:
+  ansible.builtin.copy:  # noqa template-instead-of-copy
     dest: /data/project/{{ tool_account.name }}/{{ item.name }}
     content: "{{ item.content }}"
     mode: "{{ item.mode }}"

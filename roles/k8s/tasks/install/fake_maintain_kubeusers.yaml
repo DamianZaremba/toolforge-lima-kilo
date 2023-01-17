@@ -1,24 +1,24 @@
 ---
-- name: load fake_maintain_kubeusers.yaml
+- name: Load fake_maintain_kubeusers.yaml
   kubernetes.core.k8s:
     state: present
     src: "{{ role_path }}/files/fake_maintain_kubeusers.yaml"
 
-- name: generate RBAC
-  include_tasks: "{{ role_path }}/tasks/install/generate_rbac.yaml"
+- name: Generate RBAC
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/generate_rbac.yaml"
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
     loop_var: tool_account
     label: "{{ tool_account.name }}"
 
-- name: obtain kubernetes CA
+- name: Obtain kubernetes CA
   ansible.builtin.shell:
     cmd: kubectl config view --raw -o json | jq -r '.clusters[0].cluster."certificate-authority-data"' | tr -d '"' | base64 --decode | base64 -w0
   register: kubernetes_ca_shell
   changed_when: false
 
-- name: generate credentials
-  include_tasks: "{{ role_path }}/tasks/install/generate_credentials.yaml"
+- name: Generate credentials
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/generate_credentials.yaml"
   vars:
     kubernetes_ca: "{{ kubernetes_ca_shell.stdout }}"
   loop: "{{ toolforge.tool_accounts }}"

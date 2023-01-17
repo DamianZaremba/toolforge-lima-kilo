@@ -1,5 +1,5 @@
 ---
-- name: uninstall a kind-based fake Toolforge in a Debian-based machine
+- name: Uninstall a kind-based fake Toolforge in a Debian-based machine
   hosts: localhost
   vars:
     target: uninstall

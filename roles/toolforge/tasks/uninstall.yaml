@@ -1,12 +1,12 @@
 ---
-- name: delete fake toolforge files
+- name: Delete fake toolforge files
   become: true
   ansible.builtin.file:
     path: "{{ item.path }}"
     state: absent
   loop: "{{ toolforge.files }}"
 
-- name: delete tool accounts unix users
+- name: Delete tool accounts unix users
   become: true
   ansible.builtin.user:
     name: "{{ tool_account.name }}"
@@ -16,7 +16,7 @@
     loop_var: tool_account
     label: "{{ tool_account.name }}"
 
-- name: delete tool accounts unix groups
+- name: Delete tool accounts unix groups
   become: true
   ansible.builtin.group:
     name: "{{ tool_account.name }}"

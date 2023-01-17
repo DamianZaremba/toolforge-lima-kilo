@@ -1,11 +1,11 @@
 ---
-- name: create temp directory
+- name: Create temp directory
   ansible.builtin.tempfile:
     state: directory
     suffix: -toolforge-lima-kilo
   register: tempdir
 
-- name: git clone custom k8s components
+- name: Git clone custom k8s components
   ansible.builtin.command:
     cmd: git clone --quiet {{ item.git_url }} {{ tempdir.path }}/{{ item.name }}
     creates: "{{ tempdir.path }}/{{ item.name }}/.git"
@@ -13,7 +13,7 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: build docker image
+- name: Build docker image
   ansible.builtin.shell: # noqa no-changed-when
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: docker build --tag {{ item.name }}:latest .
@@ -21,7 +21,7 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: load docker image into kind (if using kind)
+- name: Load docker image into kind (if using kind)
   ansible.builtin.shell:
     cmd: kind load docker-image {{ item.name }}:latest --name {{ kind.cluster.name }}
   loop: "{{ k8s_custom_components }}"
@@ -29,7 +29,7 @@
     label: "{{ item.name }}"
   when: kind is defined
 
-- name: deploy custom component into k8s
+- name: Deploy custom component into k8s
   ansible.builtin.shell: # noqa no-changed-when
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: "{{ item.deploy }}"
@@ -37,7 +37,7 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: remove the temp dir
+- name: Remove the temp dir
   ansible.builtin.file:
     path: "{{ tempdir.path }}"
     state: absent

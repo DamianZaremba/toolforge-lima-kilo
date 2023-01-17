@@ -1,8 +1,8 @@
 ---
-- name: target action -> install kind
-  include_tasks: install.yaml
+- name: Target action -> install kind
+  ansible.builtin.include_tasks: install.yaml
   when: target == 'install'
 
-- name: target action -> uninstall kind
-  include_tasks: uninstall.yaml
+- name: Target action -> uninstall kind
+  ansible.builtin.include_tasks: uninstall.yaml
   when: target == 'uninstall'

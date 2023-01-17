@@ -1,6 +1,6 @@
 ---
-- name: cycle a kind-based fake Toolforge in a Debian-based machine (uninstall target)
+- name: Cycle a kind-based fake Toolforge in a Debian-based machine (uninstall target)
   ansible.builtin.import_playbook: debian-kind-uninstall.yaml
 
-- name: cycle a kind-based fake Toolforge in a Debian-based machine (install target)
+- name: Cycle a kind-based fake Toolforge in a Debian-based machine (install target)
   ansible.builtin.import_playbook: debian-kind-install.yaml

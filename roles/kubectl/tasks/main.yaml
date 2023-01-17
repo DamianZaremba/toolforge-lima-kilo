@@ -1,6 +1,6 @@
 ---
-- name: install kubectl
-  include_tasks: "{{ role_path }}/../apt/tasks/apt-install-from-repository.yaml"
+- name: Install kubectl
+  ansible.builtin.include_tasks: "{{ role_path }}/../apt/tasks/apt-install-from-repository.yaml"
   vars:
     conf:
       shortname: kubectl

@@ -1,7 +1,7 @@
 ---
-- name: fake toolforge directories
+- name: Fake toolforge directories
   become: true
-  ansible.builtin.file:
+  ansible.builtin.file:  # noqa args[module]
     dest: "{{ item }}"
     state: "{{ 'directory' if target == 'install' else 'absent' }}"
     mode: "0755"
@@ -10,10 +10,10 @@
   loop:
     "{{ toolforge.special_directories + toolforge.directories }}"
 
-- name: target action -> install fake toolforge
-  include_tasks: install.yaml
+- name: Target action -> install fake toolforge
+  ansible.builtin.include_tasks: install.yaml
   when: target == 'install'
 
-- name: target action -> uninstall fake toolforge
-  include_tasks: uninstall.yaml
+- name: Target action -> uninstall fake toolforge
+  ansible.builtin.include_tasks: uninstall.yaml
   when: target == 'uninstall'
