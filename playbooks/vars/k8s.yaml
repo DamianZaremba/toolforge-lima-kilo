@@ -1,5 +1,10 @@
 ---
 k8s_custom_components:
+  - name: image-config
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/image-config
+    docker_build: false
+    deploy: ./deploy.sh
   - name: volume-admission
     git_url: https://gerrit.wikimedia.org/r/cloud/toolforge/volume-admission-controller
+    docker_build: true
     deploy: ./deploy.sh local

@@ -17,6 +17,7 @@
   ansible.builtin.shell: # noqa no-changed-when
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: docker build --tag {{ item.name }}:latest .
+  when: "item.docker_build"
   loop: "{{ k8s_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
@@ -27,7 +28,7 @@
   loop: "{{ k8s_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
-  when: kind is defined
+  when: kind is defined and item.docker_build
 
 - name: Deploy custom component into k8s
   ansible.builtin.shell: # noqa no-changed-when
