@@ -1,2 +1,4 @@
 .tox
 *.swp
+
+playbooks/vars/local.yaml

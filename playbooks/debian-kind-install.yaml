@@ -7,6 +7,7 @@
     - vars/kind.yaml
     - vars/toolforge.yaml
     - vars/k8s.yaml
+    - vars/local.yaml
   roles:
     - { role: toolforge }
     - { role: kind }

@@ -1,7 +1,7 @@
 ---
 - name: Verify if kind is installed
   ansible.builtin.stat:
-    path: /usr/local/bin/kind
+    path: "{{ lima_kilo_kind_binary_path }}"
   register: filecheck
 
 - name: Verify if kind cluster exists
@@ -18,5 +18,6 @@
 - name: Delete kind itself
   become: true
   ansible.builtin.file:
-    dest: /usr/local/bin/kind
+    dest: "{{ lima_kilo_kind_binary_path }}"
     state: absent
+  when: lima_kilo_manage_kind_installation
