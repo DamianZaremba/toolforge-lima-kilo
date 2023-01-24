@@ -8,6 +8,19 @@
     owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
     group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
 
+- name: Ensure required dir tree exists for tool account '{{ tool_account.name }}'
+  become: true
+  ansible.builtin.file:
+    dest: /data/project/{{ tool_account.name }}/{{ item.name | dirname }}
+    state: directory
+    mode: "0777"
+    owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+    group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+  loop: "{{ tool_account.files }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: tool_account.files is defined
+
 - name: Install files for tool account '{{ tool_account.name }}'
   become: true
   ansible.builtin.copy:  # noqa template-instead-of-copy

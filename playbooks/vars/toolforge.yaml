@@ -33,4 +33,9 @@ toolforge:
             #!/bin/sh
             echo "Waiting 40"
             sleep 40
+        - name: public_html/index.php
+          mode: "0755"
+          content: |
+            Hello from PHP!
+            <?php phpinfo(); ?>
     - name: tf-test2
