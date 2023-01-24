@@ -1,5 +1,6 @@
 ---
 toolforge:
+  project_name: toolsbeta
   special_directories:
     - /data/
     - /public/

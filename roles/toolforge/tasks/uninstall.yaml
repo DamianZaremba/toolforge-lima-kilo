@@ -9,7 +9,7 @@
 - name: Delete tool accounts unix users
   become: true
   ansible.builtin.user:
-    name: "{{ tool_account.name }}"
+    name: "{{ toolforge.project_name }}.{{ tool_account.name }}"
     state: absent
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
@@ -19,7 +19,7 @@
 - name: Delete tool accounts unix groups
   become: true
   ansible.builtin.group:
-    name: "{{ tool_account.name }}"
+    name: "{{ toolforge.project_name }}.{{ tool_account.name }}"
     state: absent
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:

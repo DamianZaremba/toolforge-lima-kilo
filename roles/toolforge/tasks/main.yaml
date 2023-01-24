@@ -17,3 +17,23 @@
 - name: Target action -> uninstall fake toolforge
   ansible.builtin.include_tasks: uninstall.yaml
   when: target == 'uninstall'
+
+- name: Delete old names for tool accounts unix users
+  become: true
+  ansible.builtin.user:
+    name: "{{ tool_account.name }}"
+    state: absent
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"
+
+- name: Delete old names for tool accounts unix groups
+  become: true
+  ansible.builtin.group:
+    name: "{{ tool_account.name }}"
+    state: absent
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"

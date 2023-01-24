@@ -1,13 +1,13 @@
 ---
 - name: Get tool account '{{ tool_account.name }}' uid number
   ansible.builtin.command:
-    cmd: id -u {{ tool_account.name }}
+    cmd: id -u {{ toolforge.project_name }}.{{ tool_account.name }}
   register: uid
   changed_when: false
 
 - name: Get tool account '{{ tool_account.name }}' gid number
   ansible.builtin.command:
-    cmd: id -g {{ tool_account.name }}
+    cmd: id -g {{ toolforge.project_name }}.{{ tool_account.name }}
   register: gid
   changed_when: false
 

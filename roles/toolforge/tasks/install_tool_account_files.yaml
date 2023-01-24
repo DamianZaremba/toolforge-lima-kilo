@@ -5,8 +5,8 @@
     path: /data/project/{{ tool_account.name }}
     state: directory
     mode: "0777"
-    owner: "{{ tool_account.name }}"
-    group: "{{ tool_account.name }}"
+    owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+    group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
 
 - name: Install files for tool account '{{ tool_account.name }}'
   become: true
@@ -14,8 +14,8 @@
     dest: /data/project/{{ tool_account.name }}/{{ item.name }}
     content: "{{ item.content }}"
     mode: "{{ item.mode }}"
-    owner: "{{ tool_account.name }}"
-    group: "{{ tool_account.name }}"
+    owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+    group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
   loop: "{{ tool_account.files }}"
   loop_control:
     label: "{{ item.name }}"
