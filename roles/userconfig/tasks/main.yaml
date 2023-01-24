@@ -1,0 +1,12 @@
+---
+# load local user configuration variables in the local system, if present
+- name: Include vars from '{{ ansible_env.HOME }}/.config/toolforge-lima-kilo-userconfig.yaml'
+  ansible.builtin.include_vars: "{{ ansible_env.HOME }}/.config/toolforge-lima-kilo-userconfig.yaml"
+  register: userconfig
+  # we don't really care if the file isn't there
+  failed_when: false
+
+- name: Print loaded userconfig
+  ansible.builtin.debug:
+    var: userconfig.ansible_facts
+  when: userconfig.ansible_facts | length > 0

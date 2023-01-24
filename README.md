@@ -27,7 +27,7 @@ user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/deb
 Configuration
 -------------
 
-You can create a configuration file in `playbooks/vars/local.yaml` with any of the following options:
+You may create a configuration file in `~/.config/toolforge-lima-kilo-userconfig.yaml` with local options, such as:
 
 ```yaml
 # Set to false if you prefer to manage the kubectl binary installation on your own.
@@ -37,6 +37,7 @@ lima_kilo_manage_kubectl_installation: true
 lima_kilo_manage_kind_installation: true
 lima_kilo_kind_binary_path: /usr/local/bin/kind
 ```
+Hint: you may use this mechanism to override any other internal lima-kilo variable.
 
 License
 -------

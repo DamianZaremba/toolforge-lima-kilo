@@ -8,6 +8,7 @@
     - vars/toolforge.yaml
     - vars/local.yaml
   roles:
+    - { role: userconfig }
     - { role: kind }
     - { role: toolforge }
     - { role: kubectl }
