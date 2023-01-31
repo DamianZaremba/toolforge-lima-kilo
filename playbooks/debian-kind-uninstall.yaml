@@ -12,3 +12,4 @@
     - { role: toolforge }
     - { role: kubectl }
     - { role: k8s }
+    - { role: apt }

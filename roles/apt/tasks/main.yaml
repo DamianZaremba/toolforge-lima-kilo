@@ -1,0 +1,9 @@
+---
+- name: Debian package dependencies via apt ({{ target }} target)
+  become: true
+  ansible.builtin.apt:  # noqa args[module]
+    name: "{{ item }}"
+    state: "{{ 'latest' if target == 'install' else 'absent' }}"
+  loop:
+    # this allows using the kubernetes.core.k8s ansible module
+    - python3-kubernetes

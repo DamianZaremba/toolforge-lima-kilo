@@ -1,11 +1,4 @@
 ---
 - name: Install kubectl
-  ansible.builtin.include_tasks: "{{ role_path }}/../apt/tasks/apt-install-from-repository.yaml"
-  vars:
-    conf:
-      shortname: kubectl
-      repo_spec: https://apt.kubernetes.io/ kubernetes-xenial main
-      key_url: https://packages.cloud.google.com/apt/doc/apt-key.gpg.asc
-      packages:
-        - kubectl
+  ansible.builtin.include_tasks: "{{ ansible_facts['distribution'] | lower }}.yaml"
   when: lima_kilo_manage_kubectl_installation

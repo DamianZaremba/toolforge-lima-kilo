@@ -1,11 +1,4 @@
 ---
-- name: Install python3-kubernetes package
-  become: true
-  # this allows using the kubernetes.core.k8s ansible module
-  ansible.builtin.apt:  # noqa args[module]
-    name: python3-kubernetes
-    state: "{{ 'latest' if target == 'install' else 'absent' }}"
-
 - name: Target action -> install k8s things
   ansible.builtin.include_tasks: install.yaml
   when: target == 'install'

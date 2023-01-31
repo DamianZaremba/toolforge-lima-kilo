@@ -9,6 +9,7 @@
     - vars/k8s.yaml
   roles:
     - { role: userconfig }
+    - { role: apt }
     - { role: toolforge }
     - { role: kind }
     - { role: kubectl }
