@@ -21,6 +21,9 @@ nodes:
           kubeletExtraArgs:
             node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
     extraPortMappings:
+      - containerPort: {{ kind.api.port }}
+        hostPort: {{ kind.api.port }}
+        protocol: TCP
       - containerPort: {{ kind.ingress.port }}
         hostPort: {{ kind.ingress.port }}
         protocol: TCP
