@@ -45,3 +45,6 @@
     state: "{{ 'latest' if target == 'install' else 'absent' }}"
     update_cache: false
   loop: "{{ conf.packages }}"
+  # skip this task if target == uninstall and lima_kilo_apt_uninstall == false
+  # i.e, don't really uninstall packages
+  when: not ( target == 'uninstall' and not lima_kilo_apt_uninstall )

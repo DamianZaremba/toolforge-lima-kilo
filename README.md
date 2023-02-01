@@ -36,6 +36,9 @@ lima_kilo_manage_kubectl_installation: true
 # Set to false if you prefer to manage the kind binary installation on your own.
 lima_kilo_manage_kind_installation: true
 lima_kilo_kind_binary_path: /usr/local/bin/kind
+
+# You can use this to prevent apt from uninstalling your local packages in debian uninstall targets
+lima_kilo_apt_uninstall: true
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
 
