@@ -1,5 +1,8 @@
 ---
 toolforge:
+  uid:
+    min: 50001
+    max: 50010
   project_name: toolsbeta
   special_directories:
     - /data/
