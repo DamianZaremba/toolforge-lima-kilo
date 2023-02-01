@@ -39,6 +39,9 @@ lima_kilo_kind_binary_path: /usr/local/bin/kind
 
 # You can use this to prevent apt from uninstalling your local packages in debian uninstall targets
 lima_kilo_apt_uninstall: true
+
+# Set to false to prevent managing a shortcut in /etc/hosts for kind.
+lima_kilo_manage_etc_hosts_shortcut_for_kind: true
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
 

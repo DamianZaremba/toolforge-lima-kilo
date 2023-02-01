@@ -14,5 +14,6 @@ kind:
       checksum: sha256:9d9eb5fb26b4fbc0c6d95fa8c790414f9750dd583f5d7cee45d92e8c26670aa1
   api:
     port: 6443
+    hostname: toolforge-control-plane
 
-tool_account_kubeconfig_server_url: https://{{ kind.cluster.name }}-control-plane:{{ kind.api.port }}
+tool_account_kubeconfig_server_url: https://{{ kind.api.hostname }}:{{ kind.api.port }}

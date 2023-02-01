@@ -6,3 +6,11 @@
 - name: Target action -> uninstall kind
   ansible.builtin.include_tasks: uninstall.yaml
   when: target == 'uninstall'
+
+- name: Manage /etc/hosts shortcut for {{ kind.cluster.name }}
+  become: true
+  ansible.builtin.lineinfile:  # noqa args[module]
+    path: /etc/hosts
+    line: 127.0.0.1 {{ kind.api.hostname }}
+    state: "{{ 'present' if target == 'install' else 'absent' }}"
+  when: lima_kilo_manage_etc_hosts_shortcut_for_kind
