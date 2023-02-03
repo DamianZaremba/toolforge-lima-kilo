@@ -1,6 +1,6 @@
 ---
 kind:
-  config: "{{ ansible_env.HOME }}/.kind.yaml"
+  config: "{{ lima_kilo_local_path }}/.kind.yaml"
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
   version: 0.17.0
   url: https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64

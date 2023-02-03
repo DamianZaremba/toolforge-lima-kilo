@@ -1,7 +1,33 @@
 ---
+# migration of user config file. This code can be deleted after we know all users have migrated
+- name: Verify if old config file exists '{{ ansible_env.HOME }}/.config/toolforge-lima-kilo-userconfig.yaml'
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.config/toolforge-lima-kilo-userconfig.yaml"
+  register: filecheck_old
+
+- name: Verify if new config file exists '{{ lima_kilo_userconfig }}'
+  ansible.builtin.stat:
+    path: "{{ lima_kilo_userconfig }}"
+  register: filecheck_new
+
+- name: Ensure local dir tree exists for lima-kilo '{{ lima_kilo_local_path }}'
+  ansible.builtin.file:
+    dest: "{{ lima_kilo_local_path }}"
+    state: directory
+    mode: "0777"
+
+- name: Copy config file from old to new path (only if not already there)
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ filecheck_old.stat.path }}"
+    dest: "{{ lima_kilo_userconfig }}"
+    force: false
+    mode: "0644"
+  when: filecheck_old.stat.exists and not filecheck_new.stat.exists
+
 # load local user configuration variables in the local system, if present
-- name: Include vars from '{{ ansible_env.HOME }}/.config/toolforge-lima-kilo-userconfig.yaml'
-  ansible.builtin.include_vars: "{{ ansible_env.HOME }}/.config/toolforge-lima-kilo-userconfig.yaml"
+- name: Include vars from '{{ lima_kilo_userconfig }}'
+  ansible.builtin.include_vars: "{{ lima_kilo_userconfig }}"
   register: userconfig
   # we don't really care if the file isn't there
   failed_when: false

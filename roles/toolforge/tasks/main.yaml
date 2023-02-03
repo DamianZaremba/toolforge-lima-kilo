@@ -1,8 +1,24 @@
 ---
+- name: Delete old directories (cleanup, were relocated to a chroot)
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item }}"
+    state: absent
+  loop:
+    "{{ toolforge.special_directories + toolforge.directories }}"
+
+- name: Delete old files (cleanup, were relocated to a chroot)
+  become: true
+  ansible.builtin.file:
+    dest: "{{ item.path }}"
+    state: absent
+  loop:
+    "{{ toolforge.files }}"
+
 - name: Fake toolforge directories
   become: true
   ansible.builtin.file:  # noqa args[module]
-    dest: "{{ item }}"
+    dest: "{{ lima_kilo_chroot }}/{{ item }}"
     state: "{{ 'directory' if target == 'install' else 'absent' }}"
     mode: "0755"
     owner: "{{ ansible_env.USER }}"

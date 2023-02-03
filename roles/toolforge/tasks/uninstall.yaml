@@ -2,9 +2,8 @@
 - name: Delete fake toolforge files
   become: true
   ansible.builtin.file:
-    path: "{{ item.path }}"
+    path: "{{ lima_kilo_chroot }}"
     state: absent
-  loop: "{{ toolforge.files }}"
 
 - name: Delete tool accounts unix users
   become: true

@@ -42,7 +42,7 @@
   ansible.builtin.user:
     name: "{{ toolforge.project_name }}.{{ tool_account.name }}"
     group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
-    home: "/data/project/{{ tool_account.name }}"
+    home: "{{ lima_kilo_chroot }}/data/project/{{ tool_account.name }}"
     create_home: false
     state: present
     uid: "{{ uid_gid.stdout }}"

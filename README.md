@@ -24,10 +24,13 @@ To uninstall the fake Toolforge (beware, really removes things):
 user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/debian-kind-uninstall.yaml
 ```
 
+NOTE: It is a good practice to *uninstall* using the playbooks before updating to a newer git revision, that
+way resources are smoothly cleaned up before new code potentially doesn't know how to handle them.
+
 Configuration
 -------------
 
-You may create a configuration file in `~/.config/toolforge-lima-kilo-userconfig.yaml` with local options, such as:
+You may create a configuration file in `~/.local/toolforge-lima-kilo/userconfig.yaml` with local options, such as:
 
 ```yaml
 # Set to false if you prefer to manage the kubectl binary installation on your own.
@@ -44,6 +47,8 @@ lima_kilo_apt_uninstall: true
 lima_kilo_manage_etc_hosts_shortcut_for_kind: true
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
+
+NOTE: in previous lima-kilo revisions, the config file was `~/.config/toolforge-lima-kilo-userconfig.yaml`.
 
 License
 -------

@@ -2,7 +2,7 @@
 - name: Create home dir for tool account '{{ tool_account.name }}'
   become: true
   ansible.builtin.file:
-    path: /data/project/{{ tool_account.name }}
+    path: "{{ lima_kilo_chroot }}/data/project/{{ tool_account.name }}"
     state: directory
     mode: "0777"
     owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
@@ -11,7 +11,7 @@
 - name: Ensure required dir tree exists for tool account '{{ tool_account.name }}'
   become: true
   ansible.builtin.file:
-    dest: /data/project/{{ tool_account.name }}/{{ item.name | dirname }}
+    dest: "{{ lima_kilo_chroot }}/data/project/{{ tool_account.name }}/{{ item.name | dirname }}"
     state: directory
     mode: "0777"
     owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
@@ -24,7 +24,7 @@
 - name: Install files for tool account '{{ tool_account.name }}'
   become: true
   ansible.builtin.copy:  # noqa template-instead-of-copy
-    dest: /data/project/{{ tool_account.name }}/{{ item.name }}
+    dest: "{{ lima_kilo_chroot }}/data/project/{{ tool_account.name }}/{{ item.name }}"
     content: "{{ item.content }}"
     mode: "{{ item.mode }}"
     owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"

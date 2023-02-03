@@ -1,8 +1,14 @@
 ---
+- name: Ensure required dir tree exists for toolforge files
+  ansible.builtin.file:
+    dest: "{{ lima_kilo_chroot }}/{{ item.path | dirname }}"
+    state: directory
+    mode: "0777"
+  loop: "{{ toolforge.files }}"
+
 - name: Install fake toolforge files
-  become: true
   ansible.builtin.copy:  # noqa template-instead-of-copy
-    dest: "{{ item.path }}"
+    dest: "{{ lima_kilo_chroot }}/{{ item.path }}"
     content: "{{ item.content }}"
     mode: "0644"
   loop: "{{ toolforge.files }}"
