@@ -4,6 +4,10 @@ k8s_custom_components:
     git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/image-config
     docker_build: false
     deploy: ./deploy.sh
+  - name: cert-manager
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/cert-manager
+    docker_build: false
+    deploy: ./deploy.sh
   - name: volume-admission
     git_url: https://gerrit.wikimedia.org/r/cloud/toolforge/volume-admission-controller
     docker_build: true
