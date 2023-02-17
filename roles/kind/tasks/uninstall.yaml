@@ -14,6 +14,8 @@
   ansible.builtin.shell:
     cmd: kind delete clusters "{{ kind.cluster.name }}"
   when: filecheck.stat.executable is defined and filecheck.stat.executable and kind.cluster.name in kind_get_clusters.stdout
+  # if we execute this task, consider it always changed
+  changed_when: true
 
 - name: Delete kind itself
   become: true

@@ -29,6 +29,8 @@
   loop_control:
     label: "{{ item.name }}"
   when: kind is defined and item.docker_build
+  register: kind_load
+  changed_when: '"loading" in kind_load.stderr'
 
 - name: Deploy custom component into k8s
   ansible.builtin.shell: # noqa no-changed-when

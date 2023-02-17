@@ -41,3 +41,5 @@
     cmd: >
       kind create cluster -n "{{ kind.cluster.name }}" --config "{{ kind.config }}" --image "{{ kind.cluster.image.name }}"@"{{ kind.cluster.image.checksum }}"
   when: kind.cluster.name not in kind_get_clusters.stdout
+  # if we execute this task, consider it always changed
+  changed_when: true
