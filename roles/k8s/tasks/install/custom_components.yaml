@@ -45,4 +45,6 @@
     path: "{{ tempdir.path }}"
     state: absent
   when: tempdir.path is defined
+  # the diff output of this can be really long, turn it off even in debug mode
   diff: false
+  no_log: true
