@@ -11,9 +11,9 @@
 set -e
 usage() {
     echo "INFO: Usage of this script:"
-    echo -e "      $0 -h/--help   \t- show help and exit"
-    echo -e "      $0 <svcname>   \t- generate a x509 TLS cert from the kubernetes API"
-    echo -e "      $0 <svcname> -v\t- same, but in verbose mode"
+    echo -e "      $0 -h/--help                   \t- show help and exit"
+    echo -e "      $0 <username> <organization>   \t- generate a x509 TLS cert from the kubernetes API"
+    echo -e "      $0 <username> <organization> -v\t- same, but in verbose mode"
 }
 
 usage_error() {
@@ -33,7 +33,12 @@ if [ -z "$title" ] ; then
     usage_error
 fi
 
-verbose="$2"
+organization="$2"
+if [ ! -z "$organization" ] || [ "$organization" == "-v" ] ; then
+    usage_error
+fi
+
+verbose="$3"
 if [ ! -z "$verbose" ] && [ "$verbose" != "-v" ] ; then
     usage_error
 fi
@@ -68,7 +73,7 @@ DNS.1 = ${title}
 EOF
 
 openssl genrsa -out ${tmpdir}/k8s-key.pem 2048
-openssl req -new -key ${tmpdir}/k8s-key.pem -subj "/CN=${title}" -out ${tmpdir}/csr -config ${tmpdir}/csr.conf
+openssl req -new -key ${tmpdir}/k8s-key.pem -subj "/CN=${title}/O=${organization}" -out ${tmpdir}/csr -config ${tmpdir}/csr.conf
 
 # clean-up any previously created CSR for our service. Ignore errors if not present.
 kubectl delete csr ${csrName} || true
