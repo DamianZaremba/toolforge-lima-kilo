@@ -24,9 +24,11 @@ nodes:
       - containerPort: {{ kind.api.port }}
         hostPort: {{ kind.api.port }}
         protocol: TCP
-      - containerPort: {{ kind.ingress.port }}
-        hostPort: {{ kind.ingress.port }}
+{% for port in kind.extra_forward_ports %}
+      - containerPort: {{ port }}
+        hostPort: {{ port }}
         protocol: TCP
+{% endfor %}
     extraMounts:
 {% for dir in toolforge.directories %}
       - hostPath: {{ dir }}
