@@ -12,3 +12,7 @@ k8s_custom_components:
     git_url: https://gerrit.wikimedia.org/r/cloud/toolforge/volume-admission-controller
     docker_build: true
     deploy: ./deploy.sh local
+  - name: api-gateway
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/api-gateway
+    docker_build: false
+    deploy: ./deploy.sh local
