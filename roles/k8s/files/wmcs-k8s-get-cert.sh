@@ -1,4 +1,5 @@
 #!/bin/bash
+# SPDX-License-Identifier: Apache-2.0
 
 #
 # request and sign a generic x509 TLS cert from the kubernetes API.
@@ -42,6 +43,12 @@ if [ "$verbose" != "-v" ] ; then
      exec &>/dev/null
 fi
 
+# lima-kilo patch: not expecting root here
+#if [ "$(id -u)" != "0" ] ; then
+#    echo "ERROR: are you running this script as root in a k8s control node?" >&2
+#    exit 1
+#fi
+
 csrName=${title}
 tmpdir=$(mktemp -d)
 [ "$verbose" == "-v" ] && echo "INFO: creating certs in tmpdir ${tmpdir}"
@@ -58,8 +65,6 @@ extendedKeyUsage = serverAuth, clientAuth
 subjectAltName = @alt_names
 [alt_names]
 DNS.1 = ${title}
-DNS.2 = ${title}.${title}
-DNS.3 = ${title}.${title}.svc
 EOF
 
 openssl genrsa -out ${tmpdir}/k8s-key.pem 2048
@@ -70,19 +75,19 @@ kubectl delete csr ${csrName} || true
 
 # create  server cert/key CSR and  send to k8s API
 cat <<EOF | kubectl create -f -
-apiVersion: certificates.k8s.io/v1beta1
+apiVersion: certificates.k8s.io/v1
 kind: CertificateSigningRequest
 metadata:
   name: ${csrName}
 spec:
   groups:
-  - system:authenticated
+    - system:authenticated
   request: $(cat ${tmpdir}/csr | base64 | tr -d '\n')
+  signerName: kubernetes.io/kube-apiserver-client
   usages:
-  - digital signature
-  - key encipherment
-  - server auth
-  - client auth
+    - digital signature
+    - key encipherment
+    - client auth
 EOF
 
 # verify CSR has been created
