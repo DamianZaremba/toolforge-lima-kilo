@@ -1,29 +1,15 @@
 ---
-- name: Verify if kind is installed
-  ansible.builtin.stat:
-    path: "{{ lima_kilo_kind_binary_path }}"
-  register: filecheck
-
-- name: Verify kind version
-  ansible.builtin.shell: kind --version
-  when: filecheck.stat.executable is defined and filecheck.stat.executable
-  register: kindversion
-  changed_when: false
-
-- name: Download and install kind
-  become: true
-  ansible.builtin.get_url:
-    url: "{{ kind.url }}"
-    dest: "{{ lima_kilo_kind_binary_path }}"
-    mode: "0755"
-    checksum: "{{ kind.checksum }}"
-  when: |
-    (
-      filecheck.stat.executable is not defined
-      or not filecheck.stat.executable
-      or kind.version not in kindversion.stdout
-    )
-    and lima_kilo_manage_kind_installation
+- name: Install kind binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  when: lima_kilo_manage_kind_installation
+  vars:
+    binary:
+      name: "kind"
+      version: "{{ kind.version }}"
+      version_command: "{{ kind.version_command }}"
+      path: "{{ lima_kilo_kind_binary_path }}"
+      url: "{{ kind.platform[ansible_system].url }}"
+      checksum: "{{ kind.platform[ansible_system].checksum }}"
 
 - name: Install kind configuration file
   ansible.builtin.template:
