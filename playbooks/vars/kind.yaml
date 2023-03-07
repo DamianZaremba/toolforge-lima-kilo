@@ -8,6 +8,9 @@ kind:
     Linux:
       url: https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
       checksum: sha256:a8c045856db33f839908b6acb90dc8ec397253ffdaef7baf058f5a542e009b9c
+    Darwin:
+      url: https://kind.sigs.k8s.io/dl/v0.17.0/kind-darwin-amd64
+      checksum: sha256:a4e9f4cf18ec762934f4acd68752fe085bcded3a736258de0367085525180342
   extra_forward_ports:
     - 30001  # jobs-api
     - 30002  # ingress-nginx
