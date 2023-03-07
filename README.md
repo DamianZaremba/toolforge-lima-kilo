@@ -35,6 +35,7 @@ You may create a configuration file in `~/.local/toolforge-lima-kilo/userconfig.
 ```yaml
 # Set to false if you prefer to manage the kubectl binary installation on your own.
 lima_kilo_manage_kubectl_installation: true
+lima_kilo_kubectl_binary_path: /usr/local/bin/kubectl
 
 # Set to false if you prefer to manage the kind binary installation on your own.
 lima_kilo_manage_kind_installation: true

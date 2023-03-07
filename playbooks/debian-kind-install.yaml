@@ -6,6 +6,7 @@
   vars_files:
     - vars/lima-kilo.yaml
     - vars/kind.yaml
+    - vars/kubectl.yaml
     - vars/toolforge.yaml
     - vars/k8s.yaml
   roles:

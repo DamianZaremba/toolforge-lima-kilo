@@ -1,0 +1,12 @@
+---
+- name: Install kubectl binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  when: lima_kilo_manage_kubectl_installation
+  vars:
+    binary:
+      name: "kubectl"
+      version: "{{ kubectl.version }}"
+      version_command: "{{ kubectl.version_command }}"
+      path: "{{ lima_kilo_kubectl_binary_path }}"
+      url: "{{ kubectl.platform[ansible_system].url }}"
+      checksum: "{{ kubectl.platform[ansible_system].checksum }}"

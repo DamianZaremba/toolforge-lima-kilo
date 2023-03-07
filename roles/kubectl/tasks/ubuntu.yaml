@@ -1,4 +1,0 @@
----
-- name: Install kubectl (in ubuntu, like in debian via apt)
-  ansible.builtin.include_tasks: debian.yaml
-  when: lima_kilo_manage_kubectl_installation
