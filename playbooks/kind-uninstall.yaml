@@ -1,5 +1,5 @@
 ---
-- name: Uninstall a kind-based fake Toolforge in a Debian-based machine
+- name: Uninstall a kind-based fake Toolforge
   hosts: localhost
   vars:
     target: uninstall
@@ -13,4 +13,3 @@
     - { role: toolforge }
     - { role: kubectl }
     - { role: k8s }
-    - { role: apt }

@@ -16,13 +16,13 @@ Or make sure you have `ansible` installed on your machine.
 Then, to install the fake Toolforge:
 
 ```
-user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/debian-kind-install.yaml
+user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/kind-install.yaml
 ```
 
 To uninstall the fake Toolforge (beware, really removes things):
 
 ```
-user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/debian-kind-uninstall.yaml
+user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/kind-uninstall.yaml
 ```
 
 NOTE: It is a good practice to *uninstall* using the playbooks before updating to a newer git revision, that
@@ -41,9 +41,6 @@ lima_kilo_kubectl_binary_path: /usr/local/bin/kubectl
 # Set to false if you prefer to manage the kind binary installation on your own.
 lima_kilo_manage_kind_installation: true
 lima_kilo_kind_binary_path: /usr/local/bin/kind
-
-# You can use this to prevent apt from uninstalling your local packages in debian uninstall targets
-lima_kilo_apt_uninstall: true
 
 # Set to false to prevent managing a shortcut in /etc/hosts for kind.
 lima_kilo_manage_etc_hosts_shortcut_for_kind: true

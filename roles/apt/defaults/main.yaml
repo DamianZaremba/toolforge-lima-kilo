@@ -1,4 +1,0 @@
----
-# this can be used to prevent apt from uninstalling packages
-# default is to uninstall the packages in 'uninstall' target playbooks
-lima_kilo_apt_uninstall: true

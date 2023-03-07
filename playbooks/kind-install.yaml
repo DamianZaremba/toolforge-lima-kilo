@@ -1,5 +1,5 @@
 ---
-- name: Install a kind-based fake Toolforge in a Debian-based machine
+- name: Install a kind-based fake Toolforge
   hosts: localhost
   vars:
     target: install
@@ -11,7 +11,6 @@
     - vars/k8s.yaml
   roles:
     - { role: userconfig }
-    - { role: apt }
     - { role: toolforge }
     - { role: kind }
     - { role: kubectl }
