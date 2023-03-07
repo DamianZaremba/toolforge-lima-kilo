@@ -5,8 +5,6 @@
     name: "{{ item }}"
     state: "{{ 'latest' if target == 'install' else 'absent' }}"
   loop:
-    # this allows using the kubernetes.core.k8s ansible module
-    - python3-kubernetes
     # this allows using the jq utility to fetch the kubernetes CA from kubectl
     - jq
   # skip this task if target == uninstall and lima_kilo_apt_uninstall == false

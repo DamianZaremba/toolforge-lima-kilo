@@ -10,9 +10,10 @@ internal components.
 How to use it
 -------------
 
-Make sure you have `ansible` installed on your machine.
+Create a python venv and run `pip install -rrequirements.txt` inside it.
+Or make sure you have `ansible` installed on your machine.
 
-To install the fake Toolforge:
+Then, to install the fake Toolforge:
 
 ```
 user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/debian-kind-install.yaml
