@@ -34,7 +34,7 @@ if [ -z "$title" ] ; then
 fi
 
 organization="$2"
-if [ ! -z "$organization" ] || [ "$organization" == "-v" ] ; then
+if [ -z "$organization" ] || [ "$organization" == "-v" ] ; then
     usage_error
 fi
 
