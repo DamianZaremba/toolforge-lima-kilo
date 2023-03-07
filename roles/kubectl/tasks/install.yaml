@@ -10,3 +10,4 @@
       path: "{{ lima_kilo_kubectl_binary_path }}"
       url: "{{ kubectl.platform[ansible_system].url }}"
       checksum: "{{ kubectl.platform[ansible_system].checksum }}"
+      unpack: "{{ kubectl.platform[ansible_system].unpack }}"

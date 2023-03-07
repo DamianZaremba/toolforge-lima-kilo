@@ -44,6 +44,14 @@ lima_kilo_kind_binary_path: /usr/local/bin/kind
 
 # Set to false to prevent managing a shortcut in /etc/hosts for kind.
 lima_kilo_manage_etc_hosts_shortcut_for_kind: true
+
+# Set to false if you prefer to manage the helm binary installation on your own.
+lima_kilo_manage_helm_installation: true
+lima_kilo_helm_binary_path: /usr/local/bin/helm
+
+# Set to false if you prefer to manage the helmfile binary installation on your own.
+lima_kilo_manage_helmfile_installation: true
+lima_kilo_helmfile_binary_path: /usr/local/bin/helmfile
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
 

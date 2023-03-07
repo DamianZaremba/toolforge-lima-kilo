@@ -9,9 +9,11 @@
     - vars/kubectl.yaml
     - vars/toolforge.yaml
     - vars/k8s.yaml
+    - vars/helm.yaml
   roles:
     - { role: userconfig }
     - { role: toolforge }
     - { role: kind }
     - { role: kubectl }
+    - { role: helm }
     - { role: k8s }

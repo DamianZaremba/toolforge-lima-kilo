@@ -12,4 +12,5 @@
     - { role: kind }
     - { role: toolforge }
     - { role: kubectl }
+    - { role: helm }
     - { role: k8s }

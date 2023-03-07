@@ -8,6 +8,8 @@ kubectl:
     Linux:
       url: https://dl.k8s.io/release/v1.26.2/bin/linux/amd64/kubectl
       checksum: sha256:fcf86d21fb1a49b012bce7845cf00081d2dd7a59f424b28621799deceb5227b3
+      unpack: false
     Darwin:
       url: https://dl.k8s.io/release/v1.26.2/bin/darwin/amd64/kubectl
       checksum: sha256:f5cc3c01e9b87523c4f25353b8c9c8a57a0b2d6074b0f64cabc181280a4a1822
+      unpack: false

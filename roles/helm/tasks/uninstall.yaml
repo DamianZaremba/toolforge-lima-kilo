@@ -1,0 +1,14 @@
+---
+- name: Delete helm
+  become: true
+  ansible.builtin.file:
+    dest: "{{ lima_kilo_helm_binary_path }}"
+    state: absent
+  when: lima_kilo_manage_helm_installation
+
+- name: Delete helmfile
+  become: true
+  ansible.builtin.file:
+    dest: "{{ lima_kilo_helmfile_binary_path }}"
+    state: absent
+  when: lima_kilo_manage_helmfile_installation

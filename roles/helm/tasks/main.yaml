@@ -1,0 +1,8 @@
+---
+- name: Target action -> install helm
+  ansible.builtin.include_tasks: install.yaml
+  when: target == 'install'
+
+- name: Target action -> uninstall helm
+  ansible.builtin.include_tasks: uninstall.yaml
+  when: target == 'uninstall'

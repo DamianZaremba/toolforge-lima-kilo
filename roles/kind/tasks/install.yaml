@@ -10,6 +10,7 @@
       path: "{{ lima_kilo_kind_binary_path }}"
       url: "{{ kind.platform[ansible_system].url }}"
       checksum: "{{ kind.platform[ansible_system].checksum }}"
+      unpack: "{{ kind.platform[ansible_system].unpack }}"
 
 - name: Install kind configuration file
   ansible.builtin.template:
