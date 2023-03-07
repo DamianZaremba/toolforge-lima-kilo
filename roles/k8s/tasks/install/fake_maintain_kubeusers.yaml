@@ -13,7 +13,10 @@
 
 - name: Obtain kubernetes CA
   ansible.builtin.shell:
-    cmd: kubectl config view --raw -o json | jq -r '.clusters[0].cluster."certificate-authority-data"' | tr -d '"' | base64 --decode | base64 -w0
+    cmd: |
+      set -e -o pipefail
+      kubectl config view --raw -o json | jq -r '.clusters[0].cluster."certificate-authority-data"' | tr -d '"' | base64 --decode | base64 -w0
+    executable: /bin/bash
   register: kubernetes_ca_shell
   changed_when: false
   failed_when: kubernetes_ca_shell.stdout | length == 0
