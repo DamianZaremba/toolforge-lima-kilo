@@ -1,10 +1,12 @@
 ---
 - name: Figure out if '{{ tool_account.name }}' account exists already
-  ansible.builtin.shell: |
-    uid=$(id -u {{ toolforge.project_name }}.{{ tool_account.name }} 2>/dev/null || echo "no uid")
-    gid=$(id -g {{ toolforge.project_name }}.{{ tool_account.name }} 2>/dev/null || echo "no gid")
-    test "${uid}" -eq "${gid}" && return 0
-    return 1
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      uid=$(id -u {{ toolforge.project_name }}.{{ tool_account.name }} 2>/dev/null || echo 1)
+      gid=$(id -g {{ toolforge.project_name }}.{{ tool_account.name }} 2>/dev/null || echo 2)
+      test "${uid}" -eq "${gid}" && exit 0
+      exit 1
   register: account_exists
   # otherwise, is always changed
   changed_when: false
@@ -12,14 +14,17 @@
   failed_when: account_exists.rc not in [0, 1]
 
 - name: Figure out first empty unix UID/GID for '{{ tool_account.name }}'
-  ansible.builtin.shell: |
-    for i in $(seq {{ toolforge.uid.min }} {{ toolforge.uid.max }} ) ; do
-      if ! getent passwd $i >/dev/null ; then
-        if ! getent group $i >/dev/null ; then
-          echo "$i" ; break
+  ansible.builtin.shell:
+    executable: /bin/bash
+    cmd: |
+      for i in $(seq {{ toolforge.uid.min }} {{ toolforge.uid.max }} ) ; do
+        uid=$(id -u $i 2>/dev/null)
+        gid=$(id -g $i 2>/dev/null)
+        if [ -z "${uid}" ] && [ -z "${gid}" ] ; then
+          echo "$i"
+          exit
         fi
-      fi
-    done
+      done
   register: uid_gid
   # only when account doesn't exists already
   when: account_exists.rc != 0
