@@ -16,7 +16,11 @@
   loop:
     - /etc/apt/sources.list/kubectl.list
     - /etc/apt/trusted.gpg.d/kubectl.asc
-  when: lima_kilo_manage_kubectl_installation and ( lima_kilo_apt_uninstall | default(true) )
+  when: >
+    lima_kilo_manage_kubectl_installation and
+    ( lima_kilo_apt_uninstall | default(true) ) and
+    ansible_system == 'Linux' and
+    ansible_os_family == 'Debian'
 
 - name: Delete previous apt packages (now obsolete)
   become: true
@@ -24,4 +28,8 @@
     name: kubectl
     state: absent
     update_cache: false
-  when: lima_kilo_manage_kubectl_installation and ( lima_kilo_apt_uninstall | default(true) )
+  when: >
+    lima_kilo_manage_kubectl_installation and
+    ( lima_kilo_apt_uninstall | default(true) ) and
+    ansible_system == 'Linux' and
+    ansible_os_family == 'Debian'
