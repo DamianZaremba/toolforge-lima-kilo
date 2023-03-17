@@ -1,0 +1,7 @@
+---
+foxtrot_ldap:
+  ns: foxtrot-ldap
+  dp: deployment/foxtrot-ldap
+  inject: container/utils/add-lima-kilo-tool-account.sh
+
+foxtrot_ldap_add_tool_account: kubectl -n {{ foxtrot_ldap.ns }} exec -i {{ foxtrot_ldap.dp }} -- {{ foxtrot_ldap.inject }}

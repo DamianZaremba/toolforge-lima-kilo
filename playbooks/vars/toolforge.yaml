@@ -20,7 +20,13 @@ toolforge:
         toolsbeta
     - path: /etc/ldap.yaml
       content: |
-        # whatever
+        ---
+        # data from foxtrot-ldap. The server DNS name is the foxtrot-ldap k8s service name
+        basedn: dc=wmftest,dc=net
+        user: cn=proxyagent,dc=wmftest,dc=net
+        password: admin
+        servers:
+          - ldap://foxtrot-ldap.foxtrot-ldap:389
     - path: /etc/ldap.conf
       content: |
         # whatever

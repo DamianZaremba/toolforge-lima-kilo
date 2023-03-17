@@ -1,0 +1,15 @@
+---
+- name: Inject tool accounts into foxtrot-ldap
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      uid_gid=$(id -u {{ toolforge.project_name }}.{{ tool_account.name }})
+      {{ foxtrot_ldap_add_tool_account }} {{ tool_account.name }} $uid_gid $uid_gid
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"
+  register: foxtrot_ldap_inject_result
+  changed_when: foxtrot_ldap_inject_result.rc == 0
+  # 68 is when the account already exists. We don't really care
+  failed_when: foxtrot_ldap_inject_result.rc not in [0, 68]

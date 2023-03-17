@@ -1,0 +1,4 @@
+---
+- name: Target action -> install foxtrot-ldap things
+  ansible.builtin.include_tasks: install.yaml
+  when: target == 'install'

@@ -20,3 +20,7 @@ k8s_custom_components:
     git_url: https://gerrit.wikimedia.org/r/cloud/toolforge/jobs-framework-api
     docker_build: true
     deploy: ./deploy.sh local
+  - name: foxtrot-ldap
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap
+    docker_build: true
+    deploy: ./deploy.sh
