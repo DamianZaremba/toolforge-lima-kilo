@@ -14,3 +14,9 @@
     line: 127.0.0.1 {{ kind.api.hostname }}
     state: "{{ 'present' if target == 'install' else 'absent' }}"
   when: lima_kilo_manage_etc_hosts_shortcut_for_kind
+
+- name: Remove old kind configuration file {{ kind.old_config }}
+  become: true
+  ansible.builtin.file:
+    path: "{{ kind.old_config }}"
+    state: absent

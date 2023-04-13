@@ -1,6 +1,7 @@
 ---
 kind:
-  config: "{{ lima_kilo_local_path }}/.kind.yaml"
+  config: "{{ lima_kilo_local_path }}/kind.yaml"
+  old_config: "{{ lima_kilo_local_path }}/.kind.yaml"
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
   version: 0.17.0
   version_command: kind --version
