@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# you probably need to call this after loading the jobs-framework-cli python venv
+CLI="toolforge-jobs"
+# TODO: make the tool account an input parameter? I don't see the need at the moment
+TLS_CERT="--cert {{ lima_kilo_chroot }}/data/project/{{ toolforge.tool_accounts[0].name }}/.toolskube/client.crt"
+TLS_KEY="--key {{ lima_kilo_chroot }}/data/project/{{ toolforge.tool_accounts[0].name }}/.toolskube/client.key"
+CFGFILE="{{ lima_kilo_cli_toolforge_jobs_conf }}"
+
+${CLI} ${TLS_CERT} ${TLS_KEY} --cfg ${CFGFILE} "$@"

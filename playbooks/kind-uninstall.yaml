@@ -10,6 +10,7 @@
   roles:
     - { role: userconfig }
     - { role: kind }
+    - { role: cli }
     - { role: toolforge }
     - { role: kubectl }
     - { role: helm }

@@ -1,0 +1,6 @@
+---
+# TODO: this file could probably be fully templated
+api_url: https://localhost:30003/jobs/api/v1
+kubeconfig: {{ lima_kilo_chroot }}/data/project/{{ toolforge.tool_accounts[0].name }}/.kube/config
+customaddr: 127.0.0.1
+customfqdn: api.svc.{{ toolforge.project_name }}.eqiad1.wikimedia.cloud

@@ -1,0 +1,18 @@
+---
+- name: Ensure required dir tree exists for toolforge CLI files
+  ansible.builtin.file:
+    dest: "{{ lima_kilo_cli_dir }}"
+    state: directory
+    mode: "0777"
+
+- name: Install lima-kilo toolforge-jobs CLI script
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/toolforge-jobs.sh.j2"
+    dest: "{{ lima_kilo_cli_toolforge_jobs }}"
+    mode: "0774"
+
+- name: Install lima-kilo toolforge-jobs CLI config file
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/toolforge-jobs-conf.yaml.j2"
+    dest: "{{ lima_kilo_cli_toolforge_jobs_conf }}"
+    mode: "0664"
