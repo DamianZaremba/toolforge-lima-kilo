@@ -51,5 +51,6 @@
     create_home: false
     state: present
     uid: "{{ uid_gid.stdout }}"
+    shell: "/bin/bash"
   # only when account doesn't exists already
   when: account_exists.rc != 0
