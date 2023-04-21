@@ -58,6 +58,23 @@ Hint: you may use this mechanism to override any other internal lima-kilo variab
 NOTE: in previous lima-kilo revisions, the config file was `~/.local/toolforge-lima-kilo/userconfig.yaml`.
 NOTE: in even older lima-kilo revisions, the config file was `~/.config/toolforge-lima-kilo-userconfig.yaml`.
 
+Usage
+-----
+Once the installation is finished, you can run commands as one of the two default users created, tf-test or tf-test2 like this:
+```
+dcaro@vulcanus$ sudo -i -u toolsbeta.tf-test
+toolsbeta.tf-test@vulcanus:~$ pwd
+/home/dcaro/.toolforge-lima-kilo/chroot/data/project/tf-test
+```
+
+You would be already at the home of the user, and ready to run kubectl commands (or any toolforge cli if you installed one).
+
+If you want to access the api-gateway, you can do so by pointing to `https://127.0.0.1:30003/`, note that you will need the user certs to authenticate:
+```
+toolsbeta.tf-test@vulcanus:~$ curl --insecure --cert ~/.toolskube/client.crt --key ~/.toolskube/client.key https://127.0.0.1:30003/
+This is the Toolforge API gateway!
+```
+
 License
 -------
 [GPL-3.0](//www.gnu.org/copyleft/gpl.html "GPL-3.0")
