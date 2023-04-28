@@ -37,4 +37,5 @@ nodes:
 {% for file in toolforge.files %}
       - hostPath: {{ lima_kilo_chroot }}/{{ file.path }}
         containerPath: {{ file.path }}
+        propagation: Bidirectional
 {% endfor %}
