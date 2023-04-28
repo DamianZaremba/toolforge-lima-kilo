@@ -14,6 +14,7 @@ lima_kilo_toolforge_deploy_components:
   - name: builds-api # deploying this depends on builds-builder
   - name: api-gateway
     wait: true
+  - name: maintain-kubeusers
 
 lima_kilo_k8s_other_custom_components:
   - name: foxtrot-ldap
