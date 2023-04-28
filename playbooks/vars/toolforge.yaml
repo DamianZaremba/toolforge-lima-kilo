@@ -22,9 +22,9 @@ toolforge:
       content: |
         ---
         # data from foxtrot-ldap. The server DNS name is the foxtrot-ldap k8s service name
-        basedn: dc=wmftest,dc=net
-        user: cn=proxyagent,dc=wmftest,dc=net
-        password: admin
+        basedn: dc=wikimedia,dc=org
+        user: cn=proxyagent,dc=wikimedia,dc=org
+        password: readonly
         servers:
           - ldap://foxtrot-ldap.foxtrot-ldap:389
     - path: /etc/ldap.conf
