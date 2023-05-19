@@ -47,4 +47,11 @@ toolforge:
           content: |
             Hello from PHP!
             <?php phpinfo(); ?>
+        - name: test-cmd.sh
+          mode: "0755"
+          content: |
+            #!/bin/sh
+            echo stdout $1
+            echo stderr >&2
+            sleep 60
     - name: tf-test2
