@@ -8,3 +8,6 @@ skip_list:
   # this has been overridden also by some other projects, see
   # for example https://review.opendev.org/c/openstack/kolla-ansible/+/859220
   - name[template]
+  # This is a bit too passive-aggresive, requires that every var used in a role
+  # starts with the 'role_name_' prefix.
+  - var-naming[no-role-prefix]
