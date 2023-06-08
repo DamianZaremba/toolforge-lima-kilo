@@ -31,7 +31,7 @@ way resources are smoothly cleaned up before new code potentially doesn't know h
 Configuration
 -------------
 
-You may create a configuration file in `~/.local/toolforge-lima-kilo/userconfig.yaml` with local options, such as:
+You may create a configuration file in `~/.toolforge-lima-kilo/userconfig.yaml` with local options, such as:
 
 ```yaml
 # Set to false if you prefer to manage the kubectl binary installation on your own.
@@ -55,7 +55,8 @@ lima_kilo_helmfile_binary_path: /usr/local/bin/helmfile
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
 
-NOTE: in previous lima-kilo revisions, the config file was `~/.config/toolforge-lima-kilo-userconfig.yaml`.
+NOTE: in previous lima-kilo revisions, the config file was `~/.local/toolforge-lima-kilo/userconfig.yaml`.
+NOTE: in even older lima-kilo revisions, the config file was `~/.config/toolforge-lima-kilo-userconfig.yaml`.
 
 License
 -------
