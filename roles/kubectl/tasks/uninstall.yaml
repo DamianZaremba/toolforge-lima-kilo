@@ -1,6 +1,5 @@
 ---
 - name: Delete kubectl
-  become: true
   ansible.builtin.file:
     dest: "{{ lima_kilo_kubectl_binary_path }}"
     state: absent

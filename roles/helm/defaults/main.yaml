@@ -1,6 +1,6 @@
 ---
 lima_kilo_manage_helm_installation: true
-lima_kilo_helm_binary_path: /usr/local/bin/helm
+lima_kilo_helm_binary_path: "{{lima_kilo_bin}}/helm"
 
 lima_kilo_manage_helmfile_installation: true
-lima_kilo_helmfile_binary_path: /usr/local/bin/helmfile
+lima_kilo_helmfile_binary_path: "{{lima_kilo_bin}}/helmfile"

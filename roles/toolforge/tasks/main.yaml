@@ -1,30 +1,14 @@
 ---
-- name: Delete old directories (cleanup, were relocated to a chroot)
-  become: true
-  ansible.builtin.file:
-    dest: "{{ item }}"
-    state: absent
-  loop:
-    "{{ toolforge.special_directories + toolforge.directories }}"
-
-- name: Delete old files (cleanup, were relocated to a chroot)
-  become: true
-  ansible.builtin.file:
-    dest: "{{ item.path }}"
-    state: absent
-  loop:
-    "{{ toolforge.files }}"
-
 - name: Fake toolforge directories
+  # needed as the files are owned by the new users
   become: true
-  ansible.builtin.file:  # noqa args[module]
+  ansible.builtin.file: # noqa args[module]
     dest: "{{ lima_kilo_chroot }}/{{ item }}"
     state: "{{ 'directory' if target == 'install' else 'absent' }}"
     mode: "0755"
     owner: "{{ ansible_facts['user_uid'] }}"
     group: "{{ ansible_facts['user_gid'] }}"
-  loop:
-    "{{ toolforge.special_directories + toolforge.directories }}"
+  loop: "{{ toolforge.special_directories + toolforge.directories }}"
 
 - name: Target action -> install fake toolforge
   ansible.builtin.include_tasks: install.yaml
@@ -33,23 +17,3 @@
 - name: Target action -> uninstall fake toolforge
   ansible.builtin.include_tasks: uninstall.yaml
   when: target == 'uninstall'
-
-- name: Delete old names for tool accounts unix users
-  become: true
-  ansible.builtin.user:
-    name: "{{ tool_account.name }}"
-    state: absent
-  loop: "{{ toolforge.tool_accounts }}"
-  loop_control:
-    loop_var: tool_account
-    label: "{{ tool_account.name }}"
-
-- name: Delete old names for tool accounts unix groups
-  become: true
-  ansible.builtin.group:
-    name: "{{ tool_account.name }}"
-    state: absent
-  loop: "{{ toolforge.tool_accounts }}"
-  loop_control:
-    loop_var: tool_account
-    label: "{{ tool_account.name }}"

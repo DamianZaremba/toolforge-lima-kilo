@@ -1,3 +1,3 @@
 ---
 lima_kilo_manage_kubectl_installation: true
-lima_kilo_kubectl_binary_path: /usr/local/bin/kubectl
+lima_kilo_kubectl_binary_path: "{{lima_kilo_bin}}/kubectl"

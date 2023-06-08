@@ -1,6 +1,5 @@
 ---
 - name: Delete fake toolforge files
-  become: true
   ansible.builtin.file:
     path: "{{ lima_kilo_chroot }}"
     state: absent

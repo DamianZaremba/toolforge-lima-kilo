@@ -26,11 +26,9 @@
     suffix: -toolforge-lima-kilo
   register: tempdir
   when: >
-    filecheck.stat.executable is not defined or
-    not filecheck.stat.executable or
-    filecheck.stat.mimetype != "application/x-executable" or
-    version is not defined or
-    version is defined and binary.version not in version.stdout
+    filecheck.stat.executable is not defined or not filecheck.stat.executable or
+    filecheck.stat.mimetype != "application/x-executable" or version is not
+    defined or version is defined and binary.version not in version.stdout
 
 - name: Download '{{ binary.name }}' version '{{ binary.version }}'
   ansible.builtin.get_url:
@@ -67,7 +65,6 @@
   failed_when: find.matched < 1
 
 - name: Install '{{ binary.name }}'
-  become: true
   ansible.builtin.copy:
     src: "{{ src }}"
     dest: "{{ binary.path }}"
@@ -78,7 +75,6 @@
   when: tempdir.path is defined
 
 - name: Remove temp dir
-  become: true
   ansible.builtin.file:
     path: "{{ tempdir.path }}"
     state: absent

@@ -44,9 +44,7 @@ toolforge:
             sleep 40
         - name: public_html/index.php
           mode: "0755"
-          content: |
-            Hello from PHP!
-            <?php phpinfo(); ?>
+          content: "Hello from PHP!  <?php phpinfo(); ?>"
         - name: test-cmd.sh
           mode: "0755"
           content: |

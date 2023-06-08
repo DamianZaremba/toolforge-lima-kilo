@@ -1,7 +1,6 @@
 ---
 kind:
   config: "{{ lima_kilo_local_path }}/kind.yaml"
-  old_config: "{{ lima_kilo_local_path }}/.kind.yaml"
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
   version: 0.17.0
   version_command: kind --version
@@ -15,9 +14,9 @@ kind:
       checksum: sha256:a4e9f4cf18ec762934f4acd68752fe085bcded3a736258de0367085525180342
       unpack: false
   extra_forward_ports:
-    - 30001  # jobs-api
-    - 30002  # ingress-nginx
-    - 30003  # api-gateway
+    - 30001 # jobs-api
+    - 30002 # ingress-nginx
+    - 30003 # api-gateway
   cluster:
     name: toolforge
     image:
@@ -27,4 +26,5 @@ kind:
     port: 6443
     hostname: toolforge-control-plane
 
-tool_account_kubeconfig_server_url: https://{{ kind.api.hostname }}:{{ kind.api.port }}
+tool_account_kubeconfig_server_url:
+  https://{{ kind.api.hostname }}:{{ kind.api.port }}

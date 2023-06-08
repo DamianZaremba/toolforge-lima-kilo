@@ -11,11 +11,20 @@
     - vars/k8s.yaml
     - vars/helm.yaml
   roles:
-    - { role: userconfig }
-    - { role: toolforge }
-    - { role: kind }
-    - { role: kubectl }
-    - { role: helm }
-    - { role: k8s }
-    - { role: foxtrot_ldap }
-    - { role: cli }
+    # To apply only one or some of these use -t tag1,tag2,...
+    - role: userconfig
+      tags: userconfig
+    - role: toolforge
+      tags: toolforge
+    - role: kind
+      tags: kind
+    - role: kubectl
+      tags: kind
+    - role: helm
+      tags: helm
+    - role: k8s
+      tags: k8s
+    - role: foxtrot_ldap
+      tags: foxtrot_ldap
+    - role: cli
+      tags: cli
