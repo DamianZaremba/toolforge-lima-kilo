@@ -29,23 +29,24 @@ if [[ "$1" =~ ^"-" ]] ; then
 fi
 
 title="$1"
-if [ -z "$title" ] ; then
+if [[ "$title" == "" ]] ; then
     usage_error
 fi
 
 organization="$2"
-if [ -z "$organization" ] || [ "$organization" == "-v" ] ; then
+if [[ "$organization" == "" ]] || [[ "$organization" == "-v" ]] ; then
     usage_error
 fi
 
 verbose="$3"
-if [ ! -z "$verbose" ] && [ "$verbose" != "-v" ] ; then
+if [[ "$verbose" != "" ]] && [[ "$verbose" != "-v" ]] ; then
     usage_error
 fi
 
 exec 3>/dev/stdout
-if [ "$verbose" != "-v" ] ; then
-     exec &>/dev/null
+if [[ "$verbose" != "-v" ]] ; then
+     exec 1>/dev/null
+     # Don't supress errors, otherwise we get no feedback at all
 fi
 
 # lima-kilo patch: not expecting root here
@@ -56,7 +57,7 @@ fi
 
 csrName=${title}
 tmpdir=$(mktemp -d)
-[ "$verbose" == "-v" ] && echo "INFO: creating certs in tmpdir ${tmpdir}"
+[[ "$verbose" == "-v" ]] && echo "INFO: creating certs in tmpdir ${tmpdir}"
 
 cat <<EOF >> ${tmpdir}/csr.conf
 [req]
@@ -119,7 +120,7 @@ if [[ ${serverCert} == '' ]]; then
 fi
 echo ${serverCert} | openssl base64 -d -A -out ${tmpdir}/k8s-cert.pem
 
-if [ "$verbose" == "-v" ] ; then
+if [[ "$verbose" == "-v" ]] ; then
     echo
     echo "INFO: your TLS cert files are:"
     echo "INFO:     ${tmpdir}/k8s-cert.pem"
