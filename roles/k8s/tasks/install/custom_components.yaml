@@ -7,7 +7,10 @@
 
 - name: Git clone custom k8s components
   ansible.builtin.command:
-    cmd: git clone --quiet {{ item.git_url }} {{ tempdir.path }}/{{ item.name }}
+    cmd: >-
+      git clone --depth 1 {% if item.branch is defined %}--branch {{ item.branch
+      }}{% endif %} --quiet {{ item.git_url }} {{ tempdir.path }}/{{ item.name
+      }}
     creates: "{{ tempdir.path }}/{{ item.name }}/.git"
   loop: "{{ k8s_custom_components }}"
   loop_control:
@@ -24,7 +27,9 @@
 
 - name: Load docker image into kind (if using kind)
   ansible.builtin.shell:
-    cmd: kind load docker-image {{ item.name }}:latest --name {{ kind.cluster.name }}
+    cmd: >-
+      kind load docker-image {{ item.name }}:latest --name {{ kind.cluster.name
+      }}
   loop: "{{ k8s_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
