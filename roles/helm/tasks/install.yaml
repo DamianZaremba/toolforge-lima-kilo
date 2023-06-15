@@ -28,5 +28,6 @@
 # this install all helm plugin dependencies
 - name: Run helmfile init
   ansible.builtin.command: helmfile init --force
+  when: lima_kilo_manage_helmfile_installation
   register: init
   changed_when: "'Installed plugin' in init.stderr"
