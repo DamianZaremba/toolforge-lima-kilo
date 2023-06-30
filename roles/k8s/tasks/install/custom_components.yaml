@@ -16,11 +16,11 @@
   loop_control:
     label: "{{ item.name }}"
 
-- name: Build docker image
+- name: Build component
   ansible.builtin.shell: # noqa no-changed-when
     chdir: "{{ tempdir.path }}/{{ item.name }}"
-    cmd: docker build --tag {{ item.name }}:latest .
-  when: "item.docker_build"
+    cmd: "{{ item.build }}"
+  when: item.build is defined
   loop: "{{ k8s_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
@@ -33,7 +33,7 @@
   loop: "{{ k8s_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
-  when: kind is defined and item.docker_build
+  when: kind is defined and item.build is defined
   register: kind_load
   changed_when: '"loading" in kind_load.stderr'
 
