@@ -52,6 +52,23 @@ lima_kilo_helm_binary_path: /usr/local/bin/helm
 # Set to false if you prefer to manage the helmfile binary installation on your own.
 lima_kilo_manage_helmfile_installation: true
 lima_kilo_helmfile_binary_path: /usr/local/bin/helmfile
+
+# Modify this to customize the toolforge-deploy repository:
+lima_kilo_toolforge_deploy_repo:
+  url: https://gitlab.wikimedia.org/repos/cloud/toolforge/toolforge-deploy
+  branch: main
+
+# Modify this to override the list of components deployed from toolforge-deploy
+lima_kilo_toolforge_deploy_components:
+  - name: image-config
+    cmd: ./deploy.sh image-config local
+
+# Override this in case you want to modify the list of other k8s custom components
+lima_kilo_k8s_other_custom_components:
+  - name: foxtrot-ldap
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap
+    build: docker build --tag foxtrot-ldap:latest .
+    deploy: ./deploy.sh
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
 

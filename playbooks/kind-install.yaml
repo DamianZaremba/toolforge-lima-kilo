@@ -8,7 +8,6 @@
     - vars/kind.yaml
     - vars/kubectl.yaml
     - vars/toolforge.yaml
-    - vars/k8s.yaml
     - vars/helm.yaml
   roles:
     # To apply only one or some of these use -t tag1,tag2,...

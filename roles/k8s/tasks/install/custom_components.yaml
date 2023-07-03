@@ -12,7 +12,7 @@
       }}{% endif %} --quiet {{ item.git_url }} {{ tempdir.path }}/{{ item.name
       }}
     creates: "{{ tempdir.path }}/{{ item.name }}/.git"
-  loop: "{{ k8s_custom_components }}"
+  loop: "{{ lima_kilo_k8s_other_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
 
@@ -21,7 +21,7 @@
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: "{{ item.build }}"
   when: item.build is defined
-  loop: "{{ k8s_custom_components }}"
+  loop: "{{ lima_kilo_k8s_other_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
 
@@ -30,7 +30,7 @@
     cmd: >-
       kind load docker-image {{ item.name }}:latest --name {{ kind.cluster.name
       }}
-  loop: "{{ k8s_custom_components }}"
+  loop: "{{ lima_kilo_k8s_other_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
   when: kind is defined and item.build is defined
@@ -41,7 +41,7 @@
   ansible.builtin.shell: # noqa no-changed-when
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: "{{ item.deploy }}"
-  loop: "{{ k8s_custom_components }}"
+  loop: "{{ lima_kilo_k8s_other_custom_components }}"
   loop_control:
     label: "{{ item.name }}"
 

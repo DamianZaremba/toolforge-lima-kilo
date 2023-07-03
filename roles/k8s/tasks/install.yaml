@@ -5,6 +5,10 @@
     src: "{{ role_path }}/files/base-pod-security-policies.yaml"
   when: target == 'install'
 
+- name: Install toolforge-deploy components
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/toolforge-deploy_components.yaml"
+  when: target == 'install'
+
 - name: Install custom components
   ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/custom_components.yaml"
   when: target == 'install'

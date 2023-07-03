@@ -1,0 +1,22 @@
+---
+lima_kilo_toolforge_deploy_repo:
+  url: https://gitlab.wikimedia.org/repos/cloud/toolforge/toolforge-deploy
+  branch: main
+
+lima_kilo_toolforge_deploy_components:
+  - name: image-config
+    cmd: ./deploy.sh image-config local
+  - name: cert-manager
+    cmd: ./deploy.sh cert-manager local
+  - name: volume-admission
+    cmd: ./deploy.sh volume-admission local
+  - name: api-gateway
+    cmd: ./deploy.sh api-gateway local
+  - name: jobs-api
+    cmd: ./deploy.sh jobs-api local
+
+lima_kilo_k8s_other_custom_components:
+  - name: foxtrot-ldap
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap
+    build: docker build --tag foxtrot-ldap:latest .
+    deploy: ./deploy.sh
