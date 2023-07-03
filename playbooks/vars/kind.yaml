@@ -2,16 +2,16 @@
 kind:
   config: "{{ lima_kilo_local_path }}/kind.yaml"
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
-  version: 0.17.0
+  version: 0.20.0
   version_command: kind --version
   platform:
     Linux:
-      url: https://kind.sigs.k8s.io/dl/v0.17.0/kind-linux-amd64
-      checksum: sha256:a8c045856db33f839908b6acb90dc8ec397253ffdaef7baf058f5a542e009b9c
+      url: https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+      checksum: sha256:513a7213d6d3332dd9ef27c24dab35e5ef10a04fa27274fe1c14d8a246493ded
       unpack: false
     Darwin:
-      url: https://kind.sigs.k8s.io/dl/v0.17.0/kind-darwin-amd64
-      checksum: sha256:a4e9f4cf18ec762934f4acd68752fe085bcded3a736258de0367085525180342
+      url: https://kind.sigs.k8s.io/dl/v0.20.0/kind-darwin-amd64
+      checksum: sha256:bffd8fb2006dc89fa0d1dde5ba6bf48caacb707e4df8551528f49145ebfeb7ad
       unpack: false
   extra_forward_ports:
     - 30001 # jobs-api
@@ -20,8 +20,8 @@ kind:
   cluster:
     name: toolforge
     image:
-      name: kindest/node:v1.22.15
-      checksum: sha256:41e599fbbc038175c570c9aec9f9f59311d77be1b54f7f4de1a41d974dcd4cea
+      name: kindest/node:v1.23.17
+      checksum: sha256:59c989ff8a517a93127d4a536e7014d28e235fb3529d9fba91b3951d461edfdb
   api:
     port: 6443
     hostname: toolforge-control-plane
