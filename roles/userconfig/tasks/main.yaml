@@ -35,6 +35,7 @@
 # migration to the new local dir tree. This code can be removed when we know all users have moved
 - name: |
     "Ensure old local dir tree does not exist anymore for lima-kilo '{{ old_lima_kilo_local_path }}'"
+  become: true
   ansible.builtin.file:
     dest: "{{ old_lima_kilo_local_path }}"
     state: "absent"
