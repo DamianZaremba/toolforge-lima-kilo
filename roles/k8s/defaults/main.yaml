@@ -12,15 +12,29 @@ lima_kilo_toolforge_deploy_components:
     cmd: ./deploy.sh cert-manager local --wait
   - name: volume-admission
     cmd: ./deploy.sh volume-admission local
+  - name: jobs-api
+    cmd: ./deploy.sh jobs-api local
+  - name: envvars-api
+    cmd: ./deploy.sh envvars-api local
+  - name: builds-api
+    cmd: ./deploy.sh builds-api local
+  # TODO: this is not ready yet for toolforge-deploy
+  # - name: builds-builder
+  #  cmd: ./deploy.sh builds-builder local
+  - name: builds-admission
+    cmd: ./deploy.sh builds-admission local
+  # deploy api-gateway last when all other API components are up and running already
   - name: api-gateway
     # use --wait to make sure all resources are up and running before deploying anything else
     # this gets passed to helmfile, which gets passed to helm
     cmd: ./deploy.sh api-gateway local --wait
-  - name: jobs-api
-    cmd: ./deploy.sh jobs-api local
+
 
 lima_kilo_k8s_other_custom_components:
   - name: foxtrot-ldap
     git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap
     build: docker build --tag foxtrot-ldap:latest .
     deploy: ./deploy.sh
+  - name: builds-builder
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/buildservice
+    deploy: ./deploy.sh toolsbeta
