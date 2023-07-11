@@ -7,11 +7,15 @@ lima_kilo_toolforge_deploy_components:
   - name: image-config
     cmd: ./deploy.sh image-config local
   - name: cert-manager
-    cmd: ./deploy.sh cert-manager local
+    # use --wait to make sure all resources are up and running before deploying anything else
+    # this gets passed to helmfile, which gets passed to helm
+    cmd: ./deploy.sh cert-manager local --wait
   - name: volume-admission
     cmd: ./deploy.sh volume-admission local
   - name: api-gateway
-    cmd: ./deploy.sh api-gateway local
+    # use --wait to make sure all resources are up and running before deploying anything else
+    # this gets passed to helmfile, which gets passed to helm
+    cmd: ./deploy.sh api-gateway local --wait
   - name: jobs-api
     cmd: ./deploy.sh jobs-api local
 
