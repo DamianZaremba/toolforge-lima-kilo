@@ -17,7 +17,10 @@ lima_kilo_toolforge_deploy_components:
   - name: envvars-api
     cmd: ./deploy.sh envvars-api local
   - name: builds-api
-    cmd: ./deploy.sh builds-api local
+    # deploying this depends on the image-build namespace being present, for a rolebinding
+    # this snowflake can go away when the builds-builder is in toolforge-deploy and deployed
+    # here before the builds-api
+    cmd: "{{ lima_kilo_kubectl_binary_path }} create namespace image-build && ./deploy.sh builds-api local"
   # TODO: this is not ready yet for toolforge-deploy
   # - name: builds-builder
   #  cmd: ./deploy.sh builds-builder local
