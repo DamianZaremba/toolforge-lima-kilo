@@ -5,14 +5,14 @@
   register: filecheck
 
 - name: Verify if kind cluster exists
-  ansible.builtin.shell: kind get clusters
+  ansible.builtin.shell: "{{ lima_kilo_kind_binary_path }} get clusters"
   when: filecheck.stat.executable is defined and filecheck.stat.executable
   register: kind_get_clusters
   changed_when: false
 
 - name: Delete kind cluster
   ansible.builtin.shell:
-    cmd: kind delete clusters "{{ kind.cluster.name }}"
+    cmd: "{{ lima_kilo_kind_binary_path }} delete clusters {{ kind.cluster.name }}"
   when: |
     filecheck.stat.executable is defined
     and filecheck.stat.executable

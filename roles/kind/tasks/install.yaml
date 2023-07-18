@@ -19,14 +19,17 @@
     mode: "0644"
 
 - name: Verify if kind cluster exists
-  ansible.builtin.shell: kind get clusters
+  ansible.builtin.shell: "{{ lima_kilo_kind_binary_path }} get clusters"
   register: kind_get_clusters
   changed_when: false
 
 - name: Bootstrap kind cluster
   ansible.builtin.shell:
-    cmd: >
-      kind create cluster -n "{{ kind.cluster.name }}" --config "{{ kind.config }}" --image "{{ kind.cluster.image.name }}"@"{{ kind.cluster.image.checksum }}"
+    cmd: |
+      "{{ lima_kilo_kind_binary_path }}" create cluster \
+      --name "{{ kind.cluster.name }}" \
+      --config "{{ kind.config }}" \
+      --image "{{ kind.cluster.image.name }}"@"{{ kind.cluster.image.checksum }}"
   when: kind.cluster.name not in kind_get_clusters.stdout
   # if we execute this task, consider it always changed
   changed_when: true
