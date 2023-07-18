@@ -33,6 +33,16 @@ toolforge:
     - path: /etc/novaobserver.yaml
       content: |
         # whatever
+    - path: /etc/toolforge/toolforge.yaml
+      content: |
+        ---
+        # TODO: template this file
+        api_gateway:
+          url: https://localhost:30003
+        build:
+          dest_repository: tools-harbor.wmcloud.org
+          builder_image: tools-harbor.wmcloud.org/toolforge/heroku-builder-classic:22
+          builds_endpoint: "/builds/v1"
   tool_accounts:
     - name: tf-test
       files:

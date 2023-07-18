@@ -2,5 +2,6 @@
 
 # TODO: make the tool account an input parameter? I don't see the need at the moment
 export KUBECONFIG="{{ lima_kilo_chroot }}/data/project/{{ toolforge.tool_accounts[0].name }}/.kube/config"
+export XDG_CONFIG_HOME="{{ lima_kilo_chroot }}/etc/toolforge/"
 
 toolforge-build "$@"
