@@ -1,15 +1,15 @@
 ---
-# migration of user config file. This code can be deleted after we know all users have migrated
-- name: |
-    Verify if old config file exists '{{ old_lima_kilo_local_path }}/userconfig.yaml'
-  ansible.builtin.stat:
-    path: "{{ old_lima_kilo_local_path }}/userconfig.yaml"
-  register: filecheck_old
+# load local user configuration variables in the local system, if present
+- name: Include vars from '{{ lima_kilo_userconfig }}'
+  ansible.builtin.include_vars: "{{ lima_kilo_userconfig }}"
+  register: userconfig
+  # we don't really care if the file isn't there
+  failed_when: false
 
-- name: Verify if new config file exists '{{ lima_kilo_userconfig }}'
-  ansible.builtin.stat:
-    path: "{{ lima_kilo_userconfig }}"
-  register: filecheck_new
+- name: Print loaded userconfig
+  ansible.builtin.debug:
+    var: userconfig.ansible_facts
+  when: userconfig.ansible_facts | length > 0
 
 - name: Ensure local dir tree exists for lima-kilo '{{ lima_kilo_local_path }}'
   ansible.builtin.file:
@@ -22,32 +22,3 @@
     dest: "{{ lima_kilo_bin }}"
     state: directory
     mode: "0777"
-
-- name: Copy config file from old to new path (only if not already there)
-  ansible.builtin.copy:
-    remote_src: true
-    src: "{{ filecheck_old.stat.path }}"
-    dest: "{{ lima_kilo_userconfig }}"
-    force: false
-    mode: "0644"
-  when: filecheck_old.stat.exists and not filecheck_new.stat.exists
-
-# migration to the new local dir tree. This code can be removed when we know all users have moved
-- name: |
-    "Ensure old local dir tree does not exist anymore for lima-kilo '{{ old_lima_kilo_local_path }}'"
-  become: true
-  ansible.builtin.file:
-    dest: "{{ old_lima_kilo_local_path }}"
-    state: "absent"
-
-# load local user configuration variables in the local system, if present
-- name: Include vars from '{{ lima_kilo_userconfig }}'
-  ansible.builtin.include_vars: "{{ lima_kilo_userconfig }}"
-  register: userconfig
-  # we don't really care if the file isn't there
-  failed_when: false
-
-- name: Print loaded userconfig
-  ansible.builtin.debug:
-    var: userconfig.ansible_facts
-  when: userconfig.ansible_facts | length > 0
