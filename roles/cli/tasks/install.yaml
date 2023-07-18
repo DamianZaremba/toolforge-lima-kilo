@@ -16,3 +16,9 @@
     src: "{{ role_path }}/templates/toolforge-jobs-conf.yaml.j2"
     dest: "{{ lima_kilo_cli_toolforge_jobs_conf }}"
     mode: "0664"
+
+- name: Install lima-kilo toolforge-build CLI script
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/toolforge-build.sh.j2"
+    dest: "{{ lima_kilo_cli_toolforge_build }}"
+    mode: "0774"
