@@ -27,3 +27,5 @@
       tags: foxtrot_ldap
     - role: cli
       tags: cli
+    - role: harbor
+      tags: harbor

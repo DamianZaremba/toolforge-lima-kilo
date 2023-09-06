@@ -1,0 +1,8 @@
+---
+- name: Target action -> install harbor
+  ansible.builtin.include_tasks: install.yaml
+  when: target == 'install' and lima_kilo_manage_harbor_installation
+
+- name: Target action -> uninstall harbor
+  ansible.builtin.include_tasks: uninstall.yaml
+  when: target == 'uninstall' and lima_kilo_manage_harbor_installation

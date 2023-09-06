@@ -13,6 +13,10 @@ How to use it
 Create a python venv and run `pip install -rrequirements.txt` inside it.
 Or make sure you have `ansible` installed on your machine.
 
+Other dependencies are (install them yourself):
+* docker
+* docker-compose
+
 Then, to install the fake Toolforge:
 
 ```
@@ -69,6 +73,9 @@ lima_kilo_k8s_other_custom_components:
     git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap
     build: docker build --tag foxtrot-ldap:latest .
     deploy: ./deploy.sh
+
+# Some harbor overrides
+lima_kilo_manage_harbor_installation: true
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
 

@@ -1,0 +1,32 @@
+---
+# this is the template used to create harbor robot account (used by the builds-api to inject images into projects)
+name: "{{ lima_kilo_harbor_robot_account_username }}"
+secret: "{{ lima_kilo_harbor_robot_account_password }}"
+disable: false
+level: "system"
+duration: -1
+description: "Tekton pipelines pushing robot account"
+permissions:
+    - kind: "project"
+      namespace: "*"
+      access:
+        - action: "push"
+          resource: "repository"
+        - action: "pull"
+          resource: "repository"
+        - action: "delete"
+          resource: "artifact"
+        - action: "read"
+          resource: "helm-chart"
+        - action: "create"
+          resource: "helm-chart-version"
+        - action: "delete"
+          resource: "helm-chart-version"
+        - action: "create"
+          resource: "tag"
+        - action: "delete"
+          resource: "tag"
+        - action: "create"
+          resource: "artifact-label"
+        - action: "create"
+          resource: "scan"

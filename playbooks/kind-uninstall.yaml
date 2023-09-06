@@ -15,3 +15,4 @@
     - { role: kubectl }
     - { role: helm }
     - { role: k8s }
+    - { role: harbor }

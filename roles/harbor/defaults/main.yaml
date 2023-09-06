@@ -1,0 +1,27 @@
+---
+# setting this to false will prevent any harbor operations from lima-kilo
+lima_kilo_manage_harbor_installation: true
+
+# refresh versions from https://github.com/goharbor/harbor/releases
+lima_kilo_harbor_installer:
+  url: https://github.com/goharbor/harbor/releases/download/v2.5.4/harbor-online-installer-v2.5.4.tgz
+  checksum: md5:0a6dd820936ee73f9fba4650ed5d0b06
+
+lima_kilo_harbor_path: "{{ lima_kilo_local_path }}/harbor"
+
+lima_kilo_harbor_config_template_path: "{{ lima_kilo_harbor_path }}/harbor/harbor.yml.tmpl"
+lima_kilo_harbor_config_path: "{{ lima_kilo_harbor_path }}/harbor/harbor.yml"
+lima_kilo_harbor_config_hostname: "localhost"
+lima_kilo_harbor_config_data_volume: "{{ lima_kilo_harbor_path }}/data"
+
+lima_kilo_harbor_prepare: "{{ lima_kilo_harbor_path }}/harbor/prepare"
+lima_kilo_harbor_up: "$(which docker-compose) -f {{ lima_kilo_harbor_path }}/harbor/docker-compose.yml up -d"
+lima_kilo_harbor_down: "$(which docker-compose) -f {{ lima_kilo_harbor_path }}/harbor/docker-compose.yml down"
+
+lima_kilo_harbor_robot_account_username: "tekton"
+lima_kilo_harbor_robot_account_password: "Dummyr0botpass"
+
+# upstream defaults
+lima_kilo_harbor_admin_username: "admin"
+lima_kilo_harbor_admin_password: "Harbor12345"
+lima_kilo_harbor_api_url: "http://{{ lima_kilo_harbor_config_hostname }}/api/v2.0"
