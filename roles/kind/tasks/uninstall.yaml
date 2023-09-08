@@ -25,3 +25,8 @@
     dest: "{{ lima_kilo_kind_binary_path }}"
     state: absent
   when: lima_kilo_manage_kind_installation
+
+- name: Remove configuration file
+  ansible.builtin.file:
+    dest: "{{ kind.config }}"
+    state: absent
