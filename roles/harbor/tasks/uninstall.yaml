@@ -21,3 +21,5 @@
     cmd: rm --recursive --dir --verbose --preserve-root=all --one-file-system "{{ lima_kilo_harbor_path }}"
   # always consider this a change
   changed_when: true
+  # never fail, we don't care
+  failed_when: false
