@@ -100,25 +100,3 @@
     state: present
     template: tekton_secret.yaml.j2
   diff: false
-
-# TODO: this could be replaced by maintain-harbor in the future
-- name: Create per-tool project
-  ansible.builtin.uri:
-    url: "{{ lima_kilo_harbor_api_url }}/projects"
-    force_basic_auth: true
-    user: "{{ lima_kilo_harbor_admin_username }}"
-    password: "{{ lima_kilo_harbor_admin_password }}"
-    method: POST
-    body_format: "json"
-    body: "{{ lookup('template', 'project.yaml.j2') | from_yaml | combine(update, recursive=True) | to_json }}"
-    status_code:
-      - 200  # ok
-      - 201  # ok, created
-      - 409  # already exists. This means that changes needs to happen via lima-kilo install cycle
-  vars:
-    update:
-      project_name: "{{ tool_account.name }}"
-  loop: "{{ toolforge.tool_accounts }}"
-  loop_control:
-    loop_var: tool_account
-    label: "{{ tool_account.name }}"
