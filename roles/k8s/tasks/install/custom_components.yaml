@@ -41,10 +41,6 @@
   ansible.builtin.shell: # noqa no-changed-when
     chdir: "{{ tempdir.path }}/{{ item.name }}"
     cmd: "{{ item.deploy }}"
-  environment:
-    # add lima-kilo bin/ to path so local binaries (helm, helmfile) are
-    # available during component deploy
-    PATH: "{{ lima_kilo_bin }}:{{ ansible_env.PATH }}"
   loop: "{{ lima_kilo_k8s_other_custom_components }}"
   loop_control:
     label: "{{ item.name }}"

@@ -29,3 +29,7 @@
       tags: cli
     - role: harbor
       tags: harbor
+  environment:
+    # add lima-kilo bin/ to path so local binaries (helm, helmfile) are
+    # available during component deploy
+    PATH: "{{ lima_kilo_bin }}:{{ ansible_env.PATH }}"
