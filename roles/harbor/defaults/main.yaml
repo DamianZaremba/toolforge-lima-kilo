@@ -18,7 +18,7 @@ lima_kilo_harbor_prepare: "{{ lima_kilo_harbor_path }}/harbor/prepare"
 lima_kilo_harbor_up: "$(which docker-compose) -f {{ lima_kilo_harbor_path }}/harbor/docker-compose.yml up -d"
 lima_kilo_harbor_down: "$(which docker-compose) -f {{ lima_kilo_harbor_path }}/harbor/docker-compose.yml down"
 
-lima_kilo_harbor_robot_account_username: "tekton"
+lima_kilo_harbor_robot_account_username: "robot$tekton"
 lima_kilo_harbor_robot_account_password: "Dummyr0botpass"
 
 # upstream defaults
