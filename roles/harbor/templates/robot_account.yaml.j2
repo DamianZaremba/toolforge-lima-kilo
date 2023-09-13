@@ -1,6 +1,7 @@
 ---
 # this is the template used to create harbor robot account (used by the builds-api to inject images into projects)
-name: "{{ lima_kilo_harbor_robot_account_username }}"
+# stripping 'robot$' prefix, as Harbor automatically appends it at account creation 
+name: "{{ lima_kilo_harbor_robot_account_username | regex_replace('^robot\\$', '') }}"
 secret: "{{ lima_kilo_harbor_robot_account_password }}"
 disable: false
 level: "system"
