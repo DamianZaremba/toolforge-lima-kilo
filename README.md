@@ -10,6 +10,7 @@ internal components.
 How to use it
 -------------
 
+**Locally:**
 Create a python venv and run `pip install -rrequirements.txt` inside it.
 Or make sure you have `ansible` installed on your machine.
 
@@ -31,6 +32,9 @@ user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/kin
 
 NOTE: It is a good practice to *uninstall* using the playbooks before updating to a newer git revision, that
 way resources are smoothly cleaned up before new code potentially doesn't know how to handle them.
+
+**Using Vagrant:**
+See detailed instructions here: [Vagrant README](./vagrant/README.md)
 
 Configuration
 -------------
