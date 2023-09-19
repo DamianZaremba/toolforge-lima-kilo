@@ -23,7 +23,7 @@ lima_kilo_toolforge_deploy_components:
     cmd: |
       {{ lima_kilo_kubectl_binary_path }} create namespace image-build --dry-run\=client -o yaml | \
       {{ lima_kilo_kubectl_binary_path }} apply -f - && \
-      ./deploy.sh builds-api local
+      HARBOR_IP={{ lima_kilo_harbor_addr_for_within_k8s }} ./deploy.sh builds-api local
   # TODO: this is not ready yet for toolforge-deploy
   # - name: builds-builder
   #  cmd: ./deploy.sh builds-builder local

@@ -3,3 +3,8 @@ lima_kilo_local_path: "{{ ansible_env.HOME }}/.toolforge-lima-kilo"
 lima_kilo_userconfig: "{{ lima_kilo_local_path }}/userconfig.yaml"
 lima_kilo_chroot: "{{ lima_kilo_local_path }}/chroot"
 lima_kilo_bin: "{{ lima_kilo_local_path }}/bin"
+
+# the default docker network is 172.17.0.0/16 so take it as the default
+# normally, docker0 will have 172.17.0.1 and that is reachable from within
+# containers running in the local kubernetes
+lima_kilo_docker_addr: "172.17.0.1"

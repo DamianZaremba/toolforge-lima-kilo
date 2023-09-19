@@ -80,6 +80,11 @@ lima_kilo_k8s_other_custom_components:
 
 # Some harbor overrides
 lima_kilo_manage_harbor_installation: true
+
+# normally, docker0 will have 172.17.0.1 and that is reachable from within
+# containers running in the local kubernetes. This is used by builds-api to
+# contact harbor
+lima_kilo_docker_addr: "172.17.0.1"
 ```
 Hint: you may use this mechanism to override any other internal lima-kilo variable.
 
