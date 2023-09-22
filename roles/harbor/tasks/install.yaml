@@ -103,6 +103,39 @@
       - 201  # ok, created
       - 409  # already exists. This means that changes needs to happen via lima-kilo install cycle
 
+- name: Get list of robot accounts
+  ansible.builtin.uri:
+    url: "{{ lima_kilo_harbor_api_url }}/robots"
+    force_basic_auth: true
+    user: "{{ lima_kilo_harbor_admin_username }}"
+    password: "{{ lima_kilo_harbor_admin_password }}"
+    method: GET
+    status_code:
+      - 200  # ok
+  register: robot_account_list
+
+- name: Figure out tekton robot account id
+  ansible.builtin.set_fact:
+    harbor_robot_account_id: "{{ item.id }}"
+  loop: "{{ robot_account_list | community.general.json_query(query) }}"
+  loop_control:
+    label: "{{ item.name }}"
+  vars:
+    query: "json[?name=='{{ lima_kilo_harbor_robot_account_username }}']"
+
+- name: Set robot account password
+  ansible.builtin.uri:
+    url: "{{ lima_kilo_harbor_api_url }}/robots/{{ harbor_robot_account_id }}"
+    force_basic_auth: true
+    user: "{{ lima_kilo_harbor_admin_username }}"
+    password: "{{ lima_kilo_harbor_admin_password }}"
+    method: PATCH
+    body_format: "json"
+    body:
+      secret: "{{ lima_kilo_harbor_robot_account_password }}"
+    status_code:
+      - 200  # ok
+
 - name: Create kubernetes secret for tekton
   kubernetes.core.k8s:
     state: present
