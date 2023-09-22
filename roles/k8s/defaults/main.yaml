@@ -42,5 +42,5 @@ lima_kilo_k8s_other_custom_components:
     build: docker build --tag foxtrot-ldap:latest .
     deploy: ./deploy.sh
   - name: builds-builder
-    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/buildservice
-    deploy: ./deploy.sh toolsbeta
+    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/builds-builder
+    deploy: HARBOR_IP={{ lima_kilo_harbor_addr_for_within_k8s }} ./deploy.sh devel
