@@ -14,6 +14,10 @@ Vagrant.configure("2") do |config|
     vb.memory = ENV['VAGRANT_MEMORY'] || 8192 
     vb.cpus = ENV['VAGRANT_CPUS'] || 4
   end
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.memory = ENV['VAGRANT_MEMORY'] || 8192
+    libvirt.cpus = ENV['VAGRANT_CPUS'] || 4
+  end
 
   # Provisioners
   config.vm.provision "docker"
@@ -27,7 +31,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "install", type: "shell", privileged: false, path: "vagrant/install.sh"
   config.vm.provision "run", type: "shell", privileged: false, inline: <<-SHELL
     cd lima-kilo
-    ansible-playbook -KD playbooks/kind-install.yaml 
+    ansible-playbook -vvv -KD playbooks/kind-install.yaml
   SHELL
 
 #  https://github.com/hashicorp/vagrant/issues/13234 
