@@ -81,7 +81,7 @@
     url: "{{ lima_kilo_harbor_api_url }}/health"
     method: GET
     status_code:
-      - 200  # ok
+      - 200 # ok
   register: uri_output
   until: >
     uri_output.status == 200 and
@@ -99,9 +99,9 @@
     body_format: "json"
     body: "{{ lookup('template', 'robot_account.yaml.j2') | from_yaml | to_json }}"
     status_code:
-      - 200  # ok
-      - 201  # ok, created
-      - 409  # already exists. This means that changes needs to happen via lima-kilo install cycle
+      - 200 # ok
+      - 201 # ok, created
+      - 409 # already exists. This means that changes needs to happen via lima-kilo install cycle
 
 - name: Get list of robot accounts
   ansible.builtin.uri:
@@ -111,7 +111,7 @@
     password: "{{ lima_kilo_harbor_admin_password }}"
     method: GET
     status_code:
-      - 200  # ok
+      - 200 # ok
   register: robot_account_list
 
 - name: Figure out tekton robot account id
@@ -134,10 +134,4 @@
     body:
       secret: "{{ lima_kilo_harbor_robot_account_password }}"
     status_code:
-      - 200  # ok
-
-- name: Create kubernetes secret for tekton
-  kubernetes.core.k8s:
-    state: present
-    template: tekton_secret.yaml.j2
-  diff: false
+      - 200 # ok

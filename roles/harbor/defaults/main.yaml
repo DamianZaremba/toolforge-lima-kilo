@@ -14,7 +14,7 @@ lima_kilo_harbor_config_path: "{{ lima_kilo_harbor_path }}/harbor/harbor.yml"
 lima_kilo_harbor_config_data_volume: "{{ lima_kilo_harbor_path }}/data"
 lima_kilo_harbor_config_hostname: "localhost"
 lima_kilo_harbor_config_port: 8080
-lima_kilo_harbor_addr_for_within_k8s: "{{ lima_kilo_docker_addr }}:{{ lima_kilo_harbor_config_port }}"
+lima_kilo_harbor_url_for_within_k8s: "http://{{ lima_kilo_docker_addr }}:{{ lima_kilo_harbor_config_port }}"
 
 lima_kilo_harbor_prepare: "{{ lima_kilo_harbor_path }}/harbor/prepare"
 lima_kilo_harbor_up: "$(which docker-compose) -f {{ lima_kilo_harbor_path }}/harbor/docker-compose.yml up -d"

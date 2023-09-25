@@ -8,4 +8,3 @@ lima_kilo_bin: "{{ lima_kilo_local_path }}/bin"
 # normally, docker0 will have 172.19.0.1 and that is reachable from within
 # containers running in the local kubernetes
 lima_kilo_docker_addr: "172.19.0.1"
-lima_kilo_using_vagrant: true
