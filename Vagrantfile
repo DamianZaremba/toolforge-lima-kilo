@@ -7,6 +7,10 @@ Vagrant.configure("2") do |config|
   config.vm.box = "debian/bullseye64"
   config.vm.box_check_update = false
   config.vm.synced_folder ".", "/vagrant", disabled: true
+  # for harbor
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+  # for api-gateway
+  config.vm.network "forwarded_port", guest: 30003, host: 30003
 
   # VirtualBox settings
   config.vm.provider "virtualbox" do |vb|
@@ -23,8 +27,10 @@ Vagrant.configure("2") do |config|
   config.vm.provision "docker"
   config.vm.provision "docker_compose"
 
-#  config.vm.provision "file", source: "./requirements.txt", destination: "/tmp/requirements.txt"
-#  config.vm.provision "file", source: "./setup.sh", destination: "setup.sh"
+  # skip any non-ansible things (specially .git as it will go really slowly file-by-file)
+  ["playbooks", "roles", "ansible.cfg", "hosts.yaml", "requirements.txt"].each do |file|
+    config.vm.provision "file", source: file, destination: "lima-kilo/"
+  end
 
   # Shell provisioners
   config.vm.provision "setup", type: "shell", privileged: false, path: "vagrant/setup.sh"
