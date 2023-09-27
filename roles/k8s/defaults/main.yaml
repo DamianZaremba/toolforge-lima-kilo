@@ -17,12 +17,12 @@ lima_kilo_toolforge_deploy_components:
   - name: envvars-api
     cmd: ./deploy.sh envvars-api local
   - name: builds-builder
-    cmd: HARBOR_IP={{ lima_kilo_harbor_url_for_within_k8s }} ./deploy.sh builds-builder local
+    cmd: HARBOR_IP={{ lima_kilo_harbor_ip_for_within_k8s }} ./deploy.sh builds-builder local
   - name: builds-api
     # deploying this depends on builds-builder
-    cmd: HARBOR_IP={{ lima_kilo_harbor_url_for_within_k8s }} ./deploy.sh builds-api local
+    cmd: HARBOR_IP={{ lima_kilo_harbor_ip_for_within_k8s }} ./deploy.sh builds-api local
   - name: builds-admission
-    cmd: ./deploy.sh builds-admission local
+    cmd: HARBOR_IP={{ lima_kilo_harbor_ip_for_within_k8s }} ./deploy.sh builds-admission local
   - name: api-gateway
     # use --wait to make sure all resources are up and running before deploying anything else
     # this gets passed to helmfile, which gets passed to helm

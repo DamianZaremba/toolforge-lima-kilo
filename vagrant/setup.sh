@@ -2,8 +2,8 @@
 set -e
 
 # Install general packages
-sudo apt get update && sudo apt get upgrade -y
-sudo apt get install -y \
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y \
 	curl \
 	git \
 	jq \
@@ -17,7 +17,7 @@ sudo bash -c "cat >/etc/apt/sources.list.d/toolforge.list<<EOR
 deb [trusted=yes] https://deb-tools.wmcloud.org/repo bullseye-tools main
 EOR"
 
-# this wtill not be needed once https://gitlab.wikimedia.org/repos/cloud/toolforge/builds-cli/-/merge_requests/8 is deployed
+# this will not be needed once https://gitlab.wikimedia.org/repos/cloud/toolforge/builds-cli/-/merge_requests/8 is deployed
 sudo bash -c "cat >/etc/apt/sources.list.d/tekton.list<<EOR
 deb [trusted=yes] http://apt.wikimedia.org/wikimedia buster-wikimedia thirdparty/tekton
 EOR"

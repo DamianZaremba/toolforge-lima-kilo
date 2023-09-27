@@ -47,14 +47,6 @@
     update:
       data_volume: "{{ lima_kilo_harbor_config_data_volume }}"
 
-- name: Set http port in config
-  ansible.builtin.set_fact:
-    harbor_config: "{{ harbor_config | combine(update, recursive=True) }}"
-  vars:
-    update:
-      http:
-        port: "{{ lima_kilo_harbor_config_port }}"
-
 - name: Write config file
   ansible.builtin.copy: # noqa template-instead-of-copy
     content: "{{ harbor_config | to_nice_yaml }}"
