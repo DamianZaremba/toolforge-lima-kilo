@@ -1,3 +1,5 @@
 .tox
 *.swp
 .vagrant/
+artifacts/
+artifacts.zip

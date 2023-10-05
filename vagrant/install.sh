@@ -10,7 +10,7 @@ cd lima-kilo
 pip3 install -r requirements.txt --no-warn-script-location
 
 # so the base user can use kubectl and others
-echo 'export PATH=$PATH:/home/vagrant/.local/bin:/home/vagrant/.toolforge-lima-kilo/bin' >> ~/.bashrc
+echo 'export PATH=$PATH:/home/vagrant/.local/bin:/home/vagrant/.toolforge-lima-kilo/bin:/home/vagrant/lima-kilo/helpers' >> ~/.bashrc
 # if you want to deploy builds-* component from source, so it uses the right harbor ip
 echo "export HARBOR_IP=$HARBOR_IP" >> ~/.bashrc
 

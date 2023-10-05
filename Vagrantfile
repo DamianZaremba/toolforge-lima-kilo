@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "docker_compose"
 
   # skip any non-ansible things (specially .git as it will go really slowly file-by-file)
-  ["playbooks", "roles", "ansible.cfg", "hosts.yaml", "requirements.txt"].each do |file|
+  ["playbooks", "roles", "ansible.cfg", "hosts.yaml", "requirements.txt", "helpers"].each do |file|
     config.vm.provision "file", source: file, destination: "lima-kilo/"
   end
 
