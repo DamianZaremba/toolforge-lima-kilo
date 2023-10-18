@@ -4,8 +4,8 @@ lima_kilo_manage_harbor_installation: true
 
 # refresh versions from https://github.com/goharbor/harbor/releases
 lima_kilo_harbor_installer:
-  url: https://github.com/goharbor/harbor/releases/download/v2.5.4/harbor-online-installer-v2.5.4.tgz
-  checksum: md5:0a6dd820936ee73f9fba4650ed5d0b06
+  url: https://github.com/goharbor/harbor/releases/download/v2.9.0/harbor-online-installer-v2.9.0.tgz
+  checksum: md5:6b43ce596cf8f3fb6e134c3e1d223deb
 
 lima_kilo_harbor_path: "{{ lima_kilo_local_path }}/harbor"
 
