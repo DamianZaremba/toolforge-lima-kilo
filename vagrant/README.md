@@ -52,3 +52,26 @@ Due to a [known issue](https://github.com/hashicorp/vagrant/issues/13234) with V
 and fall back to a compatibility mode for Ansible version '1.8', even when a newer version is installed.
 This issue is particularly prevalent on various versions of Ubuntu and Debian as the host and guest operating systems.
 For this reason, the setup is not currently using the native Ansible provisioner.
+
+## Troubleshooting
+
+### Running out of disk space
+
+If your Vagrantbox runs out of disk space, it's most likely because of Docker images filling it up.
+If `docker prune` and other attempts to free enough space is not enough, you might need to resize the disk.
+For instance, to allocate 100GB to your Vagrant box, add the following line to the Vagrantfile:
+
+```bash
+Vagrant.configure("2") do |config|
+  # Other config ...
+  config.vm.disk :disk, size: "100GB", primary: true
+```
+
+For this to take effect, you will need to do `vagrant halt` followed by `vagrant up`.
+
+This will not automatically resize your filesystem however. You will need to do this manually:
+
+```bash
+$ ssh vagrant
+vagrant@host:~$ sudo resize2fs /dev/sda1 
+```
