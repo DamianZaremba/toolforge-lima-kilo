@@ -1,8 +1,33 @@
 ---
-- name: Target action -> install helm
-  ansible.builtin.include_tasks: install.yaml
-  when: target == 'install'
+- name: Install helm binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  when: lima_kilo_manage_helm_installation
+  vars:
+    binary:
+      name: "helm"
+      version: "{{ helm.version }}"
+      version_command: "{{ helm.version_command }}"
+      path: "{{ lima_kilo_helm_binary_path }}"
+      url: "{{ helm.url }}"
+      checksum: "{{ helm.checksum }}"
+      unpack: "{{ helm.unpack }}"
 
-- name: Target action -> uninstall helm
-  ansible.builtin.include_tasks: uninstall.yaml
-  when: target == 'uninstall'
+- name: Install helmfile binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  when: lima_kilo_manage_helmfile_installation
+  vars:
+    binary:
+      name: "helmfile"
+      version: "{{ helmfile.version }}"
+      version_command: "{{ helmfile.version_command }}"
+      path: "{{ lima_kilo_helmfile_binary_path }}"
+      url: "{{ helmfile.url }}"
+      checksum: "{{ helmfile.checksum }}"
+      unpack: "{{ helmfile.unpack }}"
+
+# this install all helm plugin dependencies
+- name: Run helmfile init
+  ansible.builtin.command: "{{ lima_kilo_helmfile_binary_path }} init --force"
+  when: lima_kilo_manage_helmfile_installation
+  register: init
+  changed_when: "'Installed plugin' in init.stderr"

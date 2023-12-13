@@ -1,6 +1,0 @@
----
-- name: Cycle a kind-based fake Toolforge (uninstall target)
-  ansible.builtin.import_playbook: kind-uninstall.yaml
-
-- name: Cycle a kind-based fake Toolforge (install target)
-  ansible.builtin.import_playbook: kind-install.yaml

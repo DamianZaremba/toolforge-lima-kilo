@@ -1,5 +1,0 @@
----
-- name: Delete toolforge CLI files
-  ansible.builtin.file:
-    path: "{{ lima_kilo_cli_dir }}"
-    state: absent

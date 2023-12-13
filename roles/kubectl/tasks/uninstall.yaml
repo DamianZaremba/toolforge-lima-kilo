@@ -1,6 +1,0 @@
----
-- name: Delete kubectl
-  ansible.builtin.file:
-    dest: "{{ lima_kilo_kubectl_binary_path }}"
-    state: absent
-  when: lima_kilo_manage_kubectl_installation

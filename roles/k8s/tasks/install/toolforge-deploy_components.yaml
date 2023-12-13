@@ -1,30 +1,15 @@
 ---
-- name: Create temp directory
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: -toolforge-lima-kilo
-  register: tempdir
-
 - name: Git clone toolforge-deploy repository
   ansible.builtin.command:
     cmd: >-
       git clone --depth 1 --branch {{ lima_kilo_toolforge_deploy_repo.branch }}
-      --quiet {{ lima_kilo_toolforge_deploy_repo.url }} {{ tempdir.path }}/toolforge-deploy
-    creates: "{{ tempdir.path }}/toolforge-deploy/.git"
+      --quiet {{ lima_kilo_toolforge_deploy_repo.url }} ~/toolforge-deploy
+    creates: "~/toolforge-deploy/.git"
 
 - name: Deploy toolforge-deploy components into local k8s
   ansible.builtin.shell: # noqa no-changed-when
-    chdir: "{{ tempdir.path }}/toolforge-deploy"
+    chdir: "~/toolforge-deploy"
     cmd: "{{ item.cmd }}"
   loop: "{{ lima_kilo_toolforge_deploy_components }}"
   loop_control:
     label: "{{ item.name }}"
-
-- name: Remove the temp dir
-  ansible.builtin.file:
-    path: "{{ tempdir.path }}"
-    state: absent
-  when: tempdir.path is defined
-  # the diff output of this can be really long, turn it off even in debug mode
-  diff: false
-  no_log: true

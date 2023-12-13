@@ -1,16 +1,43 @@
 ---
-- name: Target action -> install kind
-  ansible.builtin.include_tasks: install.yaml
-  when: target == 'install'
+- name: Install kind binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  when: lima_kilo_manage_kind_installation
+  vars:
+    binary:
+      name: "kind"
+      version: "{{ kind.version }}"
+      version_command: "{{ kind.version_command }}"
+      path: "{{ lima_kilo_kind_binary_path }}"
+      url: "{{ kind.url }}"
+      checksum: "{{ kind.checksum }}"
+      unpack: "{{ kind.unpack }}"
 
-- name: Target action -> uninstall kind
-  ansible.builtin.include_tasks: uninstall.yaml
-  when: target == 'uninstall'
+- name: Install kind configuration file
+  ansible.builtin.template:
+    src: kind.yaml.j2
+    dest: "{{ kind.config }}"
+    mode: "0644"
+
+- name: Verify if kind cluster exists
+  ansible.builtin.shell: "{{ lima_kilo_kind_binary_path }} get clusters"
+  register: kind_get_clusters
+  changed_when: false
+
+- name: Bootstrap kind cluster
+  ansible.builtin.shell:
+    cmd: |
+      "{{ lima_kilo_kind_binary_path }}" create cluster \
+      --name "{{ kind.cluster.name }}" \
+      --config "{{ kind.config }}" \
+      --image "{{ kind.cluster.image.name }}"@"{{ kind.cluster.image.checksum }}"
+  when: kind.cluster.name not in kind_get_clusters.stdout
+  # if we execute this task, consider it always changed
+  changed_when: true
 
 - name: Manage /etc/hosts shortcut for {{ kind.cluster.name }}
   become: true
   ansible.builtin.lineinfile: # noqa args[module]
     path: /etc/hosts
     line: 127.0.0.1 {{ kind.api.hostname }}
-    state: "{{ 'present' if target == 'install' else 'absent' }}"
+    state: "present"
   when: lima_kilo_manage_etc_hosts_shortcut_for_kind

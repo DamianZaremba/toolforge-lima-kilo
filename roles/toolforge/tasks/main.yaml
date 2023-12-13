@@ -4,16 +4,35 @@
   become: true
   ansible.builtin.file: # noqa args[module]
     dest: "{{ lima_kilo_chroot }}/{{ item }}"
-    state: "{{ 'directory' if target == 'install' else 'absent' }}"
+    state: "directory"
     mode: "0755"
     owner: "{{ ansible_facts['user_uid'] }}"
     group: "{{ ansible_facts['user_gid'] }}"
   loop: "{{ toolforge.special_directories + toolforge.directories }}"
+- name: Ensure required dir tree exists for toolforge files
+  ansible.builtin.file:
+    dest: "{{ lima_kilo_chroot }}/{{ item.path | dirname }}"
+    state: directory
+    mode: "0777"
+  loop: "{{ toolforge.files }}"
 
-- name: Target action -> install fake toolforge
-  ansible.builtin.include_tasks: install.yaml
-  when: target == 'install'
+- name: Install fake toolforge files
+  ansible.builtin.copy: # noqa template-instead-of-copy
+    dest: "{{ lima_kilo_chroot }}/{{ item.path }}"
+    content: "{{ item.content }}"
+    mode: "0644"
+  loop: "{{ toolforge.files }}"
 
-- name: Target action -> uninstall fake toolforge
-  ansible.builtin.include_tasks: uninstall.yaml
-  when: target == 'uninstall'
+- name: Create tool account unix GID/UID
+  ansible.builtin.include_tasks: install_tool_unix_account.yaml
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"
+
+- name: Create files for tool accounts
+  ansible.builtin.include_tasks: install_tool_account_files.yaml
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+    label: "{{ tool_account.name }}"

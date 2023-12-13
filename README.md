@@ -10,29 +10,6 @@ internal components.
 How to use it
 -------------
 
-**Locally:**
-Create a python venv and run `pip install -rrequirements.txt` inside it.
-Or make sure you have `ansible` installed on your machine.
-
-Other dependencies are (install them yourself):
-* docker
-* docker-compose
-
-Then, to install the fake Toolforge:
-
-```
-user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/kind-install.yaml
-```
-
-To uninstall the fake Toolforge (beware, really removes things):
-
-```
-user@debian:~/git/cloud/toolforge/lima-kilo $ ansible-playbook -KD playbooks/kind-uninstall.yaml
-```
-
-NOTE: It is a good practice to *uninstall* using the playbooks before updating to a newer git revision, that
-way resources are smoothly cleaned up before new code potentially doesn't know how to handle them.
-
 **Using Vagrant:**
 See detailed instructions here: [Vagrant README](./vagrant/README.md)
 

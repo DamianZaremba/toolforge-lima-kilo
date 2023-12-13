@@ -1,8 +1,6 @@
 ---
 - name: Install a kind-based fake Toolforge
   hosts: localhost
-  vars:
-    target: install
   vars_files:
     - vars/lima-kilo.yaml
     - vars/kind.yaml
