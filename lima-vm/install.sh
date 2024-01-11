@@ -45,3 +45,13 @@ EOAC
 
 # instal k9s for everyone in the VM
 curl -L https://github.com/derailed/k9s/releases/download/v0.27.4/k9s_Linux_amd64.tar.gz | sudo tar xvzf - -C /usr/local/bin k9s
+
+
+# Allow docker pulling directly from harbor, for local testing
+sudo bash -c "cat >/etc/docker/daemon.json <<EOC
+{
+  \"insecure-registries\": [\"$HARBOR_IP\"]
+}
+EOC
+"
+sudo systemctl reload docker
