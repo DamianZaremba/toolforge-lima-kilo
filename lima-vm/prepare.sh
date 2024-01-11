@@ -1,9 +1,18 @@
 #!/bin/bash
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+
 # Install general packages
-sudo apt update && sudo apt upgrade -y
-sudo apt install -y \
+sudo apt update \
+	&& sudo apt upgrade \
+		--yes \
+		-o Dpkg::Options::="--force-confdef" \
+		-o Dpkg::Options::="--force-confold"
+sudo apt install \
+	--yes \
+	-o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confold" \
 	curl \
 	docker-compose \
 	git \
