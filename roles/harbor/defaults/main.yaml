@@ -1,25 +1,4 @@
 ---
-# refresh versions from https://github.com/goharbor/harbor/releases
-lima_kilo_harbor_installer:
-  url: https://github.com/goharbor/harbor/releases/download/v2.9.0/harbor-online-installer-v2.9.0.tgz
-  checksum: md5:6b43ce596cf8f3fb6e134c3e1d223deb
-
-lima_kilo_harbor_path: "{{ lima_kilo_local_path }}/harbor"
-
-lima_kilo_harbor_config_template_path: "{{ lima_kilo_harbor_path }}/harbor/harbor.yml.tmpl"
-lima_kilo_harbor_config_path: "{{ lima_kilo_harbor_path }}/harbor/harbor.yml"
-lima_kilo_harbor_config_data_volume: "{{ lima_kilo_harbor_path }}/data"
-lima_kilo_harbor_config_hostname: "{{ lima_kilo_docker_addr }}"
+lima_kilo_builds_builder_repo: https://gitlab.wikimedia.org/repos/cloud/toolforge/builds-builder
 lima_kilo_harbor_ip_for_within_k8s: "{{ lima_kilo_docker_addr }}"
-
-lima_kilo_harbor_prepare: "{{ lima_kilo_harbor_path }}/harbor/prepare"
-lima_kilo_harbor_up: "$(which docker-compose) -f {{ lima_kilo_harbor_path }}/harbor/docker-compose.yml up -d"
-lima_kilo_harbor_down: "$(which docker-compose) -f {{ lima_kilo_harbor_path }}/harbor/docker-compose.yml down"
-
-lima_kilo_harbor_robot_account_username: "robot$tekton"
-lima_kilo_harbor_robot_account_password: "Dummyr0botpass"
-
-# upstream defaults
-lima_kilo_harbor_admin_username: "admin"
-lima_kilo_harbor_admin_password: "Harbor12345"
-lima_kilo_harbor_api_url: "http://{{ lima_kilo_harbor_config_hostname }}/api/v2.0"
+lima_kilo_harbor_dir: "/srv/ops/harbor"

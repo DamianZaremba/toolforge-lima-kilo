@@ -19,4 +19,6 @@ python3 -m venv "$VIRTUALENV_DIR"
 source "$VIRTUALENV_DIR/bin/activate"
 pip3 install -r requirements.txt
 
+cd -
+
 "$(dirname $0)/run_ansible.sh"

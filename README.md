@@ -43,6 +43,7 @@ Some extra tools are also installed:
 * helmfile
 * docker-compose to manage harbor
 * toolforge_download_package.py to download cli packages from gitlab MRs
+* helper script harbor-compose, to manage harbor (wrapper around docker-compose)
 
 Debugging tips
 --------------
