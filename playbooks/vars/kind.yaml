@@ -2,8 +2,6 @@
 kind:
   config: "{{ lima_kilo_local_path }}/kind.yaml"
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
-  version: 0.20.0
-  version_command: kind --version
   url: https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
   checksum: sha256:513a7213d6d3332dd9ef27c24dab35e5ef10a04fa27274fe1c14d8a246493ded
   unpack: false

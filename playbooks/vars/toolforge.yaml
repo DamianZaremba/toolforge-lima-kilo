@@ -33,18 +33,9 @@ toolforge:
     - path: /etc/novaobserver.yaml
       content: |
         # whatever
-    - path: /etc/toolforge/toolforge.yaml
-      content: |
-        ---
-        # TODO: template this file
-        api_gateway:
-          url: https://localhost:30003
-        builds:
-          dest_repository: tools-harbor.wmcloud.org
-          builder_image: tools-harbor.wmcloud.org/toolforge/heroku-builder-classic:22
-          builds_endpoint: "/builds/v1"
   tool_accounts:
     - name: tf-test
+      uid: 1001
       files:
         - name: sleep40.sh
           mode: "0755"
@@ -63,4 +54,16 @@ toolforge:
             echo stderr >&2
             sleep 60
     - name: tf-test2
+      uid: 1002
     - name: fourohfour
+      uid: 1003
+  repos:
+    - name: tools
+      url: https://deb-tools.wmcloud.org/repo
+      dist: bullseye-tools
+  packages:
+    - toolforge-cli
+    - toolforge-builds-cli
+    - toolforge-jobs-framework-cli
+    - toolforge-envvars-cli
+    - toolforge-webservice

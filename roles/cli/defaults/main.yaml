@@ -1,5 +1,0 @@
----
-lima_kilo_cli_dir: "{{ lima_kilo_local_path }}/bin"
-lima_kilo_cli_toolforge_jobs: "{{ lima_kilo_cli_dir }}/toolforge-jobs"
-lima_kilo_cli_toolforge_jobs_conf: "{{ lima_kilo_cli_toolforge_jobs }}-conf.yaml"
-lima_kilo_cli_toolforge_build: "{{ lima_kilo_cli_dir }}/toolforge-build"

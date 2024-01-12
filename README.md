@@ -7,66 +7,21 @@ environment in a given machine.
 A *L*ocal *K*ubernetes deployment to help develop some of the Toolforge
 internal components.
 
+It is highly recommended to run this inside a virtual machine, there's Vagrant and a LimaVM documentation and setup if you don't want to do it by hand.
+
 How to use it
 -------------
 
 **Using Vagrant:**
 See detailed instructions here: [Vagrant README](./vagrant/README.md)
 
+**Using LimaVM:**
+See detailed instructions here: [LimaVM README](./lima-vm/README.md)
+
 Configuration
 -------------
 
-You may create a configuration file in `~/.toolforge-lima-kilo/userconfig.yaml` with local options, such as:
-
-```yaml
-# Set to false if you prefer to manage the kubectl binary installation on your own.
-lima_kilo_manage_kubectl_installation: true
-lima_kilo_kubectl_binary_path: /usr/local/bin/kubectl
-
-# Set to false if you prefer to manage the kind binary installation on your own.
-lima_kilo_manage_kind_installation: true
-lima_kilo_kind_binary_path: /usr/local/bin/kind
-
-# Set to false to prevent managing a shortcut in /etc/hosts for kind.
-lima_kilo_manage_etc_hosts_shortcut_for_kind: true
-
-# Set to false if you prefer to manage the helm binary installation on your own.
-lima_kilo_manage_helm_installation: true
-lima_kilo_helm_binary_path: /usr/local/bin/helm
-
-# Set to false if you prefer to manage the helmfile binary installation on your own.
-lima_kilo_manage_helmfile_installation: true
-lima_kilo_helmfile_binary_path: /usr/local/bin/helmfile
-
-# Modify this to customize the toolforge-deploy repository:
-lima_kilo_toolforge_deploy_repo:
-  url: https://gitlab.wikimedia.org/repos/cloud/toolforge/toolforge-deploy
-  branch: main
-
-# Modify this to override the list of components deployed from toolforge-deploy
-lima_kilo_toolforge_deploy_components:
-  - name: image-config
-    cmd: ./deploy.sh image-config local
-
-# Override this in case you want to modify the list of other k8s custom components
-lima_kilo_k8s_other_custom_components:
-  - name: foxtrot-ldap
-    git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap
-    build: docker build --tag foxtrot-ldap:latest .
-    deploy: ./deploy.sh
-
-# Some harbor overrides
-lima_kilo_manage_harbor_installation: true
-
-# normally, docker0 will have 172.17.0.1 and that is reachable from within
-# containers running in the local kubernetes. This is used by builds-api to
-# contact harbor
-lima_kilo_docker_addr: "172.17.0.1"
-```
-Hint: you may use this mechanism to override any other internal lima-kilo variable.
-
-NOTE: in previous lima-kilo revisions, the config file was `~/.local/toolforge-lima-kilo/userconfig.yaml`.
-NOTE: in even older lima-kilo revisions, the config file was `~/.config/toolforge-lima-kilo-userconfig.yaml`.
+To override any of the default values for the configuration, you can override any variable using the `-e` option to ansible, for example `-e lima_kilo_local_path=/lima-kilo`.
 
 Usage
 -----
@@ -77,9 +32,21 @@ toolsbeta.tf-test@vulcanus:~$ pwd
 /home/dcaro/.toolforge-lima-kilo/chroot/data/project/tf-test
 ```
 
-You would be already at the home of the user, and ready to run kubectl commands (or any toolforge cli if you installed one).
+You would be already at the home of the user, and ready to run any toolforge commands.
 
-If you want to access the api-gateway, you can do so by pointing to `https://127.0.0.1:30003/`, note that you will need the user certs to authenticate:
+Extra tools
+-----------
+Some extra tools are also installed:
+* k9s to explore/manage kubernetes
+* kubectl
+* helm
+* helmfile
+* docker-compose to manage harbor
+* toolforge_download_package.py to download cli packages from gitlab MRs
+
+Debugging tips
+--------------
+If you want to access directly the api-gateway, you can do so by pointing to `https://127.0.0.1:30003/`, note that you will need the user certs to authenticate:
 ```
 toolsbeta.tf-test@vulcanus:~$ curl --insecure --cert ~/.toolskube/client.crt --key ~/.toolskube/client.key https://127.0.0.1:30003/
 This is the Toolforge API gateway!

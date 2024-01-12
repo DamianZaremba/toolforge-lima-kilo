@@ -31,11 +31,11 @@ nodes:
 {% endfor %}
     extraMounts:
 {% for dir in toolforge.directories %}
-      - hostPath: {{ lima_kilo_chroot }}/{{ dir }}
+      - hostPath: /{{ dir }}
         containerPath: {{ dir }}
 {% endfor %}
 {% for file in toolforge.files %}
-      - hostPath: {{ lima_kilo_chroot }}/{{ file.path }}
+      - hostPath: /{{ file.path }}
         containerPath: {{ file.path }}
         propagation: Bidirectional
 {% endfor %}

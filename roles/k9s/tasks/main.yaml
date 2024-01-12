@@ -1,0 +1,10 @@
+---
+- name: Install k9s binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  vars:
+    binary:
+      name: "k9s"
+      path: "{{ lima_kilo_k9s_binary_path }}"
+      url: "{{ k9s.url }}"
+      checksum: "{{ k9s.checksum }}"
+      unpack: "{{ k9s.unpack }}"

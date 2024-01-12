@@ -1,7 +1,4 @@
 ---
-# setting this to false will prevent any harbor operations from lima-kilo
-lima_kilo_manage_harbor_installation: true
-
 # refresh versions from https://github.com/goharbor/harbor/releases
 lima_kilo_harbor_installer:
   url: https://github.com/goharbor/harbor/releases/download/v2.9.0/harbor-online-installer-v2.9.0.tgz

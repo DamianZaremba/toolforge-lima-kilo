@@ -1,0 +1,10 @@
+---
+lima_kilo_basic_system_packages:
+  - curl
+  - docker-compose
+  - git
+  - jq
+  - python3-distutils
+  - python3-pip
+  - python3-kubernetes
+  - vim

@@ -5,10 +5,15 @@
     - vars/lima-kilo.yaml
     - vars/kind.yaml
     - vars/kubectl.yaml
+    - vars/k9s.yaml
     - vars/toolforge.yaml
     - vars/helm.yaml
   roles:
     # To apply only one or some of these use -t tag1,tag2,...
+    - role: basic_system
+      tags: basic_system
+    - role: docker
+      tags: docker
     - role: userconfig
       tags: userconfig
     - role: toolforge
@@ -16,15 +21,15 @@
     - role: kind
       tags: kind
     - role: kubectl
-      tags: kind
+      tags: kubectl
     - role: helm
       tags: helm
     - role: k8s
       tags: k8s
+    - role: k9s
+      tags: k9s
     - role: foxtrot_ldap
       tags: foxtrot_ldap
-    - role: cli
-      tags: cli
     - role: harbor
       tags: harbor
   environment:

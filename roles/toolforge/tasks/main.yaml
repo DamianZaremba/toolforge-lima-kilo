@@ -3,22 +3,23 @@
   # needed as the files are owned by the new users
   become: true
   ansible.builtin.file: # noqa args[module]
-    dest: "{{ lima_kilo_chroot }}/{{ item }}"
+    dest: "/{{ item }}"
     state: "directory"
     mode: "0755"
     owner: "{{ ansible_facts['user_uid'] }}"
     group: "{{ ansible_facts['user_gid'] }}"
   loop: "{{ toolforge.special_directories + toolforge.directories }}"
 - name: Ensure required dir tree exists for toolforge files
+  become: true
   ansible.builtin.file:
-    dest: "{{ lima_kilo_chroot }}/{{ item.path | dirname }}"
+    dest: "{{ item.path | dirname }}"
     state: directory
     mode: "0777"
   loop: "{{ toolforge.files }}"
 
 - name: Install fake toolforge files
   ansible.builtin.copy: # noqa template-instead-of-copy
-    dest: "{{ lima_kilo_chroot }}/{{ item.path }}"
+    dest: "{{ item.path }}"
     content: "{{ item.content }}"
     mode: "0644"
   loop: "{{ toolforge.files }}"
@@ -36,3 +37,35 @@
   loop_control:
     loop_var: tool_account
     label: "{{ tool_account.name }}"
+
+- name: Add global toolforge config dir
+  become: true
+  ansible.builtin.file:
+    dest: /etc/toolforge/
+    state: directory
+    mode: "0755"
+    owner: "root"
+    group: "root"
+
+- name: Add global toolforge config
+  become: true
+  ansible.builtin.template:
+    src: toolforge-common.yaml.j2
+    dest: /etc/toolforge/common.yaml
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
+- name: "Add toolforge repos"
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb [trusted=yes] {{ item.url }} {{ item.dist }} main"
+    filename: "{{ item.name }}"
+  loop: "{{ toolforge.repos }}"
+
+- name: "Install toolforge packages"
+  become: true
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: latest # noqa package-latest
+  loop: "{{ toolforge.packages }}"

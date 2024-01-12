@@ -5,12 +5,12 @@
     src: "{{ role_path }}/files/base-pod-security-policies.yaml"
 
 - name: Install toolforge-deploy components
-  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/toolforge-deploy_components.yaml"
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/toolforge-deploy_components.yaml"
 
 - name: Install custom components
-  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/custom_components.yaml"
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/custom_components.yaml"
 
 # running maintain_kubeusers for real might be an option, but it requires an
 # actual LDAP directory. Replicating just a few bits here seems OK for now.
 - name: Install fake/generic maintain-kubeusers bits
-  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/fake_maintain_kubeusers.yaml"
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/fake_maintain_kubeusers.yaml"

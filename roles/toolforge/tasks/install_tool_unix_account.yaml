@@ -1,56 +1,18 @@
 ---
-- name: Figure out if '{{ tool_account.name }}' account exists already
-  ansible.builtin.shell:
-    executable: /bin/bash
-    cmd: |
-      uid=$(id -u {{ toolforge.project_name }}.{{ tool_account.name }} 2>/dev/null || echo 1)
-      gid=$(id -g {{ toolforge.project_name }}.{{ tool_account.name }} 2>/dev/null || echo 2)
-      test "${uid}" -eq "${gid}" && exit 0
-      exit 1
-  register: account_exists
-  # otherwise, is always changed
-  changed_when: false
-  # some rc are expected
-  failed_when: account_exists.rc not in [0, 1]
-
-- name: Figure out first empty unix UID/GID for '{{ tool_account.name }}'
-  ansible.builtin.shell:
-    executable: /bin/bash
-    cmd: |
-      for i in $(seq {{ toolforge.uid.min }} {{ toolforge.uid.max }} ) ; do
-        uid=$(id -u $i 2>/dev/null)
-        gid=$(id -g $i 2>/dev/null)
-        if [ -z "${uid}" ] && [ -z "${gid}" ] ; then
-          echo "$i"
-          exit
-        fi
-      done
-  register: uid_gid
-  # only when account doesn't exists already
-  when: account_exists.rc != 0
-  # fail when unable to allocate
-  failed_when: uid_gid.stdout | length == 0
-  # otherwise, is always changed
-  changed_when: false
-
 - name: Create unix group for tool account '{{ tool_account.name }}'
   become: true
   ansible.builtin.group:
     name: "{{ toolforge.project_name }}.{{ tool_account.name }}"
     state: present
-    gid: "{{ uid_gid.stdout }}"
-  # only when account doesn't exists already
-  when: account_exists.rc != 0
+    gid: "{{ tool_account.uid }}"
 
 - name: Create unix user for tool account '{{ tool_account.name }}'
   become: true
   ansible.builtin.user:
     name: "{{ toolforge.project_name }}.{{ tool_account.name }}"
     group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
-    home: "{{ lima_kilo_chroot }}/data/project/{{ tool_account.name }}"
+    home: "/data/project/{{ tool_account.name }}"
     create_home: false
     state: present
-    uid: "{{ uid_gid.stdout }}"
+    uid: "{{ tool_account.uid }}"
     shell: "/bin/bash"
-  # only when account doesn't exists already
-  when: account_exists.rc != 0

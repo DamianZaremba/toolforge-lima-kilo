@@ -2,41 +2,22 @@
 # expects a dict like this:
 # binary:
 #   name: string
-#   version: string
-#   version_command: string
 #   path: string
 #   url: string
 #   unpack: bool
-
-- name: Verify binary file status for '{{ binary.name }}'
-  ansible.builtin.stat:
-    path: "{{ binary.path }}"
-  register: filecheck
-
-- name: Verify installed version of '{{ binary.name }}'
-  ansible.builtin.shell: "{{ binary.version_command }}"
-  when: filecheck.stat.executable is defined and filecheck.stat.executable
-  failed_when: false
-  changed_when: false
-  register: version
 
 - name: Create temp directory for '{{ binary.name }}'
   ansible.builtin.tempfile:
     state: directory
     suffix: -toolforge-lima-kilo
   register: tempdir
-  when: >
-    filecheck.stat.executable is not defined or not filecheck.stat.executable or
-    filecheck.stat.mimetype != "application/x-executable" or version is not
-    defined or version is defined and binary.version not in version.stdout
 
-- name: Download '{{ binary.name }}' version '{{ binary.version }}'
+- name: Download '{{ binary.name }}'
   ansible.builtin.get_url:
     url: "{{ binary.url }}"
     dest: "{{ tempdir.path }}"
     checksum: "{{ binary.checksum }}"
     mode: "0644"
-  when: tempdir.path is defined
 
 - name: Unpack '{{ binary.name }}'
   ansible.builtin.unarchive:
@@ -45,9 +26,10 @@
     remote_src: true
   vars:
     src: "{{ binary.url.rsplit('/', 1)[-1] }}"
-  when: tempdir.path is defined and binary.unpack
+  when: binary.unpack
 
 - name: Find the right file to install for '{{ binary.name }}'
+  become: true
   # we don't really know where is the file we want to install,
   # specially if inside an unpacked archive
   # this search should work for both raw/unpacked binaries
@@ -72,12 +54,10 @@
     remote_src: true
   vars:
     src: "{{ find.files[0].path }}"
-  when: tempdir.path is defined
 
 - name: Remove temp dir
   ansible.builtin.file:
     path: "{{ tempdir.path }}"
     state: absent
-  when: tempdir.path is defined
   diff: false
   no_log: true

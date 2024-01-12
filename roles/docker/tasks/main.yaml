@@ -1,0 +1,16 @@
+---
+- name: Enable insecure registry to be able to pull images from harbor
+  become: true
+  ansible.builtin.copy: # noqa template-instead-of-copy
+    dest: "/etc/docker/daemon.json"
+    content: |
+      {"insecure-registries": ["{{ lima_kilo_docker_addr }}"]}
+    mode: "0662"
+    owner: "root"
+    group: "root"
+
+- name: Restart docker to pickup change
+  become: true
+  ansible.builtin.systemd_service:
+    name: docker.service
+    state: restarted

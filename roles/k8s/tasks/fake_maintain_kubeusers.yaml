@@ -5,7 +5,7 @@
     src: "{{ role_path }}/files/fake_maintain_kubeusers.yaml"
 
 - name: Generate RBAC
-  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/generate_rbac.yaml"
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/generate_rbac.yaml"
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
     loop_var: tool_account
@@ -22,7 +22,7 @@
   failed_when: kubernetes_ca_shell.stdout | length == 0
 
 - name: Generate credentials
-  ansible.builtin.include_tasks: "{{ role_path }}/tasks/install/generate_credentials.yaml"
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/generate_credentials.yaml"
   vars:
     kubernetes_ca: "{{ kubernetes_ca_shell.stdout }}"
   loop: "{{ toolforge.tool_accounts }}"

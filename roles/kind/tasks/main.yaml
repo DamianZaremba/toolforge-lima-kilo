@@ -1,12 +1,9 @@
 ---
 - name: Install kind binary
   ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
-  when: lima_kilo_manage_kind_installation
   vars:
     binary:
       name: "kind"
-      version: "{{ kind.version }}"
-      version_command: "{{ kind.version_command }}"
       path: "{{ lima_kilo_kind_binary_path }}"
       url: "{{ kind.url }}"
       checksum: "{{ kind.checksum }}"
@@ -40,4 +37,3 @@
     path: /etc/hosts
     line: 127.0.0.1 {{ kind.api.hostname }}
     state: "present"
-  when: lima_kilo_manage_etc_hosts_shortcut_for_kind

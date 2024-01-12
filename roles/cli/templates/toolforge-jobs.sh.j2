@@ -1,9 +1,0 @@
-#!/bin/bash
-
-# you probably need to call this after loading the jobs-framework-cli python venv
-CLI="toolforge-jobs"
-# TODO: make the tool account an input parameter? I don't see the need at the moment
-export KUBECONFIG="{{ lima_kilo_chroot }}/data/project/{{ toolforge.tool_accounts[0].name }}/.kube/config"
-CFGFILE="{{ lima_kilo_cli_toolforge_jobs_conf }}"
-
-${CLI} --cfg ${CFGFILE} "$@"

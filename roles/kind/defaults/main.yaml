@@ -1,9 +1,2 @@
 ---
-lima_kilo_manage_kind_installation: true
 lima_kilo_kind_binary_path: "{{ lima_kilo_bin }}/kind"
-
-# allow lima kilo to add stuff into /etc/hosts for kind.
-# this is usefull to redirect 'toolforge-control-plane' to '127.0.0.1'
-# which in turns allows for a more simple approach when managing fake
-# account's kubeconfig files (they work both inside and outside the local kubernetes)
-lima_kilo_manage_etc_hosts_shortcut_for_kind: true

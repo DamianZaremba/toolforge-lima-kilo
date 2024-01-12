@@ -5,7 +5,7 @@
 Before you proceed with the Vagrant setup, make sure you have the following prerequisites installed:
 
 1. Vagrant: If you haven't installed Vagrant yet, you can [download it from here](https://www.vagrantup.com/downloads).
-2. VirtualBox: Vagrant uses VirtualBox as the default provider.
+2. VirtualBox or libvirt: Vagrant uses VirtualBox as the default provider, and libvirt can be used too.
 [Download and install it from here](https://www.virtualbox.org/wiki/Downloads) if you haven't already.
 You can also choose another provider; in that case, you need to modify the Vagrantfile.
 3. [Vagrant Docker Compose Plugin](https://github.com/leighmcculloch/vagrant-docker-compose):

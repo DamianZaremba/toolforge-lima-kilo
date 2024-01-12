@@ -1,0 +1,2 @@
+---
+lima_kilo_k9s_binary_path: "{{ lima_kilo_bin }}/k9s"

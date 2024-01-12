@@ -1,7 +1,5 @@
 ---
-lima_kilo_local_path: "{{ ansible_env.HOME }}/.toolforge-lima-kilo"
-lima_kilo_userconfig: "{{ lima_kilo_local_path }}/userconfig.yaml"
-lima_kilo_chroot: "{{ lima_kilo_local_path }}/chroot"
+lima_kilo_local_path: "{{ ansible_env.HOME }}"
 lima_kilo_bin: "{{ lima_kilo_local_path }}/bin"
 
 # the default docker network inside vagrant is 172.19.0.0/16 so take it as the default

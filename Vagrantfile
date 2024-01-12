@@ -33,19 +33,10 @@ Vagrant.configure("2") do |config|
   end
 
   # Shell provisioners
-  config.vm.provision "setup", type: "shell", privileged: false, path: "vagrant/setup.sh"
   config.vm.provision "install", type: "shell", privileged: false, path: "vagrant/install.sh"
   config.vm.provision "run", type: "shell", privileged: false, inline: <<-SHELL
     cd lima-kilo
     ansible-playbook -vvv -KD playbooks/kind-install.yaml
   SHELL
 
-#  https://github.com/hashicorp/vagrant/issues/13234 
-#  config.vm.provision "ansible" do |ansible|
-#    ansible.playbook = "playbooks/kind-install.yaml"
-#    ansible.extra_vars = {
-#      ansible_become: true,  # Equivalent to -K option
-#      ansible_become_ask_pass: true  # Equivalent to -D option
-#    }
-#  end
 end
