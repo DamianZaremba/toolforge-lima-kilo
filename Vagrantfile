@@ -1,10 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-
 Vagrant.configure("2") do |config|
   # Basic VM configuration
-  config.vm.box = "debian/bullseye64"
+  config.vm.box = "debian/bookworm64"
   config.vm.box_check_update = false
   config.vm.synced_folder ".", "/vagrant", disabled: true
   # for harbor
@@ -15,7 +14,7 @@ Vagrant.configure("2") do |config|
   # VirtualBox settings
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
-    vb.memory = ENV['VAGRANT_MEMORY'] || 8192 
+    vb.memory = ENV['VAGRANT_MEMORY'] || 8192
     vb.cpus = ENV['VAGRANT_CPUS'] || 4
   end
   config.vm.provider :libvirt do |libvirt|
@@ -34,9 +33,5 @@ Vagrant.configure("2") do |config|
 
   # Shell provisioners
   config.vm.provision "install", type: "shell", privileged: false, path: "vagrant/install.sh"
-  config.vm.provision "run", type: "shell", privileged: false, inline: <<-SHELL
-    cd lima-kilo
-    ansible-playbook -vvv -KD playbooks/kind-install.yaml
-  SHELL
-
+  config.vm.provision "run", type: "shell", privileged: false, path: "vagrant/run_ansible.sh"
 end

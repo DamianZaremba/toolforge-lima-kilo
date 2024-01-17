@@ -1,7 +1,19 @@
 #!/bin/bash
+
+VIRTUALENV_DIR="$HOME/env"
+
+export DEBIAN_FRONTEND=noninteractive
+
 set -e
 
-# Install Ansible
-python3 -m pip install --user ansible --no-warn-script-location
 cd lima-kilo
-pip3 install -r requirements.txt --no-warn-script-location
+# Python 3.11+ won't let you pip install stuff globally
+sudo apt install \
+  --yes \
+  -o Dpkg::Options::="--force-confold" \
+  python3.11-venv
+python3 -m venv "$VIRTUALENV_DIR"
+
+# shellcheck disable=SC1091
+source "$VIRTUALENV_DIR/bin/activate"
+pip3 install -r requirements.txt
