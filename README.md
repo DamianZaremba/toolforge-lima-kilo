@@ -27,8 +27,8 @@ Usage
 -----
 Once the installation is finished, you can run commands as one of the two default users created, tf-test or tf-test2 like this:
 ```
-dcaro@vulcanus$ sudo -i -u toolsbeta.tf-test
-toolsbeta.tf-test@vulcanus:~$ pwd
+dcaro@vulcanus$ sudo -i -u local.tf-test
+local.tf-test@vulcanus:~$ pwd
 /home/dcaro/.toolforge-lima-kilo/chroot/data/project/tf-test
 ```
 
@@ -49,7 +49,7 @@ Debugging tips
 --------------
 If you want to access directly the api-gateway, you can do so by pointing to `https://127.0.0.1:30003/`, note that you will need the user certs to authenticate:
 ```
-toolsbeta.tf-test@vulcanus:~$ curl --insecure --cert ~/.toolskube/client.crt --key ~/.toolskube/client.key https://127.0.0.1:30003/
+local.tf-test@vulcanus:~$ curl --insecure --cert ~/.toolskube/client.crt --key ~/.toolskube/client.key https://127.0.0.1:30003/
 This is the Toolforge API gateway!
 ```
 

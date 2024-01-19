@@ -3,7 +3,7 @@ toolforge:
   uid:
     min: 50001
     max: 50010
-  project_name: toolsbeta
+  project_name: local
   special_directories:
     - /data/
     - /public/
@@ -17,7 +17,7 @@ toolforge:
   files:
     - path: /etc/wmcs-project
       content: |
-        toolsbeta
+        local
     - path: /etc/ldap.yaml
       content: |
         ---

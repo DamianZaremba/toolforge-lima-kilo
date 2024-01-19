@@ -43,8 +43,8 @@ On Mac, it can be installed using `brew`. Otherwise, you need to clone the repo 
 5. Make sure you can run a build successfully.
 
    ```bash
-   $ sudo -i -u toolsbeta.tf-test
-   toolsbeta.tf-test$ toolforge build start https://gitlab.wikimedia.org/toolforge-repos/wm-lol
+   $ sudo -i -u local.tf-test
+   local.tf-test$ toolforge build start https://gitlab.wikimedia.org/toolforge-repos/wm-lol
    ````
 
 
