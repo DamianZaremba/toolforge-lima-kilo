@@ -12,6 +12,10 @@ kubeadmConfigPatches:
     apiServer:
       extraArgs:
         enable-admission-plugins: NodeRestriction,PodSecurityPolicy
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{ lima_kilo_docker_addr }}"]
+    endpoint = ["http://{{ lima_kilo_docker_addr }}"]
 nodes:
   - role: control-plane
     kubeadmConfigPatches:
