@@ -2,9 +2,8 @@
 - name: Clone builds-builder for the install scripts
   become: true
   ansible.builtin.command:
-    # TODO: remove the branch when we merge it on builds-builder side
     cmd: >-
-      git clone --branch use_envvar_for_harbor_setup --depth 1 --quiet {{ lima_kilo_builds_builder_repo }} {{ lima_kilo_harbor_dir }}/builds-builder
+      git clone --depth 1 --quiet {{ lima_kilo_builds_builder_repo }} {{ lima_kilo_harbor_dir }}/builds-builder
     creates: "{{ lima_kilo_harbor_dir }}/builds-builder"
 
 - name: Run setup # noqa no-changed-when
