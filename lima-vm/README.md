@@ -25,7 +25,7 @@ On Mac, it can be installed using `brew`. Otherwise, you need to clone the repo 
    If you have a Mac with a M1/M2 processor, use this instead:
 
    ```bash
-   limactl start bookworm.yaml --vm-type=vz --rosetta --network=vzNAT
+   limactl start bookworm.yaml --vm-type=vz --rosetta
    ```
 
 3. Get a shell in the VM:

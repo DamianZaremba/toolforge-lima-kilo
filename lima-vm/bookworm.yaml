@@ -1,12 +1,4 @@
-# A template to use Docker (rootful) instead of containerd & nerdctl
-# $ limactl start ./docker-rootful.yaml
-# $ limactl shell docker-roootful docker run -it -v $HOME:$HOME --rm alpine
-
-# To run `docker` on the host (assumes docker-cli is installed):
-# $ export DOCKER_HOST=$(limactl list docker-rootful --format 'unix://{{.Dir}}/sock/docker.sock')
-# $ docker ...
-
-# This template requires Lima v0.8.0 or later
+# Based on https://github.com/lima-vm/lima/blob/master/examples/docker-rootful.yaml
 images:
   # Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
   - location: "https://cloud.debian.org/images/cloud/bookworm/20231210-1591/debian-12-genericcloud-amd64-20231210-1591.qcow2"
@@ -31,14 +23,6 @@ containerd:
   system: false
   user: false
 provision:
-  - mode: system
-    # This script defines the host.docker.internal hostname when hostResolver is disabled.
-    # It is also needed for lima 0.8.2 and earlier, which does not support hostResolver.hosts.
-    # Names defined in /etc/hosts inside the VM are not resolved inside containers when
-    # using the hostResolver; use hostResolver.hosts instead (requires lima 0.8.3 or later).
-    script: |
-      #!/bin/sh
-      sed -i 's/host.lima.internal.*/host.lima.internal host.docker.internal/' /etc/hosts
   - mode: system
     script: |
       #!/bin/bash
@@ -67,22 +51,3 @@ probes:
         exit 1
       fi
     hint: See "/var/log/cloud-init-output.log". in the guest
-hostResolver:
-  # hostResolver.hosts requires lima 0.8.3 or later. Names defined here will also
-  # resolve inside containers, and not just inside the VM itself.
-  hosts:
-    host.docker.internal: host.lima.internal
-portForwards:
-  - guestSocket: "/var/run/docker.sock"
-    hostSocket: "{{.Dir}}/sock/docker.sock"
-  - guestPort: 80
-    hostPort: 8080
-  - guestPort: 30003
-    hostPort: 30003
-message: |
-  To run `docker` on the host (assumes docker-cli is installed), run the following commands:
-  ------
-  docker context create lima-{{.Name}} --docker "host=unix://{{.Dir}}/sock/docker.sock"
-  docker context use lima-{{.Name}}
-  docker run hello-world
-  ------
