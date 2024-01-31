@@ -4,6 +4,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+from datetime import datetime, timedelta
 
 from typing import Any, cast
 import click
@@ -152,7 +153,22 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
         for line in values_data.splitlines()
     ]
     values_file.write_text("\n".join(fixed_lines))
-    subprocess.check_call(["./deploy.sh", component], cwd=TOOLFORGE_DEPLOY_REPO)
+    try:
+        subprocess.check_call(["./deploy.sh", component], cwd=TOOLFORGE_DEPLOY_REPO)
+    except subprocess.CalledProcessError:
+        if datetime.strptime(
+            pipeline["finished_at"].rsplit(".", 1)[0], "%Y-%m-%dT%H:%M:%S"
+        ) < (datetime.now() - timedelta(days=1)):
+            click.secho(
+                f"Failed to deploy, maybe the CI run is too old (from {pipeline['finished_at']}), you can try rerunning the pipeline:",
+                fg="yellow",
+            )
+            click.secho(
+                f"    https://gitlab.wikimedia.org/repos/cloud/toolforge/{component}/-/merge_requests/{mr_number}/pipelines",
+                fg="yellow",
+            )
+            return
+
     click.secho(f"Deployed {component}:{chart_version} from mr {mr_number}", fg="green")
 
 
