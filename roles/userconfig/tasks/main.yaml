@@ -23,6 +23,6 @@
 - name: Copy over the utils to the binary path
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/../helpers/toolforge_download_package.py"
+    src: "{{ playbook_dir }}/../helpers/toolforge_deploy_mr.py"
     dest: "{{ lima_kilo_bin }}/"
     mode: "777"

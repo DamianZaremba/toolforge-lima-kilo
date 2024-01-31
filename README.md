@@ -42,7 +42,7 @@ Some extra tools are also installed:
 * helm
 * helmfile
 * docker-compose to manage harbor
-* toolforge_download_package.py to download cli packages from gitlab MRs
+* toolforge_deploy_mr.py to deploy the CI-generated artifacts from the given toolforge component MR (will show a list of none passed)
 * helper script harbor-compose, to manage harbor (wrapper around docker-compose)
 
 Debugging tips
