@@ -22,6 +22,10 @@ mounts:
 containerd:
   system: false
   user: false
+portForwards:
+  # Harbor
+  - guestPort: 80
+    hostPort: 8080
 provision:
   - mode: system
     script: |
