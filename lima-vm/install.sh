@@ -1,14 +1,12 @@
 #!/bin/bash
 
-# NOTE: Edit LIMA_KILO_SOURCE_DIR to point to your lima-kilo folder
-LIMA_KILO_SOURCE_DIR="$(dirname 0)/.."
 VIRTUALENV_DIR="$HOME/env"
+LIMA_KILO_DIR="$(realpath "$(dirname "$0")"/..)"
 
 export DEBIAN_FRONTEND=noninteractive
 
-set -e
+set -o nounset
 
-cd $LIMA_KILO_SOURCE_DIR
 # Python 3.11+ won't let you pip install stuff globally
 sudo apt install \
   --yes \
@@ -19,6 +17,6 @@ python3 -m venv "$VIRTUALENV_DIR"
 source "$VIRTUALENV_DIR/bin/activate"
 pip3 install -r requirements.txt
 
-cd -
+! [[ -e "${HOME}/lima-kilo" ]] && ln -s "$LIMA_KILO_DIR" "${HOME}/lima-kilo"
 
-"$(dirname $0)/run_ansible.sh"
+"$(dirname "$0")/run_ansible.sh"

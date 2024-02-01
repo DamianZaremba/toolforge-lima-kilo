@@ -15,9 +15,8 @@ images:
     arch: "aarch64"
 memory: "8GiB"
 mounts:
-  - location: "~"
-  - location: "/tmp/lima"
-    writable: true
+  # If running manually (not using start-devenv.sh), replace this with your path to the lima-kilo directory
+  - location: "@@LIMA_KILO_DIR_PLACEHOLDER@@"
 # containerd is managed by Docker, not by Lima, so the values are set to false here.
 containerd:
   system: false

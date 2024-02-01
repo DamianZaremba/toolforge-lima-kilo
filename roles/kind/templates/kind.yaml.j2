@@ -35,11 +35,11 @@ nodes:
 {% endfor %}
     extraMounts:
 {% for dir in toolforge.directories %}
-      - hostPath: /{{ dir }}
+      - hostPath: {{ dir }}
         containerPath: {{ dir }}
 {% endfor %}
 {% for file in toolforge.files %}
-      - hostPath: /{{ file.path }}
+      - hostPath: {{ file.path }}
         containerPath: {{ file.path }}
         propagation: Bidirectional
 {% endfor %}

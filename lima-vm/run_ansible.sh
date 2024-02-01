@@ -1,12 +1,17 @@
 #!/bin/bash
-set -e
+set -o nounset
 
 VIRTUALENV_DIR="$HOME/env"
-LIMA_KILO_DIR="$(dirname $0)/.."
 
 export ANSIBLE_PYTHON_INTERPRETER=$VIRTUALENV_DIR/bin/python
 # shellcheck disable=SC1091
 source "$VIRTUALENV_DIR/bin/activate"
-cd  "$LIMA_KILO_DIR"
-ansible-playbook -D playbooks/kind-install.yaml "$@"
+
+# inside the VM this will always give the right value
+current_ip="$(hostname -i | grep -o '[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+')"
+ansible-playbook \
+    --diff \
+    --extra-vars "lima_kilo_docker_addr=$current_ip" \
+    "$(dirname $0)/../playbooks/kind-install.yaml" \
+    "$@"
 

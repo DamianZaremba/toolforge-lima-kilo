@@ -7,25 +7,25 @@ environment in a given machine.
 A *L*ocal *K*ubernetes deployment to help develop some of the Toolforge
 internal components.
 
-It is highly recommended to run this inside a virtual machine, there's Vagrant and a LimaVM documentation and setup if you don't want to do it by hand.
+The only supported way to run it is inside a lima-vm virtual machine, use at your own risk outside of one (might mess up your installation).
 
 How to use it
 -------------
 
-**Using Vagrant:**
-See detailed instructions here: [Vagrant README](./vagrant/README.md)
+Install Lima by following the instructions provided in the [official Lima-VM installation guide](https://lima-vm.io/docs/installation/).
 
-**Using LimaVM:**
+On Mac, it can be installed using `brew`.
+On Linux you need to follow the instructions on the `Binary` or `Source` section of the installation guide above.
+**Note:** that if you are using the `Binary` method on linux you'll need to make a few modifications like installing jq with apt-get.
+other than that everything should work the same.
+
+Then run `./start-devenv.sh`
+
 See detailed instructions here: [LimaVM README](./lima-vm/README.md)
-
-Configuration
--------------
-
-To override any of the default values for the configuration, you can override any variable using the `-e` option to ansible, for example `-e lima_kilo_local_path=/lima-kilo`.
 
 Usage
 -----
-Once the installation is finished, you can run commands as one of the two default users created, tf-test or tf-test2 like this:
+Once the installation is finished, you can run commands inside the vm as one of the two default users created, tf-test or tf-test2 like this:
 ```
 dcaro@vulcanus$ sudo -i -u local.tf-test
 local.tf-test@vulcanus:~$ pwd
@@ -44,6 +44,8 @@ Some extra tools are also installed:
 * docker-compose to manage harbor
 * toolforge_deploy_mr.py to deploy the CI-generated artifacts from the given toolforge component MR (will show a list of none passed)
 * helper script harbor-compose, to manage harbor (wrapper around docker-compose)
+
+There's also a clone of `toolforge-deploy` and a mount of `lima-kilo` in the home of the default user `~/{lima-kilo,toolforge-deploy}`.
 
 Debugging tips
 --------------

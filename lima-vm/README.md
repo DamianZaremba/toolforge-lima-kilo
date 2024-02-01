@@ -1,43 +1,23 @@
 # Lima Installation and Testing Guide
 
-This is a basic guide on how to install and test on Lima.
+This is a troubleshooting guide with tips and tricks on running lima-kilo on lima-vm
 
-## Installation
+You should have already followed the steps in the main [lima-kilo README](.../README.md)
 
-1. Install Lima by following the instructions provided in the [official Lima-VM documentation](https://github.com/lima-vm/lima).
-
-On Mac, it can be installed using `brew`. Otherwise, you need to clone the repo and install the binary from the [releases](https://github.com/lima-vm/lima/releases) or the build source with `make`.
-
-## Testing
-
-1. Create a new VM from the `bookworm.yaml` template:
-
+1. You'll need to replace the placeholder for the lima-kilo directory mount:
    ```bash
-   limactl start bookworm.yaml
+      sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|/path/to/lima-kilo|g" "lima-kilo.yaml.tpl" > "lima-kilo.yaml" 
    ```
 
-2. Start the VM:
-
+2. You can manually create the VM with custom options:
    ```bash
-   limactl start bookworm
+      limactl create lima-kilo.yaml
    ```
 
-   If you have a Mac with a M1/M2 processor, use this instead:
+3. Run the `install.sh` script, you can pass any extra parameters to it and will be passed to ansible:
 
    ```bash
-   limactl start bookworm.yaml --vm-type=vz --rosetta
-   ```
-
-3. Get a shell in the VM:
-
-   ```bash
-   limactl shell bookworm
-   ```
-
-4. Run the `install.sh` script:
-
-   ```bash
-   ./install.sh # this will run ansbile-playbook
+   ./install.sh # this will run ansible-playbook, any extra parameters will be passed to run_ansible.sh, see below for options
    ```
 
 5. Make sure you can run a build successfully.
@@ -48,7 +28,7 @@ On Mac, it can be installed using `brew`. Otherwise, you need to clone the repo 
    ````
 
 
-If you want to rerun the ansible playbooks, you can use the `run_ansible.sh` script:
+If you want to only rerun the ansible playbooks, you can use the `run_ansible.sh` script:
 
    ```bash
    ./run_ansible.sh # it will forward any args to ansible-playbook
