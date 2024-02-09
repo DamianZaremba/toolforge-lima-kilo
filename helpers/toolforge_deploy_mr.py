@@ -107,6 +107,8 @@ def deploy_package_mr(component: str, mr_number: int) -> None:
         command = ["sudo", "apt", "install", "--yes", "--allow-downgrades"] + debs
         subprocess.check_call(command)
 
+    click.secho(f"Deployed {component} from mr {mr_number}", fg="green")
+
 
 def deploy_chart_mr(component: str, mr_number: int) -> None:
     project = get_project(component=component)
