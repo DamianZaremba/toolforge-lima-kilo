@@ -5,6 +5,7 @@ import shutil
 import subprocess
 import tempfile
 from datetime import datetime, timedelta
+import time
 
 from typing import Any, cast
 import click
@@ -79,10 +80,19 @@ def get_package_job(
     )
 
 
-def get_last_pipeline(mr_data: dict[str, Any], mr_number: int) -> dict[str, Any]:
+def get_last_pipeline(project: dict[str, Any], mr_number: int) -> dict[str, Any]:
+    mr_data = get_mr(project=project, mr_number=mr_number)
+    while mr_data["head_pipeline"]["status"] == "running":
+        click.echo(
+            f"Pipeline {mr_data['head_pipeline']['iid']} is still running, waiting for it to finish...."
+        )
+        time.sleep(10)
+        mr_data = get_mr(project=project, mr_number=mr_number)
+
     if mr_data["head_pipeline"]["status"] != "success":
         raise Exception(
-            f"Unable to find a successful pipeline for MR {mr_number} ({mr_data['web_url']})"
+            f"Unable to find a successful pipeline for MR {mr_number} ({mr_data['web_url']}), last pipeline status: "
+            f"{mr_data['head_pipeline']['status']}"
         )
 
     return mr_data["head_pipeline"]
@@ -90,8 +100,7 @@ def get_last_pipeline(mr_data: dict[str, Any], mr_number: int) -> dict[str, Any]
 
 def deploy_package_mr(component: str, mr_number: int) -> None:
     project = get_project(component=component)
-    mr_data = get_mr(project=project, mr_number=mr_number)
-    pipeline = get_last_pipeline(mr_data=mr_data, mr_number=mr_number)
+    pipeline = get_last_pipeline(project=project, mr_number=mr_number)
     package_job = get_package_job(project=project, pipeline=pipeline)
     artifact_response = requests.get(
         f"{GITLAB_API_BASE_URL}/projects/{project['id']}/jobs/{package_job['id']}/artifacts"
@@ -112,8 +121,7 @@ def deploy_package_mr(component: str, mr_number: int) -> None:
 
 def deploy_chart_mr(component: str, mr_number: int) -> None:
     project = get_project(component=component)
-    mr_data = get_mr(project=project, mr_number=mr_number)
-    pipeline = get_last_pipeline(mr_data=mr_data, mr_number=mr_number)
+    pipeline = get_last_pipeline(project=project, mr_number=mr_number)
     chart_job = get_chart_job(project=project, pipeline=pipeline)
     # for some silly reason the jobs gitlab api needs a token to get the logs
     # but the non-api url is public, so we use the public one
