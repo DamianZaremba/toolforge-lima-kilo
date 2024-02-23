@@ -2,6 +2,6 @@
 k9s:
   # refresh versions from
   # https://k9scli.io/
-  url: https://github.com/derailed/k9s/releases/download/v0.31.4/k9s_Linux_amd64.tar.gz
-  checksum: sha256:3fa1b23a2b9cbce879f153237b0c0ad6407b40a9ec9a6adc3849a3c5360c1de2
+  url: https://github.com/derailed/k9s/releases/download/v0.31.9/k9s_Linux_amd64.tar.gz
+  checksum: sha256:075a588642e35cd68394b8ad0df474423650945ef8a786767b7fbce0a4764fea
   unpack: true
