@@ -24,7 +24,7 @@ main() {
     if [[ "${1:-}" == "--recreate" ]]; then
         recreate="true"
     fi
-    local extra_start_opts
+    local extra_create_opts
 
     command -v limactl >/dev/null || {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"
@@ -46,16 +46,16 @@ main() {
     fi
 
     if [[ $(uname -m) == 'arm64' ]]; then
-        extra_start_opts=(
+        extra_create_opts=(
             --vm-type=vz
-            --r
+            --rosetta
         )
     fi
 
     sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
 
-    limactl create "$CURDIR/lima-vm/lima-kilo.yaml"
-    limactl start "${extra_start_opts[@]}" lima-kilo
+    limactl create "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
+    limactl start lima-kilo
     limactl shell lima-kilo -- ./lima-vm/install.sh
 
     echo "########################################################"
