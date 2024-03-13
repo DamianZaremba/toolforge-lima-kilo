@@ -25,18 +25,22 @@ See detailed instructions here: [LimaVM README](./lima-vm/README.md)
 
 Usage
 -----
+
 Once the installation is finished, you can run commands inside the vm as one of the two default users created, tf-test or tf-test2 like this:
-```
-dcaro@vulcanus$ sudo -i -u local.tf-test
-local.tf-test@vulcanus:~$ pwd
-/home/dcaro/.toolforge-lima-kilo/chroot/data/project/tf-test
+
+```bash
+user@lima-lima-kilo$ become tf-test
+local.tf-test@lima-lima-kilo:~$ pwd
+/data/project/tf-test
 ```
 
 You would be already at the home of the user, and ready to run any toolforge commands.
 
 Extra tools
 -----------
+
 Some extra tools are also installed:
+
 * k9s to explore/manage kubernetes
 * kubectl
 * helm
@@ -49,12 +53,15 @@ There's also a clone of `toolforge-deploy` and a mount of `lima-kilo` in the hom
 
 Debugging tips
 --------------
+
 If you want to access directly the api-gateway, you can do so by pointing to `https://127.0.0.1:30003/`, note that you will need the user certs to authenticate:
-```
+
+```bash
 local.tf-test@vulcanus:~$ curl --insecure --cert ~/.toolskube/client.crt --key ~/.toolskube/client.key https://127.0.0.1:30003/
 This is the Toolforge API gateway!
 ```
 
 License
 -------
+
 [GPL-3.0](//www.gnu.org/copyleft/gpl.html "GPL-3.0")
