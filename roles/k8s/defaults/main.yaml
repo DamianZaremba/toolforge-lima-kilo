@@ -12,7 +12,6 @@ lima_kilo_toolforge_deploy_components:
   - name: envvars-api
   - name: builds-builder
   - name: builds-api # deploying this depends on builds-builder
-  - name: builds-admission
   - name: api-gateway
     wait: true
 
