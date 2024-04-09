@@ -53,6 +53,19 @@ toolforge:
             echo stdout $1
             echo stderr >&2
             sleep 60
+        - name: contjob.sh
+          mode: "0755"
+          content: |
+            #!/bin/sh
+            while true ; do date ; echo "another loop!" ; sleep 30 ; done
+        - name: jobs.yaml
+          mode: "0755"
+          content: |
+            - name: contjob
+              image: bookworm
+              command: ./contjob.sh
+              continuous: true
+              no-filelog: true
     - name: tf-test2
       uid: 1002
     - name: fourohfour
