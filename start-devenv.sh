@@ -56,6 +56,9 @@ main() {
 
     limactl create "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
     limactl start lima-kilo
+    # the hostname contains the `lima-` prefix by default, see https://github.com/lima-vm/lima/discussions/1634
+    # override it to remove the duplicated `lima` keyword
+    limactl shell lima-kilo -- hostname lima-kilo
     limactl shell lima-kilo -- ./lima-vm/install.sh
 
     echo "########################################################"
