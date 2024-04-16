@@ -26,3 +26,9 @@
     src: "{{ playbook_dir }}/../helpers/toolforge_deploy_mr.py"
     dest: "{{ lima_kilo_bin }}/"
     mode: "777"
+
+- name: Set up bash integration for fzf
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: |
+      source /usr/share/doc/fzf/examples/key-bindings.bash

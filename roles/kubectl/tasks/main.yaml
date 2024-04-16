@@ -8,3 +8,11 @@
       url: "{{ kubectl.url }}"
       checksum: "{{ kubectl.checksum }}"
       unpack: "{{ kubectl.unpack }}"
+
+- name: Append kubectl alias and bash autocompletion to ~/.bashrc
+  ansible.builtin.lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    line: |
+      alias k=kubectl
+      source <(kubectl completion bash)
+      complete -o default -F __start_kubectl k
