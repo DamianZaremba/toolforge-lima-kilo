@@ -21,6 +21,24 @@ other than that everything should work the same.
 
 Then run `./start-devenv.sh`
 
+There is an option to copy dotfiles from the host to the home directory (~) of the lima-kilo VM. Use the command as follows:
+
+```bash
+$ ./start-devenv.sh --dotfiles <path-to-dotfiles>
+```
+
+You can also specify the dotfiles dir relative to the /lima-vm/dotfiles folder:
+
+```bash
+$ ./start-devenv.sh --dotfiles user
+```
+
+If the --dotfiles flag is not provided, the script defaults to using the LIMA_KILO_DOTFILES environment variable, if set:
+
+```bash
+$ export LIMA_KILO_DOTFILES=user
+```
+
 See detailed instructions here: [LimaVM README](./lima-vm/README.md)
 
 Usage
@@ -29,8 +47,8 @@ Usage
 Once the installation is finished, you can run commands inside the vm as one of the two default users created, tf-test or tf-test2 like this:
 
 ```bash
-user@lima-lima-kilo$ become tf-test
-local.tf-test@lima-lima-kilo:~$ pwd
+user@lima-kilo$ become tf-test
+local.tf-test@lima-kilo:~$ pwd
 /data/project/tf-test
 ```
 
@@ -42,6 +60,10 @@ Extra tools
 Some extra tools are also installed:
 
 * k9s to explore/manage kubernetes
+* jq
+* fzf
+* htop
+* tcpdump
 * kubectl
 * helm
 * helmfile

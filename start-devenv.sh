@@ -5,26 +5,106 @@ set -o errexit
 set -o pipefail
 
 CURDIR="$(realpath "$(dirname "$0")")"
+REPO_DOTFILES="$CURDIR/lima-vm/dotfiles"
 
 help() {
     cat <<EOH
-    Usage: $0 [--recreate]
+Usage: $0 [options]
 
-    This will create, start and install a VM running lima-kilo.
+This script will create, start, and configure a VM running lima-kilo.
 
-    Options:
-        --recreate
-            If the VM already exists, will remove it and create it anew.
+Options:
+  --recreate          If the VM already exists, it will be removed and created anew.
+  --dotfiles [PATH]   Specify a path for copying dotfiles to the VM's home directory.
+                      If the --dotfiles flag is not provided, it defaults to using the 
+                      LIMA_KILO_DOTFILES environment variable, if set.
+
 EOH
+}
+
+parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --recreate)
+                recreate="true"
+                shift
+                ;;
+            --dotfiles)
+                if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
+                    if [[ -d "$2" ]]; then
+                        copy_src="$(realpath "$2")" 
+                    elif [[ -d "$REPO_DOTFILES/$2" ]]; then
+                        copy_src="$REPO_DOTFILES/$2" 
+                    else
+                        echo "Error: Directory not found: $2"
+                        exit 1
+                    fi
+                    shift 2
+                else
+                    echo "Error: --dotfiles option requires a path."
+                    exit 1
+                fi
+                ;;
+            --help)
+                help
+                exit 0
+                ;;
+            *)
+                echo "Unknown option: $1"
+                help
+                exit 1
+                ;;
+        esac
+    done
+
+    if [[ -z "${copy_src:-}" && -n "${LIMA_KILO_DOTFILES:-}" ]]; then
+        if [[ -d "$(realpath "$LIMA_KILO_DOTFILES")" ]]; then
+            copy_src="$(realpath "$LIMA_KILO_DOTFILES")"
+        elif [[ -d "$REPO_DOTFILES/$LIMA_KILO_DOTFILES" ]]; then
+            copy_src="$REPO_DOTFILES/$LIMA_KILO_DOTFILES"
+        else
+            echo "Error: Unable to find dotfiles, directory not found: $LIMA_KILO_DOTFILES"
+            echo "Provide a full path, or set LIMA_KILO_DOTFILES to one of the following:"
+            ls "$REPO_DOTFILES"
+            exit 1
+        fi
+    fi
+}
+
+
+copy_files() {
+    if [[ -n "${copy_src:-}" ]]; then
+        local guest_destination="lima-kilo:~" 
+
+        if [[ -d "$copy_src" ]]; then
+            echo "Copying contents of directory '$copy_src' to the home directory on the lima-kilo VM..."
+
+            shopt -s dotglob
+
+            for file in "$copy_src"/*; do
+                if [[ -f "$file" ]]; then
+                    echo "Copying '$file'..."
+                    limactl copy "$file" "$guest_destination"
+                fi
+            done
+
+            shopt -u dotglob
+        elif [[ -f "$copy_src" ]]; then
+            echo "Copying file '$copy_src' to the home directory on the lima-kilo VM..."
+            limactl copy "$copy_src" "$guest_destination"
+        else
+            echo "Error: The specified source '$copy_src' is not valid."
+            exit 1
+        fi
+    fi
 }
 
 main() {
     local recreate="false"
-    local response
-    if [[ "${1:-}" == "--recreate" ]]; then
-        recreate="true"
-    fi
-    local extra_create_opts
+	local response
+	local extra_create_opts
+	
+    parse_args "$@"
 
     command -v limactl >/dev/null || {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"
@@ -60,6 +140,7 @@ main() {
     # override it to remove the duplicated `lima` keyword
     limactl shell lima-kilo -- sudo hostnamectl hostname lima-kilo
     limactl shell lima-kilo -- ./lima-vm/install.sh
+    copy_files
 
     echo "########################################################"
     echo "Now you can start a shell in your new lima-kilo vm with:"

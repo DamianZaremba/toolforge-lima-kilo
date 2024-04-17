@@ -14,7 +14,7 @@ You should have already followed the steps in the main [lima-kilo README](.../RE
       limactl create lima-kilo.yaml
    ```
 
-3. Run the `install.sh` script, you can pass any extra parameters to it and will be passed to ansible:
+3. Run the `install.sh` script, you can pass any extra parameters to it and they will be passed to ansible:
 
    ```bash
    ./install.sh # this will run ansible-playbook, any extra parameters will be passed to run_ansible.sh, see below for options
@@ -23,7 +23,7 @@ You should have already followed the steps in the main [lima-kilo README](.../RE
 5. Make sure you can run a build successfully.
 
    ```bash
-   $ sudo -i -u local.tf-test
+   $ become tf-test
    local.tf-test$ toolforge build start https://gitlab.wikimedia.org/toolforge-repos/wm-lol
    ````
 
