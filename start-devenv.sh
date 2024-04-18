@@ -6,6 +6,8 @@ set -o pipefail
 
 CURDIR="$(realpath "$(dirname "$0")")"
 REPO_DOTFILES="$CURDIR/lima-vm/dotfiles"
+RECURSIVE="false"
+COPY_SRC=""
 
 help() {
     cat <<EOH
@@ -32,9 +34,10 @@ parse_args() {
             --dotfiles)
                 if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
                     if [[ -d "$2" ]]; then
-                        copy_src="$(realpath "$2")" 
+                        COPY_SRC="$(realpath "$2")"
                     elif [[ -d "$REPO_DOTFILES/$2" ]]; then
-                        copy_src="$REPO_DOTFILES/$2" 
+                        COPY_SRC="$REPO_DOTFILES/$2"
+                        RECURSIVE="true"
                     else
                         echo "Error: Directory not found: $2"
                         exit 1
@@ -57,11 +60,12 @@ parse_args() {
         esac
     done
 
-    if [[ -z "${copy_src:-}" && -n "${LIMA_KILO_DOTFILES:-}" ]]; then
+    if [[ "$COPY_SRC" == "" ]] && [[ "${LIMA_KILO_DOTFILES:-}" != "" ]]; then
+        RECURSIVE="true"
         if [[ -d "$(realpath "$LIMA_KILO_DOTFILES")" ]]; then
-            copy_src="$(realpath "$LIMA_KILO_DOTFILES")"
+            COPY_SRC="$(realpath "$LIMA_KILO_DOTFILES")"
         elif [[ -d "$REPO_DOTFILES/$LIMA_KILO_DOTFILES" ]]; then
-            copy_src="$REPO_DOTFILES/$LIMA_KILO_DOTFILES"
+            COPY_SRC="$REPO_DOTFILES/$LIMA_KILO_DOTFILES"
         else
             echo "Error: Unable to find dotfiles, directory not found: $LIMA_KILO_DOTFILES"
             echo "Provide a full path, or set LIMA_KILO_DOTFILES to one of the following:"
@@ -71,31 +75,47 @@ parse_args() {
     fi
 }
 
-
 copy_files() {
-    if [[ -n "${copy_src:-}" ]]; then
-        local guest_destination="lima-kilo:~" 
+    local copy_src="${1?}"
+    local guest_destination="lima-kilo:~" 
 
-        if [[ -d "$copy_src" ]]; then
-            echo "Copying contents of directory '$copy_src' to the home directory on the lima-kilo VM..."
+    if [[ -d "$copy_src" ]]; then
+        echo "Copying contents of directory '$copy_src' to the home directory on the lima-kilo VM..."
 
-            shopt -s dotglob
+        shopt -s dotglob
 
-            for file in "$copy_src"/*; do
-                if [[ -f "$file" ]]; then
-                    echo "Copying '$file'..."
-                    limactl copy "$file" "$guest_destination"
-                fi
-            done
+        for file in "$copy_src"/*; do
+            if [[ -f "$file" ]]; then
+                echo "Copying '$file'..."
+                limactl copy "$file" "$guest_destination"
+            fi
+        done
 
-            shopt -u dotglob
-        elif [[ -f "$copy_src" ]]; then
-            echo "Copying file '$copy_src' to the home directory on the lima-kilo VM..."
-            limactl copy "$copy_src" "$guest_destination"
-        else
-            echo "Error: The specified source '$copy_src' is not valid."
-            exit 1
-        fi
+        shopt -u dotglob
+    elif [[ -f "$copy_src" ]]; then
+        echo "Copying file '$copy_src' to the home directory on the lima-kilo VM..."
+        limactl copy "$copy_src" "$guest_destination"
+    else
+        echo "Error: The specified source '$copy_src' is not valid."
+        exit 1
+    fi
+}
+
+
+copy_files_recursive() {
+    local copy_src="${1?}"
+    local guest_destination="lima-kilo:~/" 
+
+    echo "Copying directory '$copy_src' to the home directory on the lima-kilo VM..."
+    if [[ -d "$copy_src" ]]; then
+        shopt -s dotglob
+        for file in "$copy_src"/*; do
+            echo "Copying '$file'..."
+            limactl copy --recursive "$file" "$guest_destination"
+        done
+        shopt -u dotglob
+    else
+        limactl copy --recursive "$copy_src" "$guest_destination"
     fi
 }
 
@@ -140,7 +160,13 @@ main() {
     # override it to remove the duplicated `lima` keyword
     limactl shell lima-kilo -- sudo hostnamectl hostname lima-kilo
     limactl shell lima-kilo -- ./lima-vm/install.sh
-    copy_files
+    if [[ "$COPY_SRC" != "" ]]; then
+        if [[ "$RECURSIVE" == "true" ]]; then
+            copy_files_recursive "$COPY_SRC"
+        else
+            copy_files "$COPY_SRC"
+        fi
+    fi
 
     echo "########################################################"
     echo "Now you can start a shell in your new lima-kilo vm with:"
