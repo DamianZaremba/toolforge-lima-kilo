@@ -40,3 +40,5 @@ nodes:
         containerPath: {{ file.path }}
         propagation: Bidirectional
 {% endfor %}
+      - hostPath: /etc/nsswitch.conf
+        containerPath: /etc/nsswitch.conf

@@ -17,6 +17,12 @@ memory: "8GiB"
 mounts:
   # If running manually (not using start-devenv.sh), replace this with your path to the lima-kilo directory
   - location: "@@LIMA_KILO_DIR_PLACEHOLDER@@"
+
+# this helps sssd to don't choke on resolving the VM name
+hostResolver:
+  hosts:
+    lima-kilo: 127.0.0.1
+
 # containerd is managed by Docker, not by Lima, so the values are set to false here.
 containerd:
   system: false

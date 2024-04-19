@@ -1,3 +1,28 @@
+---
+- name: Create /etc/sssd/ directory
+  become: true
+  ansible.builtin.file:
+    path: "/etc/sssd/"
+    state: "directory"
+    mode: "0755"
+
+- name: Install sssd.conf file
+  become: true
+  # order matters, this file should be installed before sssd can start,
+  # so before package installation
+  ansible.builtin.copy:
+    src: "sssd.conf"
+    dest: "/etc/sssd/sssd.conf"
+    # mode is enforced by sssd, it will refuse to start otherwise
+    mode: "0600"
+
+- name: Install nsswitch.conf to use sssd
+  become: true
+  ansible.builtin.copy:
+    src: "nsswitch.conf"
+    dest: "/etc/nsswitch.conf"
+    mode: "0644"
+
 - name: Install base packages
   become: true
   ansible.builtin.package:

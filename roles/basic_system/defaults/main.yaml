@@ -11,3 +11,4 @@ lima_kilo_basic_system_packages:
   - python3-kubernetes
   - tcpdump
   - vim
+  - sssd
