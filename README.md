@@ -61,6 +61,12 @@ local.tf-test@vulcanus:~$ curl --insecure --cert ~/.toolskube/client.crt --key ~
 This is the Toolforge API gateway!
 ```
 
+Another example, to hit the jobs-api by hand:
+
+```bash
+local.tf-test@lima-kilo:~$ curl https://localhost:30003/jobs/api/v1/jobs/ --cert .toolskube/client.crt --key .toolskube/client.key -k --header "Content-Type: application/json" -X POST --data '{"name":"test","image":"bookworm","cmd":"./test-cmd.sh"}'
+```
+
 License
 -------
 
