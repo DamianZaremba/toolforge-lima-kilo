@@ -5,6 +5,7 @@
     dest: "/etc/docker/daemon.json"
     content: |
       {"insecure-registries": ["{{ lima_kilo_docker_addr }}"]}
+
     mode: "0662"
     owner: "root"
     group: "root"
