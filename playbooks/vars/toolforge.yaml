@@ -1,8 +1,5 @@
 ---
 toolforge:
-  uid:
-    min: 50001
-    max: 50010
   project_name: local
   special_directories:
     - /data/
@@ -35,7 +32,7 @@ toolforge:
         # whatever
   tool_accounts:
     - name: tf-test
-      uid: 1001
+      uid: 50001
       files:
         - name: sleep40.sh
           mode: "0755"
@@ -67,9 +64,9 @@ toolforge:
               continuous: true
               no-filelog: true
     - name: tf-test2
-      uid: 1002
+      uid: 50002
     - name: fourohfour
-      uid: 1003
+      uid: 50003
   repos:
     - name: tools
       url: https://deb-tools.wmcloud.org/repo
