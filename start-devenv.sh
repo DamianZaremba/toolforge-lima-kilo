@@ -58,7 +58,7 @@ main() {
     limactl start lima-kilo
     # the hostname contains the `lima-` prefix by default, see https://github.com/lima-vm/lima/discussions/1634
     # override it to remove the duplicated `lima` keyword
-    limactl shell lima-kilo -- sudo hostname lima-kilo
+    limactl shell lima-kilo -- sudo hostnamectl hostname lima-kilo
     limactl shell lima-kilo -- ./lima-vm/install.sh
 
     echo "########################################################"
