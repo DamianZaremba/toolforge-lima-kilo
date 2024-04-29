@@ -56,6 +56,15 @@
     owner: "root"
     group: "root"
 
+- name: Add webservice toolforge config
+  become: true
+  ansible.builtin.template:
+    src: toolforge-webservice.yaml.j2
+    dest: /etc/toolforge/webservice.yaml
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
 - name: "Add toolforge repos"
   become: true
   ansible.builtin.apt_repository:

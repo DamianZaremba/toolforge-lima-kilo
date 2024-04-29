@@ -22,6 +22,9 @@ mounts:
 hostResolver:
   hosts:
     lima-kilo: 127.0.0.1
+    # same as the toolforge api
+    tf-test.local: 127.0.0.1
+    tf-test2.local: 127.0.0.1
 
 # containerd is managed by Docker, not by Lima, so the values are set to false here.
 containerd:
