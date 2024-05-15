@@ -207,7 +207,7 @@ def main(component: str, mr_number: int | None = None):
     if mr_number is None:
         mr_number = ask_mr(component=component)
 
-    if component.endswith("-cli") or component == "tools-webservice":
+    if component.endswith("-cli") or component in ["tools-webservice", "toolforge-weld"]:
         deploy_package_mr(component=component, mr_number=mr_number)
     else:
         deploy_chart_mr(component=component, mr_number=mr_number)
