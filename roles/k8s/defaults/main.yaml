@@ -13,7 +13,6 @@ lima_kilo_toolforge_deploy_components:
   - name: builds-builder
   - name: builds-api # deploying this depends on builds-builder
   - name: api-gateway
-    wait: true
   - name: maintain-kubeusers
 
 lima_kilo_k8s_other_custom_components:
