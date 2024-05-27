@@ -4,6 +4,7 @@ set -o nounset
 VIRTUALENV_DIR="$HOME/env"
 
 export ANSIBLE_PYTHON_INTERPRETER=$VIRTUALENV_DIR/bin/python
+export ANSIBLE_CONFIG="$HOME/lima-kilo/ansible.cfg"
 # shellcheck disable=SC1091
 source "$VIRTUALENV_DIR/bin/activate"
 
@@ -12,6 +13,6 @@ current_ip="$(hostname -i | grep -o '[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+
 ansible-playbook \
     --diff \
     --extra-vars "lima_kilo_docker_addr=$current_ip" \
-    "$(dirname $0)/../playbooks/kind-install.yaml" \
+    "$HOME/lima-kilo/playbooks/kind-install.yaml" \
     "$@"
 

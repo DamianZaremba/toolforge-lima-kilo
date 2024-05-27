@@ -11,12 +11,3 @@
   ansible.builtin.shell:
     chdir: "{{ lima_kilo_harbor_dir }}/builds-builder"
     cmd: "HARBOR_DIR={{ lima_kilo_harbor_dir }} HARBOR_IP={{ lima_kilo_docker_addr }} ./utils/get_harbor.sh"
-
-- name: Add harbor-compose wrapper script
-  become: true
-  ansible.builtin.copy:
-    dest: "{{ lima_kilo_bin }}/harbor-compose"
-    content: |
-      #!/bin/bash
-      sudo docker-compose -f "{{ lima_kilo_harbor_dir }}/harbor/docker-compose.yml" "$@"
-    mode: "0777"

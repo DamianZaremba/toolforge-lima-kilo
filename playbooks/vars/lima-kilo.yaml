@@ -1,6 +1,7 @@
 ---
 lima_kilo_local_path: "{{ ansible_env.HOME }}"
 lima_kilo_bin: "{{ lima_kilo_local_path }}/bin"
+lima_kilo_repo: "{{ lima_kilo_local_path }}/lima-kilo"
 
 # the default docker network inside vagrant is 172.19.0.0/16 so take it as the default
 # normally, docker0 will have 172.19.0.1 and that is reachable from within

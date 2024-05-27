@@ -68,8 +68,9 @@ Some extra tools are also installed:
 * helm
 * helmfile
 * docker-compose to manage harbor
-* toolforge_deploy_mr.py to deploy the CI-generated artifacts from the given toolforge component MR (will show a list of none passed)
-* helper script harbor-compose, to manage harbor (wrapper around docker-compose)
+* any toolforge_* script, among them:
+  * toolforge_deploy_mr.py to deploy the CI-generated artifacts from the given toolforge component MR (will show a list of none passed)
+  * helper script toolforge_harbor_compose.sh, to manage harbor (wrapper around docker-compose)
 
 There's also a clone of `toolforge-deploy` and a mount of `lima-kilo` in the home of the default user `~/{lima-kilo,toolforge-deploy}`.
 

@@ -28,10 +28,11 @@ You should have already followed the steps in the main [lima-kilo README](.../RE
    ````
 
 
-If you want to only rerun the ansible playbooks, you can use the `run_ansible.sh` script:
+If you want to only rerun the ansible playbooks, you can use the `run_ansible.sh` script
+(available as `toolforge_run_ansible.sh` from within the VM):
 
    ```bash
-   ./run_ansible.sh # it will forward any args to ansible-playbook
-                    # like -e myvar=myvalue
-                    # or --tag k8s,k9s
+   toolforge_run_ansible.sh # it will forward any args to ansible-playbook
+                            # like -e myvar=myvalue
+                            # or --tag k8s,k9s
    ```

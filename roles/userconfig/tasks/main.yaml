@@ -20,15 +20,8 @@
     group: "root"
     mode: "0775"
 
-- name: Copy over the utils to the binary path
-  become: true
-  ansible.builtin.copy:
-    src: "{{ playbook_dir }}/../helpers/toolforge_deploy_mr.py"
-    dest: "{{ lima_kilo_bin }}/"
-    mode: "777"
-
 - name: Set up bash integration for fzf
   ansible.builtin.lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
-    line: |
+    line: >-
       source /usr/share/doc/fzf/examples/key-bindings.bash
