@@ -10,6 +10,7 @@ lima_kilo_toolforge_deploy_components:
   - name: volume-admission
   - name: jobs-api
   - name: envvars-api
+  - name: envvars-admission
   - name: builds-builder
   - name: builds-api # deploying this depends on builds-builder
   - name: api-gateway
