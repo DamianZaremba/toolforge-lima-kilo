@@ -113,10 +113,78 @@ def deploy_package_mr(component: str, mr_number: int) -> None:
         subprocess.check_call(["ls", "-lR", f"{tempdir}"])
         click.echo(f"Downloaded artifacts at {tempdir}:")
         debs = list((Path(tempdir) / "debs").glob(pattern="*.deb"))
-        command = ["sudo", "apt", "install", "--yes", "--reinstall", "--allow-downgrades"] + debs
+        command = [
+            "sudo",
+            "apt",
+            "install",
+            "--yes",
+            "--reinstall",
+            "--allow-downgrades",
+        ] + debs
         subprocess.check_call(command)
 
     click.secho(f"Deployed {component} from mr {mr_number}", fg="green")
+
+
+def restore_chart(component: str) -> None:
+    try:
+        subprocess.check_call(["git", "reset", "--hard"], cwd=TOOLFORGE_DEPLOY_REPO)
+        subprocess.check_call(["./deploy.sh", component], cwd=TOOLFORGE_DEPLOY_REPO)
+    except subprocess.CalledProcessError as error:
+        click.secho(f"Failed to restore {component}: {error}", fg="yellow")
+        return
+
+    click.secho(f"Restored {component} to the version in toolforge-deploy", fg="green")
+
+
+def restore_package(component: str) -> None:
+    # this can be removed if we make the package name patterns all the same
+    if component == "jobs-cli":
+        package = "toolforge-jobs-framework-cli"
+    else:
+        package = f"toolforge-{component}"
+
+    check_command = [
+        "sudo",
+        "apt",
+        "policy",
+        package,
+    ]
+
+    remove_command = [
+        "sudo",
+        "apt",
+        "remove",
+        "--yes",
+        package,
+    ]
+
+    install_command = [
+        "sudo",
+        "apt",
+        "install",
+        "--yes",
+        "--reinstall",
+        "--allow-downgrades",
+        package,
+    ]
+
+    check_output = subprocess.check_output(check_command, cwd=TOOLFORGE_DEPLOY_REPO)
+    if "Unable to locate package" not in check_output.decode("utf-8"):
+        try:
+            subprocess.check_call(remove_command, cwd=TOOLFORGE_DEPLOY_REPO)
+        except subprocess.CalledProcessError as error:
+            click.secho(f"Failed to restore {component}: {error}", fg="yellow")
+            return
+
+    try:
+        subprocess.check_call(install_command, cwd=TOOLFORGE_DEPLOY_REPO)
+
+    except subprocess.CalledProcessError as error:
+        click.secho(f"Failed to restore {component}: {error}", fg="yellow")
+        return
+
+    click.secho(f"Restored {component} to the version in toolforge-deploy", fg="green")
 
 
 def deploy_chart_mr(component: str, mr_number: int) -> None:
@@ -185,7 +253,7 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
 def ask_mr(component: str) -> int:
     project = get_project(component=component)
     all_mrs = get_mrs(project=project)
-    choices = []
+    choices = ["restore"]
     for mr in all_mrs:
         click.secho(
             f"  * {mr['iid']}: <{mr['author']['username']}> {mr['title']}",
@@ -200,17 +268,47 @@ def ask_mr(component: str) -> int:
     return int(chosen)
 
 
+def _try_mr_number_option(maybe_mr_number: Any) -> Any:
+    try:
+        return int(maybe_mr_number)
+    except ValueError:
+        if maybe_mr_number == "restore":
+            return "restore"
+
+    raise ValueError(f"Unknown mr_number {maybe_mr_number}, must be int or 'restore'.")
+
+
 @click.command()
 @click.argument("component", required=True)
-@click.argument("mr_number", type=int, required=False, default=None)
+@click.argument(
+    "mr_number",
+    type=_try_mr_number_option,
+    required=False,
+    default=None,
+)
 def main(component: str, mr_number: int | None = None):
+    """
+    Deploy a specific version of a toolforge component or client package.
+
+    MR_NUMBER is the number of the MR to deploy or `restore` to deploy the version from toolforge-deploy. If not passed
+    will ask interactively fetching the open MRs list from gitlab.
+    """
     if mr_number is None:
         mr_number = ask_mr(component=component)
 
-    if component.endswith("-cli") or component in ["tools-webservice", "toolforge-weld"]:
-        deploy_package_mr(component=component, mr_number=mr_number)
+    if component.endswith("-cli") or component in [
+        "tools-webservice",
+        "toolforge-weld",
+    ]:
+        if mr_number == "restore":
+            restore_package(component=component)
+        else:
+            deploy_package_mr(component=component, mr_number=mr_number)
     else:
-        deploy_chart_mr(component=component, mr_number=mr_number)
+        if mr_number == "restore":
+            restore_chart(component=component)
+        else:
+            deploy_chart_mr(component=component, mr_number=mr_number)
 
 
 if __name__ == "__main__":
