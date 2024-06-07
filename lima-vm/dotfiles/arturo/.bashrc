@@ -51,4 +51,7 @@ sedrec() {
     find ${dir} -type f -exec sed -i "${pattern}" {} +
 }
 
-. .liquidprompt/liquidprompt
+. ${HOME}/.liquidprompt/liquidprompt
+
+# override lima-vm behavior of landing the shell session on some non-home dir
+cd ${HOME}
