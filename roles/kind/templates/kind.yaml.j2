@@ -8,7 +8,7 @@ kubeadmConfigPatches:
     kind: ClusterConfiguration
     apiServer:
       extraArgs:
-        enable-admission-plugins: NodeRestriction,PodSecurityPolicy
+        enable-admission-plugins: PodSecurityPolicy
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{ lima_kilo_docker_addr }}"]
@@ -30,7 +30,7 @@ nodes:
         hostPort: {{ port }}
         protocol: TCP
 {% endfor %}
-    extraMounts:
+    extraMounts: &extramounts
 {% for dir in toolforge.directories %}
       - hostPath: {{ dir }}
         containerPath: {{ dir }}
@@ -42,3 +42,28 @@ nodes:
 {% endfor %}
       - hostPath: /etc/nsswitch.conf
         containerPath: /etc/nsswitch.conf
+        propagation: Bidirectional
+  - role: worker
+    kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
+    extraMounts: *extramounts
+  - role: worker
+    kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
+    extraMounts: *extramounts
+  - role: worker
+    kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
+    extraMounts: *extramounts
