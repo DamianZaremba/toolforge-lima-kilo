@@ -39,6 +39,8 @@ alias grpo='git remote prune origin'
 alias gcd='cd $(git rev-parse --show-toplevel 2>/dev/null || echo .)'
 alias ghd='git diff origin/HEAD..HEAD'
 alias gcas='git commit --all --signoff'
+alias gpr="git pull --rebase"
+alias gcm="git checkout main"
 alias k='kubectl'
 alias kg='kubectl get'
 
