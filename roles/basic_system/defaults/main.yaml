@@ -7,8 +7,9 @@ lima_kilo_basic_system_packages:
   - htop
   - jq
   - python3-distutils
-  - python3-pip
   - python3-kubernetes
+  - python3-pip
+  - sssd
+  - strace
   - tcpdump
   - vim
-  - sssd

@@ -31,3 +31,12 @@
   loop: "{{ lima_kilo_basic_system_packages }}"
   loop_control:
     label: "{{ item }}"
+
+# Sometimes when running a couple builds at the same time we get out of inode watchers
+# similar to https://phabricator.wikimedia.org/T361519
+- name: Increase inotify user instances
+  become: true
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_instances
+    value: "1024"
+    state: present
