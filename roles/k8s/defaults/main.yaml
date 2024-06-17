@@ -4,7 +4,6 @@ lima_kilo_toolforge_deploy_repo:
   branch: main
 
 lima_kilo_toolforge_deploy_components:
-  - name: wmcs-k8s-metrics
   - name: image-config
   - name: cert-manager
     wait: true
@@ -17,6 +16,7 @@ lima_kilo_toolforge_deploy_components:
   - name: api-gateway
   - name: kyverno
   - name: maintain-kubeusers
+  - name: wmcs-k8s-metrics
 
 lima_kilo_k8s_other_custom_components:
   - name: foxtrot-ldap
