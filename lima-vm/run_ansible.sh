@@ -8,11 +8,8 @@ export ANSIBLE_CONFIG="$HOME/lima-kilo/ansible.cfg"
 # shellcheck disable=SC1091
 source "$VIRTUALENV_DIR/bin/activate"
 
-# inside the VM this will always give the right value
-current_ip="$(hostname -i | grep -o '[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+\.[[:digit:]]\+')"
 ansible-playbook \
     --diff \
-    --extra-vars "lima_kilo_docker_addr=$current_ip" \
     "$HOME/lima-kilo/playbooks/kind-install.yaml" \
     "$@"
 
