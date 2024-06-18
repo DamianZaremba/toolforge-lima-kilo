@@ -12,4 +12,3 @@ ansible-playbook \
     --diff \
     "$HOME/lima-kilo/playbooks/kind-install.yaml" \
     "$@"
-

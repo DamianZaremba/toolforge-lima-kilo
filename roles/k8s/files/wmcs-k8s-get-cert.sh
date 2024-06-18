@@ -59,7 +59,7 @@ csrName=${title}
 tmpdir=$(mktemp -d)
 [[ "$verbose" == "-v" ]] && echo "INFO: creating certs in tmpdir ${tmpdir}"
 
-cat <<EOF >> ${tmpdir}/csr.conf
+cat <<EOF >> "${tmpdir}"/csr.conf
 [req]
 req_extensions = v3_req
 distinguished_name = req_distinguished_name
@@ -73,11 +73,11 @@ subjectAltName = @alt_names
 DNS.1 = ${title}
 EOF
 
-openssl genrsa -out ${tmpdir}/k8s-key.pem 2048
-openssl req -new -key ${tmpdir}/k8s-key.pem -subj "/CN=${title}/O=${organization}" -out ${tmpdir}/csr -config ${tmpdir}/csr.conf
+openssl genrsa -out "${tmpdir}"/k8s-key.pem 2048
+openssl req -new -key "${tmpdir}"/k8s-key.pem -subj "/CN=${title}/O=${organization}" -out "${tmpdir}"/csr -config "${tmpdir}"/csr.conf
 
 # clean-up any previously created CSR for our service. Ignore errors if not present.
-kubectl delete csr ${csrName} || true
+kubectl delete csr "${csrName}" || true
 
 # create  server cert/key CSR and  send to k8s API
 cat <<EOF | kubectl create -f -
@@ -88,7 +88,7 @@ metadata:
 spec:
   groups:
     - system:authenticated
-  request: $(cat ${tmpdir}/csr | base64 | tr -d '\n')
+  request: $(base64 < "${tmpdir}"/csr | tr -d '\n')
   signerName: kubernetes.io/kube-apiserver-client
   usages:
     - digital signature
@@ -98,17 +98,16 @@ EOF
 
 # verify CSR has been created
 while true; do
-    kubectl get csr ${csrName}
-    if [ "$?" -eq 0 ]; then
+    if kubectl get csr "${csrName}"; then
         break
     fi
 done
 
 # approve and fetch the signed certificate
-kubectl certificate approve ${csrName}
+kubectl certificate approve "${csrName}"
 # verify certificate has been signed
-for x in $(seq 10); do
-    serverCert=$(kubectl get csr ${csrName} -o jsonpath='{.status.certificate}')
+for _ in $(seq 10); do
+    serverCert=$(kubectl get csr "${csrName}" -o jsonpath='{.status.certificate}')
     if [[ ${serverCert} != '' ]]; then
         break
     fi
@@ -118,7 +117,7 @@ if [[ ${serverCert} == '' ]]; then
     echo "ERROR: After approving csr ${csrName}, the signed certificate did not appear on the resource. Giving up after 10 attempts." >&2
     exit 1
 fi
-echo ${serverCert} | openssl base64 -d -A -out ${tmpdir}/k8s-cert.pem
+echo "${serverCert}" | openssl base64 -d -A -out "${tmpdir}"/k8s-cert.pem
 
 if [[ "$verbose" == "-v" ]] ; then
     echo

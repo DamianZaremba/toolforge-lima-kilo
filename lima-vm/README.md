@@ -6,7 +6,7 @@ You should have already followed the steps in the main [lima-kilo README](.../RE
 
 1. You'll need to replace the placeholder for the lima-kilo directory mount:
    ```bash
-      sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|/path/to/lima-kilo|g" "lima-kilo.yaml.tpl" > "lima-kilo.yaml" 
+      sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|/path/to/lima-kilo|g" "lima-kilo.yaml.tpl" > "lima-kilo.yaml"
    ```
 
 2. You can manually create the VM with custom options:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-from subprocess import Popen, PIPE
 import sys
+from subprocess import PIPE, Popen
 
 # change those symbols to whatever you prefer
 symbols = {"ahead of": "↑·", "behind": "↓·", "prehash": ":"}

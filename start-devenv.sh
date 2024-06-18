@@ -18,7 +18,7 @@ This script will create, start, and configure a VM running lima-kilo.
 Options:
   --recreate          If the VM already exists, it will be removed and created anew.
   --dotfiles [PATH]   Specify a path for copying dotfiles to the VM's home directory.
-                      If the --dotfiles flag is not provided, it defaults to using the 
+                      If the --dotfiles flag is not provided, it defaults to using the
                       LIMA_KILO_DOTFILES environment variable, if set.
 
 EOH
@@ -77,7 +77,7 @@ parse_args() {
 
 copy_files() {
     local copy_src="${1?}"
-    local guest_destination="lima-kilo:~" 
+    local guest_destination="lima-kilo:~"
 
     if [[ -d "$copy_src" ]]; then
         echo "Copying contents of directory '$copy_src' to the home directory on the lima-kilo VM..."
@@ -104,7 +104,7 @@ copy_files() {
 
 copy_files_recursive() {
     local copy_src="${1?}"
-    local guest_destination="lima-kilo:~/" 
+    local guest_destination="lima-kilo:~/"
 
     echo "Copying directory '$copy_src' to the home directory on the lima-kilo VM..."
     if [[ -d "$copy_src" ]]; then
@@ -123,7 +123,7 @@ main() {
     local recreate="false"
 	local response
 	local extra_create_opts
-	
+
     parse_args "$@"
 
     command -v limactl >/dev/null || {
@@ -134,7 +134,7 @@ main() {
     if limactl list | grep lima-kilo; then
         if [[ "$recreate" == "false" ]]; then
             echo "lima-kilo VM already exists, do you want to recreate it? [yN]"
-            read response
+            read -r response
             if [[ "$response" =~ ^[nN].* ]] || [[ "$response" == "" ]]; then
                 echo "Aborting at user request"
                 exit 1

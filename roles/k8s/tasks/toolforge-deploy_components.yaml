@@ -8,7 +8,7 @@
 - name: Deploy toolforge-deploy components into local k8s
   ansible.builtin.shell: # noqa no-changed-when
     chdir: "~/toolforge-deploy"
-    cmd: "HARBOR_IP={{ lima_kilo_harbor_ip_for_within_k8s }} ./deploy.sh {{ item.name }} {% if item.wait|default(false) %}--wait{% endif %}"
+    cmd: "HARBOR_IP={{ lima_kilo_harbor_ip_for_within_k8s }} ./deploy.sh {{ item.name }} {% if item.wait | default(false) %}--wait{% endif %}"
   loop: "{{ lima_kilo_toolforge_deploy_components }}"
   loop_control:
     label: "{{ item }}"

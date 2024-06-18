@@ -1,16 +1,16 @@
 #!/bin/env python3
 from __future__ import annotations
-from pathlib import Path
+
 import shutil
 import subprocess
 import tempfile
-from datetime import datetime, timedelta
 import time
-
+from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Any, cast
+
 import click
 import requests
-
 
 TOOLFORGE_DEPLOY_REPO = Path("~/toolforge-deploy").expanduser()
 GITLAB_BASE_URL = "https://gitlab.wikimedia.org"
