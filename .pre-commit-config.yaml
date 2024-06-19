@@ -31,7 +31,7 @@ repos:
         exclude: lima-vm/dotfiles/
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v6.22.2  # last version with support for Python 3.9
+    rev: v24.6.0
     hooks:
       - id: ansible-lint
         additional_dependencies:

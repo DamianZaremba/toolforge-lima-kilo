@@ -4,7 +4,7 @@ set -e
 
 BASE_DIR=$(dirname "$(realpath -s "$0")")
 CONTAINER="tox"
-IMAGE_NAME="docker-registry.tools.wmflabs.org/cloud-cicd-py39bullseye-tox:latest"
+IMAGE_NAME="docker-registry.tools.wmflabs.org/cloud-cicd-py311bookworm-tox:latest"
 
 exit_trap() {
   docker rm -f $CONTAINER
