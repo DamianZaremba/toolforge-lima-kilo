@@ -9,6 +9,7 @@ APT_PACKAGES=(
     "toolforge-webservice"
     "toolforge-jobs-framework-cli"
     "toolforge-builds-cli"
+    "toolforge-envvars-cli"
     "toolforge-cli"
     "python3-toolforge-weld"
 )
