@@ -76,6 +76,8 @@ Some extra tools are also installed:
     toolforge component MR (will show a list of none passed)
   - helper script toolforge_harbor_compose.sh, to manage harbor (wrapper around
     docker-compose)
+  - toolforge_get_versions.sh, to list the installed versions of most toolforge
+    components
 
 There's also a clone of `toolforge-deploy` and a mount of `lima-kilo` in the
 home of the default user `~/{lima-kilo,toolforge-deploy}`.
