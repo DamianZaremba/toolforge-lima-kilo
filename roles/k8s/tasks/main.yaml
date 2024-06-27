@@ -1,9 +1,4 @@
 ---
-- name: Install base PSP
-  kubernetes.core.k8s:
-    state: present
-    src: "{{ role_path }}/files/base-pod-security-policies.yaml"
-
 - name: Install toolforge-deploy components
   ansible.builtin.include_tasks: "{{ role_path }}/tasks/toolforge-deploy_components.yaml"
 
