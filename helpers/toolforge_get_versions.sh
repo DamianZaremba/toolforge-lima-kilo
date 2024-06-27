@@ -4,6 +4,12 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
+RED="\e[41m"
+YELLOW="\e[43m"
+ENDCOLOR="\e[0m"
+
+TOOLFORGE_DEPLOY_REPO=~/toolforge-deploy
+
 
 APT_PACKAGES=(
     "toolforge-webservice"
@@ -30,20 +36,55 @@ HELM_CHARTS=(
     "maintain-kubeusers"
 )
 
+get_toolforge_deploy_version() {
+    local component="${1?}"
+    if [[ "$component" =~ (cert-manager|kyverno) ]]; then
+        # it stores the version in the helmfile
+        echo "$component-$(grep version "$TOOLFORGE_DEPLOY_REPO"/components/"$component"/helmfile.yaml | awk '{print $2}' | tail -n 1)"
+        return 0
+    elif [[ "$component" == "wmcs-metrics" ]]; then
+        # naming does not match the component name
+        echo "wmcs-k8s-metrics-$(grep chartVersion "$TOOLFORGE_DEPLOY_REPO"/components/wmcs-k8s-metrics/values/local.yaml | awk '{print $2}' | tail -n 1)"
+        return 0
+    fi
+
+    echo "$component-$(grep chartVersion "$TOOLFORGE_DEPLOY_REPO"/components/"$component"/values/local.yaml* | awk '{print $2}')"
+    return 0
+}
+
 
 show_package_version() {
     local package="${1?}"
-    local cur_version
+    local cur_version \
+        last_apt_history_entry
     cur_version=$(apt policy "$package" 2>/dev/null| grep '\*\*\*' | awk '{print $2}')
-    echo "$package (package): $cur_version"
+    last_apt_history_entry=$(grep "$package" /var/log/apt/history.log | grep "^Commandline" | tail -n 1 || :)
+    if [[ "$last_apt_history_entry" == *_all.deb ]]; then
+        cur_version="$YELLOW$cur_version (manually installed)$ENDCOLOR"
+    fi
+    echo -e "$package (package): $cur_version"
 }
 
 
 show_chart_version() {
     local chart="${1?}"
     local cur_version
+    local td_version
     cur_version=$(helm list -A | grep "^$chart " | awk '{print $9}')
-    echo "$chart (chart): $cur_version"
+    td_version=$(get_toolforge_deploy_version "$chart")
+    if [[ "$chart" == "wmcs-metrics" ]]; then
+        name="wmcs-k8s-metrics"
+    else
+        name="$chart"
+    fi
+    if [[ "$cur_version" != "$td_version" ]]; then
+        cur_version="$RED$cur_version$ENDCOLOR $YELLOW(toolforge-deploy has $td_version)$ENDCOLOR"
+    else
+        if [[ "$cur_version" == *-dev-mr* ]]; then
+            cur_version="$YELLOW$cur_version$ENDCOLOR"
+        fi
+    fi
+    echo -e "$name (chart $chart): $cur_version"
 }
 
 main() {
