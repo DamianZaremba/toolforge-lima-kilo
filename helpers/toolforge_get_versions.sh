@@ -9,6 +9,7 @@ YELLOW="\e[43m"
 ENDCOLOR="\e[0m"
 
 TOOLFORGE_DEPLOY_REPO=~/toolforge-deploy
+TOOLOFORGE_PACKAGE_REGISTRY_DIR=~/.lima-kilo/installed_packages
 
 
 APT_PACKAGES=(
@@ -56,11 +57,17 @@ get_toolforge_deploy_version() {
 show_package_version() {
     local package="${1?}"
     local cur_version \
-        last_apt_history_entry
+        last_apt_history_entry \
+        installed_mr
+
     cur_version=$(apt policy "$package" 2>/dev/null| grep '\*\*\*' | awk '{print $2}')
     last_apt_history_entry=$(grep "$package" /var/log/apt/history.log | grep "^Commandline" | tail -n 1 || :)
     if [[ "$last_apt_history_entry" == *_all.deb ]]; then
-        cur_version="$YELLOW$cur_version (manually installed)$ENDCOLOR"
+        installed_mr=$( \
+            jq '.mr_number' 2>/dev/null < "$TOOLOFORGE_PACKAGE_REGISTRY_DIR/$package" \
+            || echo "mr not found in $TOOLOFORGE_PACKAGE_REGISTRY_DIR/$package" \
+        )
+        cur_version="$YELLOW$cur_version (mr:$installed_mr)$ENDCOLOR"
     fi
     echo -e "$package (package): $cur_version"
 }

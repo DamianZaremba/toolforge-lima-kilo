@@ -1,6 +1,8 @@
 #!/bin/env python3
 from __future__ import annotations
 
+import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -19,6 +21,7 @@ PACKAGE_JOB_NAME = "package:deb"
 CHART_JOB_NAME = "publish-devchart-toolsbeta"
 # Gotten from the gitlab group page
 TOOLFORGE_GROUP_ID = 203
+TOOLOFORGE_PACKAGE_REGISTRY_DIR = Path("~/.lima-kilo/installed_packages").expanduser()
 
 
 def _do_get_dict(path: str, **kwargs) -> dict[str, Any]:
@@ -32,6 +35,18 @@ def _do_get_dict(path: str, **kwargs) -> dict[str, Any]:
 
 def _do_get_list(path: str, **kwargs) -> list[dict[str, Any]]:
     return cast(list[dict[str, Any]], _do_get_dict(path=path, **kwargs))
+
+
+def _register_custom_package(mr_number: int, package: str) -> None:
+    """We need this because the package versions don't have the mr information."""
+    os.makedirs(TOOLOFORGE_PACKAGE_REGISTRY_DIR, exist_ok=True)
+    package_file = TOOLOFORGE_PACKAGE_REGISTRY_DIR / package
+
+    if mr_number == "restore":
+        package_file.unlink(missing_ok=True)
+        return
+
+    package_file.write_text(json.dumps({"mr_number": mr_number}))
 
 
 def get_project(component: str) -> dict[str, Any]:
@@ -123,6 +138,7 @@ def deploy_package_mr(component: str, mr_number: int) -> None:
         ] + debs
         subprocess.check_call(command)
 
+    _register_custom_package(mr_number=mr_number, package=f"toolforge-{component}")
     click.secho(f"Deployed {component} from mr {mr_number}", fg="green")
 
 
