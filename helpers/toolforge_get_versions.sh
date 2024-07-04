@@ -84,12 +84,10 @@ show_chart_version() {
     else
         name="$chart"
     fi
-    if [[ "$cur_version" != "$td_version" ]]; then
+    if [[ "$cur_version" =~ ^.*-dev-mr-(.*)$ ]]; then
+        cur_version="$YELLOW$cur_version (mr:${BASH_REMATCH[1]})$ENDCOLOR"
+    elif [[ "$cur_version" != "$td_version" ]]; then
         cur_version="$RED$cur_version$ENDCOLOR $YELLOW(toolforge-deploy has $td_version)$ENDCOLOR"
-    else
-        if [[ "$cur_version" == *-dev-mr* ]]; then
-            cur_version="$YELLOW$cur_version$ENDCOLOR"
-        fi
     fi
     echo -e "$name (chart $chart): $cur_version"
 }
