@@ -9,32 +9,33 @@ YELLOW="\e[43m"
 ENDCOLOR="\e[0m"
 
 TOOLFORGE_DEPLOY_REPO=~/toolforge-deploy
-TOOLOFORGE_PACKAGE_REGISTRY_DIR=~/.lima-kilo/installed_packages
+TOOLFORGE_PACKAGE_REGISTRY_DIR=~/.lima-kilo/installed_packages
 
 
 APT_PACKAGES=(
-    "toolforge-webservice"
-    "toolforge-jobs-framework-cli"
-    "toolforge-builds-cli"
-    "toolforge-envvars-cli"
-    "toolforge-cli"
     "python3-toolforge-weld"
+    "toolforge-builds-cli"
+    "toolforge-cli"
+    "toolforge-envvars-cli"
+    "toolforge-jobs-framework-cli"
+    "toolforge-webservice"
 )
 
 
 HELM_CHARTS=(
-    "jobs-api"
-    "builds-api"
     "api-gateway"
+    "builds-api"
     "builds-builder"
     "cert-manager"
     "envvars-admission"
     "envvars-api"
     "image-config"
+    "jobs-api"
     "kyverno"
+    "maintain-kubeusers"
+    "registry-admission"
     "volume-admission"
     "wmcs-metrics"
-    "maintain-kubeusers"
 )
 
 get_toolforge_deploy_version() {
@@ -64,8 +65,8 @@ show_package_version() {
     last_apt_history_entry=$(grep "$package" /var/log/apt/history.log | grep "^Commandline" | tail -n 1 || :)
     if [[ "$last_apt_history_entry" == *_all.deb ]]; then
         installed_mr=$( \
-            jq '.mr_number' 2>/dev/null < "$TOOLOFORGE_PACKAGE_REGISTRY_DIR/$package" \
-            || echo "mr not found in $TOOLOFORGE_PACKAGE_REGISTRY_DIR/$package" \
+            jq '.mr_number' 2>/dev/null < "$TOOLFORGE_PACKAGE_REGISTRY_DIR/$package" \
+            || echo "mr not found in $TOOLFORGE_PACKAGE_REGISTRY_DIR/$package" \
         )
         cur_version="$YELLOW$cur_version (mr:$installed_mr)$ENDCOLOR"
     fi
