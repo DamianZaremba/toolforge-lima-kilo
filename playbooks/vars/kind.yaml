@@ -2,8 +2,9 @@
 kind:
   config: "{{ lima_kilo_local_path }}/kind.yaml"
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
-  url: https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64
-  checksum: sha256:e4264d7ee07ca642fe52818d7c0ed188b193c214889dd055c929dbcb968d1f62
+  url: https://kind.sigs.k8s.io/dl/v0.23.0/kind-linux-amd64
+  checksum: sha256:1d86e3069ffbe3da9f1a918618aecbc778e00c75f838882d0dfa2d363bc4a68c
+
   unpack: false
   extra_forward_ports:
     - 30001 # jobs-api
@@ -12,8 +13,8 @@ kind:
   cluster:
     name: toolforge
     image:
-      name: kindest/node:v1.24.17
-      checksum: sha256:bad10f9b98d54586cba05a7eaa1b61c6b90bfc4ee174fdc43a7b75ca75c95e51
+      name: kindest/node:v1.25.16
+      checksum: sha256:5da57dfc290ac3599e775e63b8b6c49c0c85d3fec771cd7d55b45fae14b38d3b
   api:
     port: 6443
     hostname: toolforge-control-plane
