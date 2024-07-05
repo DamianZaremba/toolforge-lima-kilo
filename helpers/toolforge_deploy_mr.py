@@ -281,7 +281,7 @@ def ask_mr(component: str) -> int:
         "Which MR do you want to deploy?",
         type=click.Choice(choices=choices),
     )
-    return int(chosen)
+    return chosen
 
 
 def _try_mr_number_option(maybe_mr_number: Any) -> Any:
@@ -302,7 +302,7 @@ def _try_mr_number_option(maybe_mr_number: Any) -> Any:
     required=False,
     default=None,
 )
-def main(component: str, mr_number: int | None = None):
+def main(component: str, mr_number: int | str | None = None):
     """
     Deploy a specific version of a toolforge component or client package.
 
@@ -319,12 +319,12 @@ def main(component: str, mr_number: int | None = None):
         if mr_number == "restore":
             restore_package(component=component)
         else:
-            deploy_package_mr(component=component, mr_number=mr_number)
+            deploy_package_mr(component=component, mr_number=int(mr_number))
     else:
         if mr_number == "restore":
             restore_chart(component=component)
         else:
-            deploy_chart_mr(component=component, mr_number=mr_number)
+            deploy_chart_mr(component=component, mr_number=int(mr_number))
 
 
 if __name__ == "__main__":
