@@ -8,6 +8,7 @@ lima_kilo_toolforge_deploy_components:
   - name: cert-manager
     wait: true
   - name: registry-admission
+    wait: true
   - name: volume-admission
   - name: jobs-api
   - name: envvars-api
