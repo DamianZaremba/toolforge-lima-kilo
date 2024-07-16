@@ -170,6 +170,8 @@ def restore_package(component: str) -> None:
 
     remove_command = [
         "sudo",
+        "env",
+        "DEBIAN_FRONTEND=noninteractive",
         "apt",
         "remove",
         "--yes",
@@ -178,6 +180,8 @@ def restore_package(component: str) -> None:
 
     install_command = [
         "sudo",
+        "env",
+        "DEBIAN_FRONTEND=noninteractive",
         "apt",
         "install",
         "--yes",
