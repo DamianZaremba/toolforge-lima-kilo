@@ -22,6 +22,10 @@ CHART_JOB_NAME = "publish-devchart-toolsbeta"
 # Gotten from the gitlab group page
 TOOLFORGE_GROUP_ID = 203
 TOOLOFORGE_PACKAGE_REGISTRY_DIR = Path("~/.lima-kilo/installed_packages").expanduser()
+COMPONENT_TO_PACKAGE = {
+    "jobs-cli": "toolforge-jobs-framework-cli",
+    "tools-webservice": "toolforge-webservice",
+}
 
 
 def _do_get_dict(path: str, **kwargs) -> dict[str, Any]:
@@ -155,10 +159,7 @@ def restore_chart(component: str) -> None:
 
 def restore_package(component: str) -> None:
     # this can be removed if we make the package name patterns all the same
-    if component == "jobs-cli":
-        package = "toolforge-jobs-framework-cli"
-    else:
-        package = f"toolforge-{component}"
+    package = COMPONENT_TO_PACKAGE.get(component, f"toolforge-{component}")
 
     check_command = [
         "sudo",
