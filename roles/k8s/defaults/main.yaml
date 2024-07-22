@@ -15,6 +15,7 @@ lima_kilo_toolforge_deploy_components:
   - name: envvars-admission
   - name: builds-builder
   - name: builds-api # deploying this depends on builds-builder
+  - name: components-api
   - name: api-gateway
   - name: kyverno
   - name: maintain-kubeusers
