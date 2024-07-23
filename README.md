@@ -82,6 +82,8 @@ home of the default user `~/{lima-kilo,toolforge-deploy}`.
 
 ## Debugging tips
 
+### API gateway
+
 If you want to access directly the api-gateway, you can do so by pointing to
 `https://127.0.0.1:30003/`, note that you will need the user certs to
 authenticate:
@@ -95,6 +97,15 @@ Another example, to hit the jobs-api by hand:
 
 ```bash
 local.tf-test@lima-kilo:~$ curl https://localhost:30003/jobs/api/v1/jobs/ --cert .toolskube/client.crt --key .toolskube/client.key -k --header "Content-Type: application/json" -X POST --data '{"name":"test","image":"bookworm","cmd":"./test-cmd.sh"}'
+```
+
+### Tool webservices
+
+You can reach the tools webservice endpoints by curling to the address (ex. for
+`tf-test` tool):
+
+```
+local.tf-test@lima-kilo:~$ curl http://tf-test.local:30002/
 ```
 
 ## Running functional tests
