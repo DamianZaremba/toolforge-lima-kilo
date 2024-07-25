@@ -25,6 +25,7 @@ TOOLOFORGE_PACKAGE_REGISTRY_DIR = Path("~/.lima-kilo/installed_packages").expand
 COMPONENT_TO_PACKAGE = {
     "jobs-cli": "toolforge-jobs-framework-cli",
     "tools-webservice": "toolforge-webservice",
+    "toolforge-weld": "python3-toolforge-weld",
 }
 
 
