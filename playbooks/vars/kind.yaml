@@ -13,8 +13,8 @@ kind:
   cluster:
     name: toolforge
     image:
-      name: kindest/node:v1.25.16
-      checksum: sha256:5da57dfc290ac3599e775e63b8b6c49c0c85d3fec771cd7d55b45fae14b38d3b
+      name: kindest/node:v1.26.15
+      checksum: sha256:84333e26cae1d70361bb7339efb568df1871419f2019c80f9a12b7e2d485fe19
   api:
     port: 6443
     hostname: toolforge-control-plane
