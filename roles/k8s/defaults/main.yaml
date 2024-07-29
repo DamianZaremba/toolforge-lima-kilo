@@ -20,6 +20,7 @@ lima_kilo_toolforge_deploy_components:
   - name: maintain-kubeusers
   - name: wmcs-k8s-metrics
   - name: ingress-nginx
+  - name: ingress-admission
 
 lima_kilo_k8s_other_custom_components:
   - name: foxtrot-ldap
