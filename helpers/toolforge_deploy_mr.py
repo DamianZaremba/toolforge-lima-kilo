@@ -42,8 +42,9 @@ def _do_get_list(path: str, **kwargs) -> list[dict[str, Any]]:
     return cast(list[dict[str, Any]], _do_get_dict(path=path, **kwargs))
 
 
-def _register_custom_package(mr_number: int, package: str) -> None:
+def _register_custom_package(mr_number: int, component: str) -> None:
     """We need this because the package versions don't have the mr information."""
+    package = COMPONENT_TO_PACKAGE.get(component, f"toolforge-{component}")
     os.makedirs(TOOLOFORGE_PACKAGE_REGISTRY_DIR, exist_ok=True)
     package_file = TOOLOFORGE_PACKAGE_REGISTRY_DIR / package
 
@@ -143,7 +144,7 @@ def deploy_package_mr(component: str, mr_number: int) -> None:
         ] + debs
         subprocess.check_call(command)
 
-    _register_custom_package(mr_number=mr_number, package=f"toolforge-{component}")
+    _register_custom_package(mr_number=mr_number, component=component)
     click.secho(f"Deployed {component} from mr {mr_number}", fg="green")
 
 
