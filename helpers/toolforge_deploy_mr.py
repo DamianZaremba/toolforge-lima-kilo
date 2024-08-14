@@ -134,15 +134,17 @@ def deploy_package_mr(component: str, mr_number: int) -> None:
         subprocess.check_call(["ls", "-lR", f"{tempdir}"])
         click.echo(f"Downloaded artifacts at {tempdir}:")
         debs = list((Path(tempdir) / "debs").glob(pattern="*.deb"))
-        command = [
+        install_command = [
             "sudo",
+            "env",
+            "DEBIAN_FRONTEND=noninteractive",
             "apt",
             "install",
             "--yes",
             "--reinstall",
             "--allow-downgrades",
         ] + debs
-        subprocess.check_call(command)
+        subprocess.check_call(install_command)
 
     _register_custom_package(mr_number=mr_number, component=component)
     click.secho(f"Deployed {component} from mr {mr_number}", fg="green")
