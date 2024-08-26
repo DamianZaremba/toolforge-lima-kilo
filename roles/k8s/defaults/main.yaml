@@ -4,6 +4,8 @@ lima_kilo_toolforge_deploy_repo:
   branch: main
 
 lima_kilo_toolforge_deploy_components:
+  - name: calico
+    wait: true
   - name: image-config
   - name: cert-manager
     wait: true
