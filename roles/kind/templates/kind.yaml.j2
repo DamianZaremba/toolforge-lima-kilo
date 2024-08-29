@@ -35,27 +35,13 @@ nodes:
       - hostPath: /etc/nsswitch.conf
         containerPath: /etc/nsswitch.conf
         propagation: Bidirectional
-  - role: worker
-    kubeadmConfigPatches:
-    - |
-      kind: JoinConfiguration
-      nodeRegistration:
-        kubeletExtraArgs:
-          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
-    extraMounts: *extramounts
-  - role: worker
-    kubeadmConfigPatches:
-    - |
-      kind: JoinConfiguration
-      nodeRegistration:
-        kubeletExtraArgs:
-          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
-    extraMounts: *extramounts
-  - role: worker
-    kubeadmConfigPatches:
-    - |
-      kind: JoinConfiguration
-      nodeRegistration:
-        kubeletExtraArgs:
-          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
-    extraMounts: *extramounts
+# Uncomment the next to add an extra worker node to the deployment,
+# note that it will consume extra disk due to containerd
+#  - role: worker
+#    kubeadmConfigPatches:
+#    - |
+#      kind: JoinConfiguration
+#      nodeRegistration:
+#        kubeletExtraArgs:
+#          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
+#    extraMounts: *extramounts

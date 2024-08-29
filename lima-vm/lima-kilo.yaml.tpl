@@ -30,6 +30,10 @@ hostResolver:
 containerd:
   system: false
   user: false
+
+# instead of having many workers that consume a lot of disk with containerd caches
+# we increase the number of cpus of the VM so every worker gets more CPUs
+cpus: 16
 portForwards:
   # Harbor
   - guestPort: 80
