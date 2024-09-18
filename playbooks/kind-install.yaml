@@ -24,10 +24,10 @@
       tags: kubectl
     - role: helm
       tags: helm
-    - role: k8s
-      tags: k8s
     - role: k9s
       tags: k9s
+    - role: k8s
+      tags: k8s
     - role: foxtrot_ldap
       tags: foxtrot_ldap
     - role: harbor
