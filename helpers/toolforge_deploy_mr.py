@@ -289,6 +289,7 @@ def ask_mr(component: str) -> int:
     chosen = click.prompt(
         "Which MR do you want to deploy?",
         type=click.Choice(choices=choices),
+        default=choices[1] if all_mrs else choices[0],
     )
     return chosen
 
