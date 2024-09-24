@@ -29,4 +29,4 @@ lima_kilo_k8s_other_custom_components:
   - name: foxtrot-ldap
     git_url: https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap
     build: docker build --tag foxtrot-ldap:latest .
-    deploy: ./deploy.sh
+    deploy: ./deploy.sh --wait

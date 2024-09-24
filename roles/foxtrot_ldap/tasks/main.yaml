@@ -4,7 +4,14 @@
     cmd: |
       set -e
       uid_gid=$(id -u {{ toolforge.project_name }}.{{ tool_account.name }})
-      {{ foxtrot_ldap_add_tool_account }} {{ tool_account.name }} $uid_gid $uid_gid
+      tries=0;
+      while ! {{ foxtrot_ldap_add_tool_account }} {{ tool_account.name }} $uid_gid $uid_gid; do
+        if [[ $tries -gt 3 ]]; then
+          exit 1
+        fi
+        tries=$((tries + 1))
+        sleep 10
+      done
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
     loop_var: tool_account
