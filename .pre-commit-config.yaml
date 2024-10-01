@@ -4,7 +4,7 @@ default_language_version:
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.6.3
+    rev: v0.6.8
     hooks:
       - id: ruff
         args: [--fix]
@@ -31,7 +31,7 @@ repos:
         exclude: lima-vm/dotfiles/
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v24.7.0
+    rev: v24.9.2
     hooks:
       - id: ansible-lint
         additional_dependencies:
