@@ -11,4 +11,5 @@ source "$VIRTUALENV_DIR/bin/activate"
 ansible-playbook \
     --diff \
     "$HOME/lima-kilo/playbooks/kind-install.yaml" \
-    "$@"
+    "$@" \
+| ts
