@@ -11,7 +11,7 @@ COPY_SRC=""
 
 help() {
     cat <<EOH
-Usage: $0 [options]
+Usage: $0 [options] -- [extra_args]
 
 This script will create, start, and configure a VM running lima-kilo.
 
@@ -20,6 +20,19 @@ Options:
   --dotfiles [PATH]   Specify a path for copying dotfiles to the VM's home directory.
                       If the --dotfiles flag is not provided, it defaults to using the
                       LIMA_KILO_DOTFILES environment variable, if set.
+
+Extra args:
+    These will be passed through to ansible, some useful ones are:
+    -e EXTRA_VARS, --extra-vars EXTRA_VARS
+        set additional variables as key=value or YAML/JSON, if filename prepend with @. This argument may be specified
+        multiple times.
+    -t TAGS, --tags TAGS
+        only run plays and tasks tagged with these values. This argument may be specified multiple times.
+    -v, --verbose
+        Causes Ansible to print more debug messages. Adding multiple -v will increase the verbosity, the builtin
+        plugins currently evaluate up to -vvvvvv. A reasonable level to start is -vvv, connection debugging might
+        require -vvvv. This argument may be specified multiple times.
+    For others check ansible-playbook --help
 
 EOH
 }
@@ -51,6 +64,11 @@ parse_args() {
             --help)
                 help
                 exit 0
+                ;;
+            --)
+                shift
+                ansible_args=("$@")
+                shift $#
                 ;;
             *)
                 echo "Unknown option: $1"
@@ -123,6 +141,7 @@ main() {
     local recreate="false"
 	local response
 	local extra_create_opts
+    declare -a ansible_args
 
     parse_args "$@"
 
@@ -159,7 +178,7 @@ main() {
     # the hostname contains the `lima-` prefix by default, see https://github.com/lima-vm/lima/discussions/1634
     # override it to remove the duplicated `lima` keyword
     limactl shell lima-kilo -- sudo hostnamectl hostname lima-kilo
-    limactl shell lima-kilo -- ./lima-vm/install.sh
+    limactl shell lima-kilo -- ./lima-vm/install.sh "${ansible_args[@]}"
     if [[ "$COPY_SRC" != "" ]]; then
         if [[ "$RECURSIVE" == "true" ]]; then
             copy_files_recursive "$COPY_SRC"

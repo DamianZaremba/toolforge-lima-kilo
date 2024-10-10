@@ -108,6 +108,15 @@ You can reach the tools webservice endpoints by curling to the address (ex. for
 local.tf-test@lima-kilo:~$ curl http://tf-test.local:30002/
 ```
 
+### Passing custom ansible variables
+
+You can pass a custom variables (and any extra options) to use when provisioning
+with ansible, for example, a custom git ref to set toolforge-deploy to:
+
+```
+dcaro@mylaptop$ ./start-devenv.sh -- --extra-vars lima_kilo_toolforge_deploy_repo.ref=refs/heads/mycustombranch
+```
+
 ## Running functional tests
 
 To run the functional tests, you can use the script
