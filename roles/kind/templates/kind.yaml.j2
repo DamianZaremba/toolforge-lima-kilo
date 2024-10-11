@@ -3,16 +3,21 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 containerdConfigPatches:
 - |-
-  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{ lima_kilo_docker_addr }}"]
-    endpoint = ["http://{{ lima_kilo_docker_addr }}"]
+  [plugins."io.containerd.grpc.v1.cri".registry]
+    config_path = "/etc/containerd/certs.d"
 nodes:
-  - role: control-plane
+{% for node in nodes %}
+
+  - role: {{ node.role }}
+    image: {{ node.image }}
     kubeadmConfigPatches:
       - |
-        kind: InitConfiguration
+        kind: {{ "InitConfiguration" if node.role == "control-plane" else "JoinConfiguration" }}
         nodeRegistration:
           kubeletExtraArgs:
             node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
+
+{% if node.name == "toolforge-control-plane" %}
     extraPortMappings:
       - containerPort: {{ kind.api.port }}
         hostPort: {{ kind.api.port }}
@@ -22,7 +27,9 @@ nodes:
         hostPort: {{ port }}
         protocol: TCP
 {% endfor %}
-    extraMounts: &extramounts
+{% endif %}
+
+    extraMounts:
 {% for dir in toolforge.directories %}
       - hostPath: {{ dir }}
         containerPath: {{ dir }}
@@ -32,16 +39,10 @@ nodes:
         containerPath: {{ file.path }}
         propagation: Bidirectional
 {% endfor %}
+      - hostPath: {{ kind.files.containerd_hosts_config.path }}
+        containerPath: {{ kind.files.containerd_hosts_config.path }}
+        propagation: Bidirectional
       - hostPath: /etc/nsswitch.conf
         containerPath: /etc/nsswitch.conf
         propagation: Bidirectional
-# Uncomment the next to add an extra worker node to the deployment,
-# note that it will consume extra disk due to containerd
-#  - role: worker
-#    kubeadmConfigPatches:
-#    - |
-#      kind: JoinConfiguration
-#      nodeRegistration:
-#        kubeletExtraArgs:
-#          node-labels: "ingress-ready=true,kubernetes.wmcloud.org/nfs-mounted=true"
-#    extraMounts: *extramounts
+{% endfor %}

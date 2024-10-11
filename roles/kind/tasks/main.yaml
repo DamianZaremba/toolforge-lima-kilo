@@ -9,11 +9,19 @@
       checksum: "{{ kind.checksum }}"
       unpack: "{{ kind.unpack }}"
 
-- name: Install kind configuration file
+- name: Ensure containerd hosts config directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ kind.files.containerd_hosts_config.path | dirname }}"
+    state: directory
+    mode: "0777"
+
+- name: Create kind configuration files
   ansible.builtin.template:
-    src: kind.yaml.j2
-    dest: "{{ kind.config }}"
+    src: "{{ item.value.src }}"
+    dest: "{{ item.value.path }}"
     mode: "0644"
+  with_dict: "{{ kind.files }}"
 
 - name: Verify if kind cluster exists
   ansible.builtin.shell: "{{ lima_kilo_kind_binary_path }} get clusters"
@@ -25,7 +33,7 @@
     cmd: |
       "{{ lima_kilo_kind_binary_path }}" create cluster \
       --name "{{ kind.cluster.name }}" \
-      --config "{{ kind.config }}" \
+      --config "{{ kind.files.config.path }}" \
       --image "{{ kind.cluster.image.name }}"@"{{ kind.cluster.image.checksum }}"
   when: kind.cluster.name not in kind_get_clusters.stdout
   # if we execute this task, consider it always changed

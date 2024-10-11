@@ -16,7 +16,7 @@ sudo apt install \
 python3 -m venv "$VIRTUALENV_DIR"
 # shellcheck disable=SC1091
 source "$VIRTUALENV_DIR/bin/activate"
-pip3 install -r requirements.txt | ts
+pip3 install -r "${LIMA_KILO_DIR}/requirements.txt"
 
 ! [[ -e "${HOME}/lima-kilo" ]] && ln -s "$LIMA_KILO_DIR" "${HOME}/lima-kilo"
 

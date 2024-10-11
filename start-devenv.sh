@@ -109,7 +109,7 @@ copy_files() {
     local guest_destination="${NAME}:~"
 
     if [[ -d "$copy_src" ]]; then
-        echo "Copying contents of directory '$copy_src' to the home directory on the lima-kilo VM..."
+        echo "Copying contents of directory '$copy_src' to the home directory on the ${NAME} VM..."
 
         shopt -s dotglob
 
@@ -122,7 +122,7 @@ copy_files() {
 
         shopt -u dotglob
     elif [[ -f "$copy_src" ]]; then
-        echo "Copying file '$copy_src' to the home directory on the lima-kilo VM..."
+        echo "Copying file '$copy_src' to the home directory on the ${NAME} VM..."
         limactl copy "$copy_src" "$guest_destination"
     else
         echo "Error: The specified source '$copy_src' is not valid."
@@ -135,7 +135,7 @@ copy_files_recursive() {
     local copy_src="${1?}"
     local guest_destination="${NAME}:~"
 
-    echo "Copying directory '$copy_src' to the home directory on the lima-kilo VM..."
+    echo "Copying directory '$copy_src' to the home directory on the ${NAME} VM..."
     if [[ -d "$copy_src" ]]; then
         shopt -s dotglob
         for file in "$copy_src"/*; do
@@ -148,11 +148,34 @@ copy_files_recursive() {
     fi
 }
 
+prompt() {
+    local message="${1?}"
+    local response
+
+    while true; do
+        echo -e "$message [y/n]"
+        read -r response
+
+        case "$response" in
+            y|"")
+                return 0
+                ;;
+            n)
+                return 1
+                ;;
+            *)
+                echo "Invalid response \"$response\", try again."
+                ;;
+        esac
+    done
+}
+
 main() {
     local recreate="false"
 	local response
 	local extra_create_opts
     declare -a ansible_args
+    sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
 
     parse_args "$@"
 
@@ -161,20 +184,6 @@ main() {
         exit 1
     }
 
-    if limactl list | grep "$NAME"; then
-        if [[ "$recreate" == "false" ]]; then
-            echo "$NAME VM already exists, do you want to recreate it? [yN]"
-            read -r response
-            if [[ "$response" =~ ^[nN].* ]] || [[ "$response" == "" ]]; then
-                echo "Aborting at user request"
-                exit 1
-            fi
-        fi
-
-        limactl stop -f "$NAME" || :
-        limactl delete "$NAME"
-    fi
-
     if [[ $(uname -m) == 'arm64' ]]; then
         extra_create_opts=(
             --vm-type=vz
@@ -182,13 +191,26 @@ main() {
         )
     fi
 
-    sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
+    if [[ "$recreate" == "false" ]] && limactl list | grep "$NAME"; then
+        message="\n${NAME} VM already exists, do you want to recreate it (\"n\" re-runs ansible on the VM)?"
+        if prompt "$message"; then
+            recreate="true"
+        fi
+    fi
 
-    limactl create --name "$NAME" "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
+    if [[ "$recreate" == "true" ]] && limactl list | grep "$NAME"; then
+        limactl stop -f "$NAME" || :
+        limactl delete "$NAME"
+    fi
+
+    if ! limactl list | grep "$NAME"; then
+        limactl create --name "$NAME" "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
+    fi
+
     limactl start "$NAME"
     # the hostname contains the `lima-` prefix by default, see https://github.com/lima-vm/lima/discussions/1634
     # override it to remove the duplicated `lima` keyword
-    limactl shell "$NAME" -- sudo hostnamectl hostname lima-kilo
+    limactl shell "$NAME" -- sudo hostnamectl hostname "$NAME"
     limactl shell "$NAME" -- ./lima-vm/install.sh "${ansible_args[@]+"${ansible_args[@]}"}"
     if [[ "$COPY_SRC" != "" ]]; then
         if [[ "$RECURSIVE" == "true" ]]; then

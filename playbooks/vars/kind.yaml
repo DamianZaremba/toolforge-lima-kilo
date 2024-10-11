@@ -1,6 +1,5 @@
 ---
 kind:
-  config: "{{ lima_kilo_local_path }}/kind.yaml"
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
   url: https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
   checksum: sha256:b89aada5a39d620da3fcd16435b7f28d858927dd53f92cbac77686b0588b600d
@@ -18,5 +17,24 @@ kind:
   api:
     port: 6443
     hostname: toolforge-control-plane
+
+  files:
+    config:
+      path: "{{ lima_kilo_local_path }}/kind.yaml"
+      src: kind.yaml.j2
+    containerd_hosts_config:
+      path: /etc/containerd/certs.d/_default/hosts.toml
+      src: hosts.toml.j2
+
+nodes:
+  - name: toolforge-control-plane
+    role: control-plane
+    image: "{{ kind.cluster.image.name }}@{{ kind.cluster.image.checksum }}"
+# Uncomment the next to add an extra worker node to the deployment,
+# note that it will consume extra disk due to containerd
+  # node2:
+  #   name: toolforge-worker
+  #   role: worker
+  #   image: "{{ kind.cluster.image.name }}@{{ kind.cluster.image.checksum }}"
 
 tool_account_kubeconfig_server_url: https://{{ kind.api.hostname }}:{{ kind.api.port }}
