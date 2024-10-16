@@ -1,0 +1,34 @@
+---
+- name: Install restish binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  vars:
+    binary:
+      name: "restish"
+      path: "{{ lima_kilo_restish_binary_path }}"
+      url: "{{ restish.url }}"
+      checksum: "{{ restish.checksum }}"
+      unpack: "{{ restish.unpack }}"
+
+- name: Create restish apis.json for tool accounts
+  become: true
+  ansible.builtin.template:
+    src: apis.json.j2
+    dest: "/data/project/{{ tool_account.name }}/{{ restish.config_dir }}/apis.json"
+    mode: "0644"
+    owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+    group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+
+- name: Create restish config.json for tool accounts
+  become: true
+  ansible.builtin.template:
+    src: config.json.j2
+    dest: "/data/project/{{ tool_account.name }}/{{ restish.config_dir }}/config.json"
+    mode: "0644"
+    owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+    group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account

@@ -26,20 +26,20 @@ There is an option to copy dotfiles from the host to the home directory (~) of
 the lima-kilo VM. Use the command as follows:
 
 ```bash
-$ ./start-devenv.sh --dotfiles <path-to-dotfiles>
+./start-devenv.sh --dotfiles <path-to-dotfiles>
 ```
 
 You can also specify the dotfiles dir relative to the /lima-vm/dotfiles folder:
 
 ```bash
-$ ./start-devenv.sh --dotfiles user
+./start-devenv.sh --dotfiles user
 ```
 
 If the --dotfiles flag is not provided, the script defaults to using the
 LIMA_KILO_DOTFILES environment variable, if set:
 
 ```bash
-$ export LIMA_KILO_DOTFILES=user
+export LIMA_KILO_DOTFILES=user
 ```
 
 See detailed instructions here: [LimaVM README](./lima-vm/README.md)
@@ -63,6 +63,7 @@ commands.
 Some extra tools are also installed:
 
 - k9s to explore/manage kubernetes
+- restish to interact with the toolforge API
 - jq
 - fzf
 - htop
@@ -104,7 +105,7 @@ local.tf-test@lima-kilo:~$ curl https://localhost:30003/jobs/api/v1/jobs/ --cert
 You can reach the tools webservice endpoints by curling to the address (ex. for
 `tf-test` tool):
 
-```
+```bash
 local.tf-test@lima-kilo:~$ curl http://tf-test.local:30002/
 ```
 
@@ -113,7 +114,7 @@ local.tf-test@lima-kilo:~$ curl http://tf-test.local:30002/
 You can pass a custom variables (and any extra options) to use when provisioning
 with ansible, for example, a custom git ref to set toolforge-deploy to:
 
-```
+```bash
 dcaro@mylaptop$ ./start-devenv.sh -- --extra-vars lima_kilo_toolforge_deploy_repo.ref=refs/heads/mycustombranch
 ```
 

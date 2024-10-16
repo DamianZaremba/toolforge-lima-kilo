@@ -1,0 +1,18 @@
+{
+  "$schema": "https://rest.sh/schemas/apis.json",
+  "toolforge": {
+    "base": "https://localhost:30003/",
+    "profiles": {
+      "default": {
+        "auth": {
+          "name": ""
+        }
+      }
+    },
+    "tls": {
+      "cert": "/data/project/{{ tool_account.name }}/.toolskube/client.crt",
+      "insecure": true,
+      "key": "/data/project/{{ tool_account.name }}/.toolskube/client.key"
+    }
+  }
+}

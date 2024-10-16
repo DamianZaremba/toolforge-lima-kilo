@@ -8,6 +8,7 @@
     - vars/k9s.yaml
     - vars/toolforge.yaml
     - vars/helm.yaml
+    - vars/restish.yaml
   roles:
     # To apply only one or some of these use -t tag1,tag2,...
     - role: basic_system
@@ -32,6 +33,8 @@
       tags: k8s
     - role: foxtrot_ldap
       tags: foxtrot_ldap
+    - role: restish
+      tags: restish
     - role: cli
       tags: cli
   environment:
