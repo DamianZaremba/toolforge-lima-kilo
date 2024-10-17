@@ -7,6 +7,7 @@ containerdConfigPatches:
     config_path = "/etc/containerd/certs.d"
 nodes:
 {% for node in nodes %}
+{% if node.active == "true" %}
 
   - role: {{ node.role }}
     image: {{ node.image }}
@@ -50,4 +51,6 @@ nodes:
       - hostPath: /etc/nsswitch.conf
         containerPath: /etc/nsswitch.conf
         propagation: Bidirectional
+
+{% endif %}
 {% endfor %}

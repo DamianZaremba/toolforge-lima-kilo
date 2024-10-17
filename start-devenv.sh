@@ -17,7 +17,10 @@ Usage: $0 [options] -- [extra_args]
 This script will create, start, and configure a VM running lima-kilo.
 
 Options:
-  --name [NAME]        Specify a name for the VM. Defaults to "lima-kilo".
+  --name [NAME]       Specify a name for the VM. Defaults to "lima-kilo".
+  --no-ha             By default, the cluster that will be created will have
+                      multiple control and worker nodes.
+                      If you want a single-node cluster instead, specify this flag.
   --recreate          If the VM already exists, it will be removed and created anew.
   --dotfiles [PATH]   Specify a path for copying dotfiles to the VM's home directory.
                       If the --dotfiles flag is not provided, it defaults to using the
@@ -53,6 +56,10 @@ parse_args() {
                     echo "Error: --name option requires an argument."
                     exit 1
                 fi
+                ;;
+            --no-ha)
+                high_availability="false"
+                shift
                 ;;
             --recreate)
                 recreate="true"
@@ -178,6 +185,7 @@ prompt() {
 }
 
 main() {
+    local high_availability="true"
     local recreate="false"
     local use_cache="true"
 	local response
@@ -186,7 +194,9 @@ main() {
     sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
 
     parse_args "$@"
+
     ansible_args+=("--extra-vars" "use_cache=${use_cache}")
+    ansible_args+=("--extra-vars" "kind_high_availability=${high_availability}")
 
     command -v limactl >/dev/null || {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"

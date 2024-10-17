@@ -11,12 +11,18 @@ kind:
     - 30003 # api-gateway
   cluster:
     name: toolforge
-    image:
-      name: kindest/node:v1.27.16
-      checksum: sha256:3fd82731af34efe19cd54ea5c25e882985bafa2c9baefe14f8deab1737d9fabe
+    images:
+      1_27:
+        name: kindest/node:v1.27.16
+        checksum: sha256:3fd82731af34efe19cd54ea5c25e882985bafa2c9baefe14f8deab1737d9fabe
+      # add more if you plan to run multiple versions
+      # ...
   api:
     port: 6443
+    # toolforge- prefix is because cluster name is toolforge.
     hostname: toolforge-control-plane
+    # this is the default for multi control-node kind clusters.
+    ha_hostname: toolforge-external-load-balancer
 
   files:
     config:
@@ -29,12 +35,20 @@ kind:
 nodes:
   - name: toolforge-control-plane
     role: control-plane
-    image: "{{ kind.cluster.image.name }}@{{ kind.cluster.image.checksum }}"
-# Uncomment the next to add an extra worker node to the deployment,
-# note that it will consume extra disk due to containerd
-  # node2:
-  #   name: toolforge-worker
-  #   role: worker
-  #   image: "{{ kind.cluster.image.name }}@{{ kind.cluster.image.checksum }}"
+    image: "{{ kind.cluster.images.1_27.name }}@{{ kind.cluster.images.1_27.checksum }}"
+    active: "true" # default
+  - name: toolforge-control-plane2
+    role: control-plane
+    image: "{{ kind.cluster.images.1_27.name }}@{{ kind.cluster.images.1_27.checksum }}"
+    active: "{{ kind_high_availability }}"
+  - name: toolforge-control-plane3
+    role: control-plane
+    image: "{{ kind.cluster.images.1_27.name }}@{{ kind.cluster.images.1_27.checksum }}"
+    active: "{{ kind_high_availability }}"
+  - name: toolforge-worker
+    role: worker
+    image: "{{ kind.cluster.images.1_27.name }}@{{ kind.cluster.images.1_27.checksum }}"
+    active: "{{ kind_high_availability }}"
 
+kind_high_availability: "true"
 tool_account_kubeconfig_server_url: https://{{ kind.api.hostname }}:{{ kind.api.port }}

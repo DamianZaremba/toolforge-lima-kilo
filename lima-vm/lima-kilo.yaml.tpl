@@ -14,7 +14,7 @@ images:
   - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-arm64.qcow2"
     arch: "aarch64"
 cpus: 16
-memory: "8GiB"
+memory: "16GiB"
 disk: "50GiB"
 mounts:
   # If running manually (not using start-devenv.sh), replace this with your path to the lima-kilo directory
@@ -33,9 +33,6 @@ containerd:
   system: false
   user: false
 
-# instead of having many workers that consume a lot of disk with containerd caches
-# we increase the number of cpus of the VM so every worker gets more CPUs
-cpus: 16
 portForwards:
   # Harbor
   - guestPort: 80
