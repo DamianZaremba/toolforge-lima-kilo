@@ -18,10 +18,13 @@ This script will create, start, and configure a VM running lima-kilo.
 
 Options:
   --name [NAME]        Specify a name for the VM. Defaults to "lima-kilo".
-  --recreate           If the VM already exists, it will be removed and created anew.
-  --dotfiles [PATH]    Specify a path for copying dotfiles to the VM's home directory.
-                       If the --dotfiles flag is not provided, it defaults to using the
-                       LIMA_KILO_DOTFILES environment variable, if set.
+  --recreate          If the VM already exists, it will be removed and created anew.
+  --dotfiles [PATH]   Specify a path for copying dotfiles to the VM's home directory.
+                      If the --dotfiles flag is not provided, it defaults to using the
+                      LIMA_KILO_DOTFILES environment variable, if set.
+  --no-cache          Specify this to avoid using container image caches during setup.
+                      By default a cache disk is created and all container images
+                      directories are mounted to this disk to speed up setup.
 
 Extra args:
     These will be passed through to ansible, some useful ones are:
@@ -53,6 +56,10 @@ parse_args() {
                 ;;
             --recreate)
                 recreate="true"
+                shift
+                ;;
+            --no-cache)
+                use_cache="false"
                 shift
                 ;;
             --dotfiles)
@@ -172,12 +179,14 @@ prompt() {
 
 main() {
     local recreate="false"
+    local use_cache="true"
 	local response
 	local extra_create_opts
     declare -a ansible_args
     sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
 
     parse_args "$@"
+    ansible_args+=("--extra-vars" "use_cache=${use_cache}")
 
     command -v limactl >/dev/null || {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"
@@ -190,6 +199,16 @@ main() {
             --rosetta
         )
     fi
+
+    if [[ "$use_cache" == "true" ]]; then
+        if ! limactl disk list cache | grep -q cache; then
+            limactl disk create cache --size 50GiB
+        fi
+        sed -i.bak -e "s|#@@ADDITIONAL_DISKS_PLACEHOLDER@@||g" "$CURDIR/lima-vm/lima-kilo.yaml" \
+        && rm "$CURDIR/lima-vm/lima-kilo.yaml.bak"
+    fi
+    # you want to always attempt unlocking disk
+    limactl disk unlock cache
 
     if [[ "$recreate" == "false" ]] && limactl list | grep "$NAME"; then
         message="\n${NAME} VM already exists, do you want to recreate it (\"n\" re-runs ansible on the VM)?"

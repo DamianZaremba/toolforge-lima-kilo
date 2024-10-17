@@ -42,6 +42,13 @@ LIMA_KILO_DOTFILES environment variable, if set:
 export LIMA_KILO_DOTFILES=user
 ```
 
+By default all container images pulled during setup are mounted to disk and persisted.
+If you don't want that you can use `--no-cache`:
+```bash
+$ ./start-devenv.sh --no-cache
+```
+The above wil pull every image needed for setup from scratch without using the cache.
+
 See detailed instructions here: [LimaVM README](./lima-vm/README.md)
 
 ## Usage

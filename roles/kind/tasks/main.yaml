@@ -33,8 +33,7 @@
     cmd: |
       "{{ lima_kilo_kind_binary_path }}" create cluster \
       --name "{{ kind.cluster.name }}" \
-      --config "{{ kind.files.config.path }}" \
-      --image "{{ kind.cluster.image.name }}"@"{{ kind.cluster.image.checksum }}"
+      --config "{{ kind.files.config.path }}"
   when: kind.cluster.name not in kind_get_clusters.stdout
   # if we execute this task, consider it always changed
   changed_when: true

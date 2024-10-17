@@ -13,7 +13,9 @@ images:
     arch: "x86_64"
   - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-arm64.qcow2"
     arch: "aarch64"
+cpus: 16
 memory: "8GiB"
+disk: "50GiB"
 mounts:
   # If running manually (not using start-devenv.sh), replace this with your path to the lima-kilo directory
   - location: "@@LIMA_KILO_DIR_PLACEHOLDER@@"
@@ -38,6 +40,10 @@ portForwards:
   # Harbor
   - guestPort: 80
     hostPort: 8080
+
+#@@ADDITIONAL_DISKS_PLACEHOLDER@@additionalDisks:
+#@@ADDITIONAL_DISKS_PLACEHOLDER@@  - cache
+
 provision:
   - mode: system
     script: |

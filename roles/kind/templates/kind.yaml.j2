@@ -39,6 +39,11 @@ nodes:
         containerPath: {{ file.path }}
         propagation: Bidirectional
 {% endfor %}
+{% if use_cache == "true" %}
+      - hostPath: {{ cache_disk_mount }}/{{ node.name }}
+        containerPath: /var/lib/containerd
+        propagation: Bidirectional
+{% endif %}
       - hostPath: {{ kind.files.containerd_hosts_config.path }}
         containerPath: {{ kind.files.containerd_hosts_config.path }}
         propagation: Bidirectional
