@@ -15,6 +15,9 @@ kind:
       1_27:
         name: kindest/node:v1.27.16
         checksum: sha256:3fd82731af34efe19cd54ea5c25e882985bafa2c9baefe14f8deab1737d9fabe
+      1_28:
+        name: kindest/node:v1.28.13
+        checksum: sha256:45d319897776e11167e4698f6b14938eb4d52eb381d9e3d7a9086c16c69a8110
       # add more if you plan to run multiple versions
       # ...
   api:
@@ -35,7 +38,7 @@ kind:
 nodes:
   - name: toolforge-control-plane
     role: control-plane
-    image: "{{ kind.cluster.images.1_27.name }}@{{ kind.cluster.images.1_27.checksum }}"
+    image: "{{ kind.cluster.images.1_28.name }}@{{ kind.cluster.images.1_28.checksum }}"
     active: "true" # default
   - name: toolforge-control-plane2
     role: control-plane
