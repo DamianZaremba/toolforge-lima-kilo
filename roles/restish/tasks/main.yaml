@@ -9,6 +9,18 @@
       checksum: "{{ restish.checksum }}"
       unpack: "{{ restish.unpack }}"
 
+- name: Create restish config dir for tool accounts
+  become: true
+  ansible.builtin.file:
+    path: "/data/project/{{ tool_account.name }}/{{ restish.config_dir }}"
+    state: directory
+    mode: "0777"
+    owner: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+    group: "{{ toolforge.project_name }}.{{ tool_account.name }}"
+  loop: "{{ toolforge.tool_accounts }}"
+  loop_control:
+    loop_var: tool_account
+
 - name: Create restish apis.json for tool accounts
   become: true
   ansible.builtin.template:
