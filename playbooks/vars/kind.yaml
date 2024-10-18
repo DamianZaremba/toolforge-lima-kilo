@@ -50,7 +50,7 @@ nodes:
     active: "{{ kind_high_availability }}"
   - name: toolforge-worker
     role: worker
-    image: "{{ kind.cluster.images.1_27.name }}@{{ kind.cluster.images.1_27.checksum }}"
+    image: "{{ kind.cluster.images.1_28.name }}@{{ kind.cluster.images.1_28.checksum }}"
     active: "{{ kind_high_availability }}"
 
 kind_high_availability: "true"
