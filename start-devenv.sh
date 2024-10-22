@@ -8,6 +8,7 @@ CURDIR="$(realpath "$(dirname "$0")")"
 REPO_DOTFILES="$CURDIR/lima-vm/dotfiles"
 RECURSIVE="false"
 COPY_SRC=""
+NAME="lima-kilo"
 
 help() {
     cat <<EOH
@@ -16,10 +17,11 @@ Usage: $0 [options] -- [extra_args]
 This script will create, start, and configure a VM running lima-kilo.
 
 Options:
-  --recreate          If the VM already exists, it will be removed and created anew.
-  --dotfiles [PATH]   Specify a path for copying dotfiles to the VM's home directory.
-                      If the --dotfiles flag is not provided, it defaults to using the
-                      LIMA_KILO_DOTFILES environment variable, if set.
+  --name [NAME]        Specify a name for the VM. Defaults to "lima-kilo".
+  --recreate           If the VM already exists, it will be removed and created anew.
+  --dotfiles [PATH]    Specify a path for copying dotfiles to the VM's home directory.
+                       If the --dotfiles flag is not provided, it defaults to using the
+                       LIMA_KILO_DOTFILES environment variable, if set.
 
 Extra args:
     These will be passed through to ansible, some useful ones are:
@@ -40,6 +42,15 @@ EOH
 parse_args() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
+            --name)
+                if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
+                    NAME="$2"
+                    shift 2
+                else
+                    echo "Error: --name option requires an argument."
+                    exit 1
+                fi
+                ;;
             --recreate)
                 recreate="true"
                 shift
@@ -95,7 +106,7 @@ parse_args() {
 
 copy_files() {
     local copy_src="${1?}"
-    local guest_destination="lima-kilo:~"
+    local guest_destination="${NAME}:~"
 
     if [[ -d "$copy_src" ]]; then
         echo "Copying contents of directory '$copy_src' to the home directory on the lima-kilo VM..."
@@ -122,7 +133,7 @@ copy_files() {
 
 copy_files_recursive() {
     local copy_src="${1?}"
-    local guest_destination="lima-kilo:~/"
+    local guest_destination="${NAME}:~"
 
     echo "Copying directory '$copy_src' to the home directory on the lima-kilo VM..."
     if [[ -d "$copy_src" ]]; then
@@ -150,9 +161,9 @@ main() {
         exit 1
     }
 
-    if limactl list | grep lima-kilo; then
+    if limactl list | grep "$NAME"; then
         if [[ "$recreate" == "false" ]]; then
-            echo "lima-kilo VM already exists, do you want to recreate it? [yN]"
+            echo "$NAME VM already exists, do you want to recreate it? [yN]"
             read -r response
             if [[ "$response" =~ ^[nN].* ]] || [[ "$response" == "" ]]; then
                 echo "Aborting at user request"
@@ -160,8 +171,8 @@ main() {
             fi
         fi
 
-        limactl stop -f lima-kilo || :
-        limactl delete lima-kilo
+        limactl stop -f "$NAME" || :
+        limactl delete "$NAME"
     fi
 
     if [[ $(uname -m) == 'arm64' ]]; then
@@ -173,12 +184,12 @@ main() {
 
     sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
 
-    limactl create "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
-    limactl start lima-kilo
+    limactl create --name "$NAME" "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
+    limactl start "$NAME"
     # the hostname contains the `lima-` prefix by default, see https://github.com/lima-vm/lima/discussions/1634
     # override it to remove the duplicated `lima` keyword
-    limactl shell lima-kilo -- sudo hostnamectl hostname lima-kilo
-    limactl shell lima-kilo -- ./lima-vm/install.sh "${ansible_args[@]+"${ansible_args[@]}"}"
+    limactl shell "$NAME" -- sudo hostnamectl hostname "$NAME"
+    limactl shell "$NAME" -- ./lima-vm/install.sh "${ansible_args[@]+"${ansible_args[@]}"}"
     if [[ "$COPY_SRC" != "" ]]; then
         if [[ "$RECURSIVE" == "true" ]]; then
             copy_files_recursive "$COPY_SRC"
@@ -188,8 +199,8 @@ main() {
     fi
 
     echo "########################################################"
-    echo "Now you can start a shell in your new lima-kilo vm with:"
-    echo "    limactl shell lima-kilo"
+    echo "Now you can start a shell in your new $NAME VM with:"
+    echo "    limactl shell $NAME"
 }
 
 
