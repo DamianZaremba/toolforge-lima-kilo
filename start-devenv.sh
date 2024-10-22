@@ -188,7 +188,7 @@ main() {
     limactl start "$NAME"
     # the hostname contains the `lima-` prefix by default, see https://github.com/lima-vm/lima/discussions/1634
     # override it to remove the duplicated `lima` keyword
-    limactl shell "$NAME" -- sudo hostnamectl hostname "$NAME"
+    limactl shell "$NAME" -- sudo hostnamectl hostname lima-kilo
     limactl shell "$NAME" -- ./lima-vm/install.sh "${ansible_args[@]+"${ansible_args[@]}"}"
     if [[ "$COPY_SRC" != "" ]]; then
         if [[ "$RECURSIVE" == "true" ]]; then
