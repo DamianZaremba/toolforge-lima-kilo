@@ -63,7 +63,8 @@ commands.
 Some extra tools are also installed:
 
 - k9s to explore/manage kubernetes
-- restish to interact with the toolforge API
+- restish to interact with the toolforge API (example `become tf-test`,
+  `restish toolforge builds-list tf-test`)
 - jq
 - fzf
 - htop

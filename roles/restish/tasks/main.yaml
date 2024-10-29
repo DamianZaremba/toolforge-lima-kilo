@@ -44,3 +44,9 @@
   loop: "{{ toolforge.tool_accounts }}"
   loop_control:
     loop_var: tool_account
+
+- name: Create autocomplete file for tool accounts
+  become: true
+  ansible.builtin.shell:
+    cmd: "restish completion bash > /etc/bash_completion.d/restish"
+    creates: /etc/bash_completion.d/restish
