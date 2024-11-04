@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import tempfile
@@ -257,7 +258,12 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
     ]
     values_file.write_text("\n".join(fixed_lines))
     try:
-        subprocess.check_call(["./deploy.sh", component], cwd=TOOLFORGE_DEPLOY_REPO)
+        output = subprocess.check_output(
+            ["./deploy.sh", component],
+            cwd=TOOLFORGE_DEPLOY_REPO,
+            # avoid interactive mode
+            stdin=subprocess.DEVNULL,
+        ).decode("utf-8")
     except subprocess.CalledProcessError:
         if datetime.strptime(
             pipeline["finished_at"].rsplit(".", 1)[0], "%Y-%m-%dT%H:%M:%S"
@@ -272,7 +278,31 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
             )
             return
 
+    click.secho(output)
+
+    if "has changed:" not in output:
+        click.secho(
+            "  Trying to do a rollout reboot of the deployments of that chart as it seems there was no chart diff..."
+        )
+        maybe_namespace = re.search("namespace=(.*)$", output, flags=re.MULTILINE)
+        if maybe_namespace:
+            rollout_reboot_deployments(namespace=maybe_namespace.groups()[0])
+        else:
+            click.secho(
+                "  Unable to find the namespace to do a rollout reboot, you might have to restart the pods yourself to pull the latest image"
+            )
+
     click.secho(f"Deployed {component}:{chart_version} from mr {mr_number}", fg="green")
+
+
+def rollout_reboot_deployments(namespace: str) -> None:
+    deployments = subprocess.check_output(
+        ["kubectl", "get", "deployments", f"--namespace={namespace}", "--output=name"]
+    ).decode("utf-8")
+    for deployment in deployments.splitlines():
+        subprocess.check_call(
+            ["kubectl", "rollout", "restart", f"--namespace={namespace}", deployment]
+        )
 
 
 def ask_mr(component: str) -> int:
