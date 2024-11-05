@@ -252,10 +252,15 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
         )
 
     values_data = values_file.read_text()
-    fixed_lines = [
-        f"chartVersion: {chart_version}" if line.startswith("chartVersion") else line
-        for line in values_data.splitlines()
-    ]
+    fixed_lines: list[str] = []
+    for line in values_data.splitlines():
+        if line.startswith("chartVersion"):
+            line = f"chartVersion: {chart_version}"
+        elif line.startswith("chartRepository:"):
+            line = "chartRepository: toolsbeta"
+        else:
+            fixed_lines.append(line)
+
     values_file.write_text("\n".join(fixed_lines))
     try:
         output = subprocess.check_output(
