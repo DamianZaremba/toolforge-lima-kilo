@@ -258,10 +258,11 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
             line = f"chartVersion: {chart_version}"
         elif line.startswith("chartRepository:"):
             line = "chartRepository: toolsbeta"
-        else:
-            fixed_lines.append(line)
+
+        fixed_lines.append(line)
 
     values_file.write_text("\n".join(fixed_lines))
+
     try:
         output = subprocess.check_output(
             ["./deploy.sh", component],
