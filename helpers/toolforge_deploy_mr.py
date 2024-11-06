@@ -283,6 +283,12 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
             )
             return
 
+        click.secho(
+            "Error trying to deploy, check the logs for hints.",
+            fg="red",
+        )
+        raise click.Abort()
+
     click.secho(output)
 
     if "has changed:" not in output:
