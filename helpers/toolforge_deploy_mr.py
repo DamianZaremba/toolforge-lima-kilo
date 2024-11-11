@@ -88,12 +88,8 @@ def get_chart_job(project: dict[str, Any], pipeline: dict[str, Any]) -> dict[str
     )
 
 
-def get_package_job(
-    project: dict[str, Any], pipeline: dict[str, Any]
-) -> dict[str, Any]:
-    for job in _do_get_list(
-        f"/projects/{project['id']}/pipelines/{pipeline['id']}/jobs"
-    ):
+def get_package_job(project_id: int, pipeline: dict[str, Any]) -> dict[str, Any]:
+    for job in _do_get_list(f"/projects/{project_id}/pipelines/{pipeline['id']}/jobs"):
         if job["name"] == PACKAGE_JOB_NAME:
             return job
 
@@ -123,10 +119,13 @@ def get_last_pipeline(project: dict[str, Any], mr_number: int) -> dict[str, Any]
 def deploy_package_mr(component: str, mr_number: int) -> None:
     project = get_project(component=component)
     pipeline = get_last_pipeline(project=project, mr_number=mr_number)
-    package_job = get_package_job(project=project, pipeline=pipeline)
+    # this allows using pipelines for forks
+    pipeline_project_id = pipeline["project_id"]
+    package_job = get_package_job(project_id=pipeline_project_id, pipeline=pipeline)
     artifact_response = requests.get(
-        f"{GITLAB_API_BASE_URL}/projects/{project['id']}/jobs/{package_job['id']}/artifacts"
+        f"{GITLAB_API_BASE_URL}/projects/{pipeline_project_id}/jobs/{package_job['id']}/artifacts"
     )
+    artifact_response.raise_for_status()
     with tempfile.TemporaryDirectory() as tempdir:
         artifacts_path = f"{tempdir}/artifacts.zip"
         Path(artifacts_path).open("wb").write(artifact_response.content)
@@ -216,6 +215,7 @@ def restore_package(component: str) -> None:
 def deploy_chart_mr(component: str, mr_number: int) -> None:
     project = get_project(component=component)
     pipeline = get_last_pipeline(project=project, mr_number=mr_number)
+    # to be able to use charts built in forks, we will have to re-think how we push images and such
     chart_job = get_chart_job(project=project, pipeline=pipeline)
     # for some silly reason the jobs gitlab api needs a token to get the logs
     # but the non-api url is public, so we use the public one
