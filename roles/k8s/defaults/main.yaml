@@ -13,6 +13,7 @@ lima_kilo_toolforge_deploy_components:
     wait: true
   - name: volume-admission
   - name: jobs-api
+  - name: jobs-emailer
   - name: envvars-api
   - name: envvars-admission
   - name: builds-builder
