@@ -10,7 +10,7 @@ _toolforge_deploy_mr.py() {
 	local cur_index="$COMP_CWORD"
 
     local components
-    components="$(ls "$COMPONENTS_DIR")"
+    components="$(ls "$COMPONENTS_DIR") jobs-cli builds-cli envvars-cli toolforge-cli components-cli tools-webservice"
 
 	case "$cur_index" in
 		1)
