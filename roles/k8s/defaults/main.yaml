@@ -22,6 +22,7 @@ lima_kilo_toolforge_deploy_components:
   - name: api-gateway
   - name: kyverno
   - name: maintain-kubeusers
+  - name: maintain-harbor
   - name: wmcs-k8s-metrics
   - name: ingress-nginx
   - name: ingress-admission
