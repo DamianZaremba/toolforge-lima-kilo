@@ -78,3 +78,4 @@ toolforge:
     - toolforge-jobs-framework-cli
     - toolforge-envvars-cli
     - toolforge-webservice
+    - toolforge-components-cli
