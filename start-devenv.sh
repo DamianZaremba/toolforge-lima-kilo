@@ -184,13 +184,26 @@ prompt() {
     done
 }
 
+
+check_limactl_version() {
+    local cur_version
+    cur_version=$(limactl --version)
+
+    if ! [[ "$cur_version" =~ \ 1\.[[:digit:]]*\.[[:digit:]]* ]]; then
+        echo "WARNING: your version of limactl is a bit old, you should consider upgrading to the latest >1.0.0"
+    fi
+}
+
 main() {
     local high_availability="true"
     local recreate="false"
     local use_cache="true"
-	local response
-	local extra_create_opts
+    local response
+    local extra_create_opts
     declare -a ansible_args
+
+    check_limactl_version
+
     sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
 
     parse_args "$@"
