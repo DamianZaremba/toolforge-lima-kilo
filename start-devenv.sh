@@ -208,6 +208,12 @@ main() {
             --vm-type=vz
             --rosetta
         )
+    else
+        # The cloud Debian VM does not support the default 9p
+        # See T384142
+        extra_create_opts=(
+            --mount-type=reverse-sshfs
+        )
     fi
 
     if [[ "$use_cache" == "true" ]]; then
