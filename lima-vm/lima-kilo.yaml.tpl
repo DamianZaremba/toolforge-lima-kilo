@@ -1,12 +1,12 @@
 # Based on https://github.com/lima-vm/lima/blob/master/examples/docker-rootful.yaml
 images:
   # Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
-  - location: "https://cloud.debian.org/images/cloud/bookworm/20231210-1591/debian-12-genericcloud-amd64-20231210-1591.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/bookworm/20250316-2053/debian-12-genericcloud-amd64-20250316-2053.qcow2"
     arch: "x86_64"
-    digest: "sha512:7b7f4d34bba4a6a819dbd67ae338b46141646de7b18ae3818a7aa178d383bfbb3e9e0197c545bb2d5fd5be7f8e55a7d449b285983ae86a09a294124bb97d3d5f"
-  - location: "https://cloud.debian.org/images/cloud/bookworm/20240701-1795/debian-12-genericcloud-arm64-20240701-1795.qcow2"
+    digest: "sha512:0ea74c246c5eb8c6eb5b8e3b8b5268b16a791dfbc8f0bca27d9d787a3f4c50a7830bfc690e6902dfe78031fb2b2c3892349990d6b26b13112252a81d6f20f792"
+  - location: "https://cloud.debian.org/images/cloud/bookworm/20250316-2053/debian-12-genericcloud-arm64-20250316-2053.qcow2"
     arch: "aarch64"
-    digest: "sha512:61304dda3043ef7457d79f96556074fea7d915216dac18307f2b429e2c54b73fd63cd256fd0e08d87b8e87f14f29d20008750ebdc47a8f2850f585e73d2a576f"
+    digest: "sha512:a6733f7f76ef62706e9e04dbad15d7ca251a2875d31025d9e8893391985b7e0610c96b6133ec5b2fa5fc4426bb3e6dcc91da77d0b3dc59bf4352e30625fc180d"
   # Fallback to the latest release image.
   # Hint: run `limactl prune` to invalidate the cache
   - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"

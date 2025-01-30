@@ -2,12 +2,12 @@
 helm:
   # refresh versions from
   # https://github.com/helm/helm/releases
-  url: https://get.helm.sh/helm-v3.14.4-linux-amd64.tar.gz
-  checksum: sha256:a5844ef2c38ef6ddf3b5a8f7d91e7e0e8ebc39a38bb3fc8013d629c1ef29c259
+  url: https://get.helm.sh/helm-v3.17.2-linux-amd64.tar.gz
+  checksum: sha256:90c28792a1eb5fb0b50028e39ebf826531ebfcf73f599050dbd79bab2f277241
   unpack: true
 helmfile:
   # refresh versions from
   # https://github.com/helmfile/helmfile/releases
-  url: https://github.com/helmfile/helmfile/releases/download/v0.167.1/helmfile_0.167.1_linux_amd64.tar.gz
-  checksum: sha256:245bfb3dae5df1c0a45a5e255d06823da98b0b41267dade84ae6815707c93315
+  url: https://github.com/helmfile/helmfile/releases/download/v0.171.0/helmfile_0.171.0_linux_amd64.tar.gz
+  checksum: sha256:c190fd305307ea3fd41a91a95b3341100a1ede239cf32e225564a1ece286fb1b
   unpack: true

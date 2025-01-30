@@ -1,8 +1,8 @@
 ---
 kind:
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
-  url: https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-amd64
-  checksum: sha256:b89aada5a39d620da3fcd16435b7f28d858927dd53f92cbac77686b0588b600d
+  url: https://kind.sigs.k8s.io/dl/v0.27.0/kind-linux-amd64
+  checksum: sha256:a6875aaea358acf0ac07786b1a6755d08fd640f4c79b7a2e46681cc13f49a04b
 
   unpack: false
   extra_forward_ports:
@@ -12,12 +12,12 @@ kind:
   cluster:
     name: toolforge
     images:
-      1_27:
-        name: kindest/node:v1.27.16
-        checksum: sha256:3fd82731af34efe19cd54ea5c25e882985bafa2c9baefe14f8deab1737d9fabe
       1_28:
         name: kindest/node:v1.28.13
         checksum: sha256:45d319897776e11167e4698f6b14938eb4d52eb381d9e3d7a9086c16c69a8110
+      1_29:
+        name: kindest/node:v1.29.14
+        checksum: sha256:8703bd94ee24e51b778d5556ae310c6c0fa67d761fae6379c8e0bb480e6fea29
       # add more if you plan to run multiple versions
       # ...
   api:
@@ -38,19 +38,19 @@ kind:
 nodes:
   - name: toolforge-control-plane
     role: control-plane
-    image: "{{ kind.cluster.images.1_28.name }}@{{ kind.cluster.images.1_28.checksum }}"
+    image: "{{ kind.cluster.images.1_29.name }}@{{ kind.cluster.images.1_29.checksum }}"
     active: "true" # default
   - name: toolforge-control-plane2
     role: control-plane
-    image: "{{ kind.cluster.images.1_28.name }}@{{ kind.cluster.images.1_28.checksum }}"
+    image: "{{ kind.cluster.images.1_29.name }}@{{ kind.cluster.images.1_29.checksum }}"
     active: "{{ kind_high_availability }}"
   - name: toolforge-control-plane3
     role: control-plane
-    image: "{{ kind.cluster.images.1_28.name }}@{{ kind.cluster.images.1_28.checksum }}"
+    image: "{{ kind.cluster.images.1_29.name }}@{{ kind.cluster.images.1_29.checksum }}"
     active: "{{ kind_high_availability }}"
   - name: toolforge-worker
     role: worker
-    image: "{{ kind.cluster.images.1_28.name }}@{{ kind.cluster.images.1_28.checksum }}"
+    image: "{{ kind.cluster.images.1_29.name }}@{{ kind.cluster.images.1_29.checksum }}"
     active: "{{ kind_high_availability }}"
 
 kind_high_availability: "false"
