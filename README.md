@@ -42,10 +42,12 @@ LIMA_KILO_DOTFILES environment variable, if set:
 export LIMA_KILO_DOTFILES=user
 ```
 
-By default running `./start-devenv.sh` creates a high-availability multi-node cluster.
-To create a single node kubernetes cluster, run:
+By default running `./start-devenv.sh` creates a single-node Kubernetes cluster.
+To create a multi-node kubernetes cluster with 3 control nodes and 1 worker
+node, run:
+
 ```bash
-$ ./start-devenv.sh --no-ha
+$ ./start-devenv.sh --ha
 ```
 
 All container images pulled during setup are mounted to disk and persisted.

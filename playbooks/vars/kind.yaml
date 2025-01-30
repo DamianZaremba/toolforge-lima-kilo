@@ -53,5 +53,5 @@ nodes:
     image: "{{ kind.cluster.images.1_28.name }}@{{ kind.cluster.images.1_28.checksum }}"
     active: "{{ kind_high_availability }}"
 
-kind_high_availability: "true"
+kind_high_availability: "false"
 tool_account_kubeconfig_server_url: https://{{ kind.api.hostname }}:{{ kind.api.port }}
