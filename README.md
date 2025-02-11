@@ -55,7 +55,7 @@ If you don't want that you can use `--no-cache`:
 ```bash
 $ ./start-devenv.sh --no-cache
 ```
-The above wil pull every image needed for setup from scratch without using the cache.
+The above will pull every image needed for setup from scratch without using the cache.
 
 Run `./start-devenv.sh --help` to see all available option.
 See detailed instructions here: [LimaVM README](./lima-vm/README.md)
