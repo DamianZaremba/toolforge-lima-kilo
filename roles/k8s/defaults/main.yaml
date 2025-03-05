@@ -1,7 +1,6 @@
 ---
-lima_kilo_toolforge_deploy_repo:
-  url: https://gitlab.wikimedia.org/repos/cloud/toolforge/toolforge-deploy
-  ref: refs/heads/main
+lima_kilo_toolforge_deploy_repo: https://gitlab.wikimedia.org/repos/cloud/toolforge/toolforge-deploy
+lima_kilo_toolforge_deploy_branch: main
 
 lima_kilo_toolforge_deploy_components:
   - name: calico

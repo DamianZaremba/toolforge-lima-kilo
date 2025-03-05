@@ -28,6 +28,9 @@ Options:
   --no-cache          Specify this to avoid using container image caches during setup.
                       By default a cache disk is created and all container images
                       directories are mounted to this disk to speed up setup.
+  --toolforge-deploy-branch [BRANCH]
+      Use a specific branch of the "toolforge-deploy" repo to deploy Toolforge
+      components. If not specified, it will use the "main" branch.
 
 Extra args:
     These will be passed through to ansible, some useful ones are:
@@ -68,6 +71,15 @@ parse_args() {
             --no-cache)
                 use_cache="false"
                 shift
+                ;;
+            --toolforge-deploy-branch)
+                if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
+                    TOOLFORGE_DEPLOY_BRANCH="$2"
+                    shift 2
+                else
+                    echo "Error: --toolforge-deploy-branch option requires an argument."
+                    exit 1
+                fi
                 ;;
             --dotfiles)
                 if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
@@ -208,8 +220,11 @@ main() {
 
     parse_args "$@"
 
+    local toolforge_deploy_branch="${TOOLFORGE_DEPLOY_BRANCH:-main}"
+
     ansible_args+=("--extra-vars" "use_cache=${use_cache}")
     ansible_args+=("--extra-vars" "kind_high_availability=${high_availability}")
+    ansible_args+=("--extra-vars" "lima_kilo_toolforge_deploy_branch=${toolforge_deploy_branch}")
 
     command -v limactl >/dev/null || {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"

@@ -1,10 +1,12 @@
 ---
-- name: Git clone toolforge-deploy repository
-  ansible.builtin.shell:
-    cmd: >-
-      git clone --quiet {{ lima_kilo_toolforge_deploy_repo.url }} ~/toolforge-deploy
-      && git -C ~/toolforge-deploy reset --hard '{{ lima_kilo_toolforge_deploy_repo.ref }}'
-    creates: "~/toolforge-deploy/.git"
+- name: Git checkout toolforge-deploy
+  ansible.builtin.git:
+    repo: "{{ lima_kilo_toolforge_deploy_repo }}"
+    dest: ~/toolforge-deploy
+    version: "{{ lima_kilo_toolforge_deploy_branch }}"
+    force: true
+    update: true
+  register: git_result
 
 - name: Deploy toolforge-deploy components into local k8s
   ansible.builtin.shell: # noqa no-changed-when

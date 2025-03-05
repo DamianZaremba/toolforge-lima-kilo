@@ -128,11 +128,17 @@ local.tf-test@lima-kilo:~$ curl http://tf-test.local:30002/
 
 ### Passing custom ansible variables
 
-You can pass a custom variables (and any extra options) to use when provisioning
-with ansible, for example, a custom git ref to set toolforge-deploy to:
+You can pass custom options and variables to ansible, for example you can tell
+ansible to apply only a single role for a quick update of k8s components:
+
+```
+$ ./start-devenv.sh -- -t k8s
+```
+
+Or you could use it to set a custom git URL to use for toolforge-deploy:
 
 ```bash
-dcaro@mylaptop$ ./start-devenv.sh -- --extra-vars lima_kilo_toolforge_deploy_repo.ref=refs/heads/mycustombranch
+$ ./start-devenv.sh -- --extra-vars lima_kilo_toolforge_deploy_repo=https://gitlab.wikimedia.org/fork/of/toolforge-deploy
 ```
 
 ## Running functional tests

@@ -42,7 +42,7 @@
   become: true
   ansible.builtin.lineinfile: # noqa args[module]
     path: /etc/hosts
-    line: "{{ item}}"
+    line: "{{ item }}"
     state: "present"
   with_items:
     - "127.0.0.1 {{ kind.api.hostname }}"
