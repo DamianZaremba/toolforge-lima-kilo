@@ -11,3 +11,20 @@
   ansible.builtin.shell:
     chdir: "{{ lima_kilo_harbor_dir }}/builds-builder"
     cmd: "HARBOR_DIR={{ lima_kilo_harbor_dir }} HARBOR_IP={{ lima_kilo_docker_addr }} ./utils/get_harbor.sh"
+
+- name: Add the service file to start harbor on reboot
+  become: true
+  ansible.builtin.template:
+    src: toolforge_harbor.service.j2
+    dest: /etc/systemd/system/toolforge_harbor.service
+    mode: "0755"
+    owner: "root"
+    group: "root"
+
+- name: Create service to start harbor on reboot
+  become: true
+  ansible.builtin.systemd_service:
+    name: toolforge_harbor.service
+    daemon_reload: true
+    enabled: true
+    state: started
