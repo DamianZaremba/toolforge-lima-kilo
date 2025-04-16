@@ -267,7 +267,7 @@ main() {
     fi
 
     if ! limactl list | grep "$NAME"; then
-        limactl create --name "$NAME" "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
+        limactl create --tty=false --name "$NAME" "${extra_create_opts[@]}" "$CURDIR/lima-vm/lima-kilo.yaml"
     fi
 
     limactl start "$NAME"
