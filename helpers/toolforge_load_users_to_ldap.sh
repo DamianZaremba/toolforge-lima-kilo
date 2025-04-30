@@ -10,4 +10,4 @@ set -o pipefail
 set -o nounset
 set -v
 
-toolforge_run_ansible.sh -D --tags foxtrot_ldap "$@"
+toolforge_run_ansible.sh -D --tags ldap_users "$@"

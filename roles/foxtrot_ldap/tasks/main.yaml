@@ -1,46 +1,39 @@
 ---
-- name: Inject tool accounts into foxtrot-ldap
+- name: Create temp directory
+  ansible.builtin.tempfile:
+    state: directory
+    suffix: -toolforge-lima-kilo
+  register: tempdir
+
+- name: Git clone repo
+  ansible.builtin.command:
+    cmd: >-
+      git clone --depth 1 {% if item.branch is defined %}--branch {{ item.branch
+      }}{% endif %} --quiet https://gitlab.wikimedia.org/repos/cloud/toolforge/foxtrot-ldap {{ tempdir.path }}/foxtrot-ldap
+    creates: "{{ tempdir.path }}/foxtrot-ldap/.git"
+
+- name: Build image
+  ansible.builtin.shell: # noqa no-changed-when
+    chdir: "{{ tempdir.path }}/foxtrot-ldap"
+    cmd: "docker build --tag foxtrot-ldap:latest ."
+
+- name: Load docker image into kind
   ansible.builtin.shell:
-    cmd: |
-      set -x
-      set -o errexit
-      set -o nounset
-      ALREADY_EXISTS_RC=68
-      uid_gid=$(id -u {{ toolforge.project_name }}.{{ tool_account.name }})
-      tries=0;
-      # needs to be on it's own otherwise it does not break when it return with rc=68/already exists
-      return_code=0
-      kubectl \
-        -n foxtrot-ldap \
-        exec \
-        --pod-running-timeout=5m0s \
-        --stdin=false \
-        deployment/foxtrot-ldap \
-        -- container/utils/add-lima-kilo-tool-account.sh {{ tool_account.name }} $uid_gid $uid_gid \
-        && return_code=0 || return_code="$?"
-      while [[ $return_code != "$ALREADY_EXISTS_RC" && $return_code != "0" ]]; do
-        if [[ $tries -gt 3 ]]; then
-          exit 1
-        fi
-        tries=$((tries + 1))
-        sleep 10
-        kubectl \
-          -n foxtrot-ldap \
-          exec \
-          --pod-running-timeout=5m0s \
-          --stdin=false \
-          deployment/foxtrot-ldap \
-          -- container/utils/add-lima-kilo-tool-account.sh {{ tool_account.name }} $uid_gid $uid_gid \
-        && return_code=0 || return_code="$?"
-      done
-      exit $return_code
-  args:
-    executable: /bin/bash
-  loop: "{{ toolforge.tool_accounts }}"
-  loop_control:
-    loop_var: tool_account
-    label: "{{ tool_account.name }}"
-  register: foxtrot_ldap_inject_result
-  changed_when: foxtrot_ldap_inject_result.rc == 0
-  # 68 is when the account already exists. We don't really care
-  failed_when: foxtrot_ldap_inject_result.rc not in [0, 68]
+    cmd: >-
+      kind load docker-image foxtrot-ldap:latest --name {{ kind.cluster.name }}
+  register: kind_load
+  changed_when: '"loading" in kind_load.stderr'
+
+- name: Deploy into k8s
+  ansible.builtin.shell: # noqa no-changed-when
+    chdir: "{{ tempdir.path }}/foxtrot-ldap"
+    cmd: "./deploy.sh --wait"
+
+- name: Remove the temp dir
+  ansible.builtin.file:
+    path: "{{ tempdir.path }}"
+    state: absent
+  when: tempdir.path is defined
+  # the diff output of this can be really long, turn it off even in debug mode
+  diff: false
+  no_log: true
