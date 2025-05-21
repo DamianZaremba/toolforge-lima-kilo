@@ -30,6 +30,9 @@ toolforge:
     - path: /etc/novaobserver.yaml
       content: |
         # whatever
+  developer_accounts:
+    - tool-developer-1
+    - tool-developer-2
   tool_accounts:
     - name: tf-test
       uid: 50001
@@ -68,6 +71,11 @@ toolforge:
       uid: 50002
     - name: fourohfour
       uid: 50003
+    - name: admin
+      uid: 50004
+      maintainers:
+        - tool-developer-1
+        - tool-developer-2
   repos:
     - name: tools
       url: https://deb.svc.toolforge.org/repo

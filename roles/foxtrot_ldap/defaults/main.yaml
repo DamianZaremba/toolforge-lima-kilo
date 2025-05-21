@@ -2,6 +2,11 @@
 foxtrot_ldap:
   ns: foxtrot-ldap
   dp: deployment/foxtrot-ldap
-  inject: container/utils/add-lima-kilo-tool-account.sh
+  inject_tool_account: container/utils/add-lima-kilo-tool-account.sh
+  inject_devel_account: container/utils/add-user.sh
+  inject_maintainer: container/utils/add-maintainer.sh
 
-foxtrot_ldap_add_tool_account: kubectl -n {{ foxtrot_ldap.ns }} exec --pod-running-timeout=5m0s --stdin=false {{ foxtrot_ldap.dp }} -- {{ foxtrot_ldap.inject }}
+foxtrot_ldap_call: kubectl -n {{ foxtrot_ldap.ns }} exec --pod-running-timeout=5m0s --stdin=false {{ foxtrot_ldap.dp }}
+foxtrot_ldap_add_tool_account: "{{ foxtrot_ldap_call }} -- {{ foxtrot_ldap.inject_tool_account }}"
+foxtrot_ldap_add_dev_account: "{{ foxtrot_ldap_call }} -- {{ foxtrot_ldap.inject_devel_account }}"
+foxtrot_ldap_add_maintainer: "{{ foxtrot_ldap_call }} -- {{ foxtrot_ldap.inject_maintainer }}"
