@@ -70,8 +70,8 @@ toolforge:
       uid: 50003
   repos:
     - name: tools
-      url: https://deb-tools.wmcloud.org/repo
-      dist: bullseye-tools
+      url: https://deb.svc.toolforge.org/repo
+      dist: bookworm-tools
   packages:
     - toolforge-cli
     - toolforge-builds-cli
