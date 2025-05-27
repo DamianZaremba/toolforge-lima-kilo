@@ -1,0 +1,17 @@
+[Unit]
+Description=Restart kind containerd after boot
+After=network-online.target
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/restart_containerd_if_node_stuck.sh
+User={{ ansible_facts['user_uid'] }}
+TimeoutSec=30
+Restart=on-failure
+RestartSec=30
+StartLimitInterval=350
+StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target
