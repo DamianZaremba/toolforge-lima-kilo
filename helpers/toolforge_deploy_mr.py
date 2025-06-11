@@ -134,17 +134,24 @@ def deploy_package_mr(component: str, mr_number: int) -> None:
         subprocess.check_call(["ls", "-lR", f"{tempdir}"])
         click.echo(f"Downloaded artifacts at {tempdir}:")
         debs = list((Path(tempdir) / "debs").glob(pattern="*.deb"))
+        # Needed as apt install might still not install the file if there's a better alternative in the repos
         install_command = [
             "sudo",
-            "env",
+            "dpkg",
+            "-i",
+        ] + debs
+        subprocess.check_call(install_command)
+
+        # Needed as the previous one does not install dependencies
+        fix_deps_command = [
+            "sudo",
             "DEBIAN_FRONTEND=noninteractive",
             "apt",
             "install",
             "--yes",
-            "--reinstall",
-            "--allow-downgrades",
-        ] + debs
-        subprocess.check_call(install_command)
+            "--fix-missing",
+        ]
+        subprocess.check_call(fix_deps_command)
 
     _register_custom_package(mr_number=mr_number, component=component)
     click.secho(f"Deployed {component} from mr {mr_number}", fg="green")
