@@ -66,7 +66,7 @@ Once the installation is finished, you can run commands inside the vm as one of
 the two default users created, tf-test or tf-test2 like this:
 
 ```bash
-user@lima-kilo$ become tf-test
+user@lima-kilo$ sudo become tf-test
 local.tf-test@lima-kilo:~$ pwd
 /data/project/tf-test
 ```
@@ -79,7 +79,7 @@ commands.
 Some extra tools are also installed:
 
 - k9s to explore/manage kubernetes
-- restish to interact with the toolforge API (example `become tf-test`,
+- restish to interact with the toolforge API (example `sudo become tf-test`,
   `restish toolforge builds-list tf-test`)
 - jq
 - fzf

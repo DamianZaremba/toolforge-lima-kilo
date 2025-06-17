@@ -35,8 +35,6 @@
       tags: foxtrot_ldap
     - role: restish
       tags: restish
-    - role: cli
-      tags: cli
   environment:
     # add lima-kilo bin/ to path so local binaries (helm, helmfile) are
     # available during component deploy

@@ -23,7 +23,7 @@ You should have already followed the steps in the main [lima-kilo README](.../RE
 5. Make sure you can run a build successfully.
 
    ```bash
-   $ become tf-test
+   $ sudo become tf-test
    local.tf-test$ toolforge build start https://gitlab.wikimedia.org/toolforge-repos/wm-lol
    ````
 
