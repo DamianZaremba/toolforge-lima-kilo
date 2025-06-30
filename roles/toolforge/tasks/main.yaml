@@ -72,6 +72,13 @@
     filename: "{{ item.name }}"
   loop: "{{ toolforge.repos }}"
 
+- name: "Enable amd64 arch"
+  become: true
+  ansible.builtin.shell:  # noqa no-changed-when
+    cmd: |-
+      dpkg  --add-architecture amd64
+      apt update
+
 - name: "Install toolforge packages"
   become: true
   ansible.builtin.package:
