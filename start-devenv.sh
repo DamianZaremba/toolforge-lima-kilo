@@ -28,6 +28,13 @@ Options:
   --no-cache          Specify this to avoid using container image caches during setup.
                       By default a cache disk is created and all container images
                       directories are mounted to this disk to speed up setup.
+  --tags TAGS         Only run plays and tasks tagged with these values.
+                      This argument accepts comma seperated or ranged arguments.
+                      .e.g.:
+                      --tags tag1: (from tag1 to end, tag1 inclusive)
+                      --tags :tag4 (from start to tag4, tag4 inclusive)
+                      --tags tag1:tag4 (from tag1 to tag4, both inclusive)
+                      --tags tag1,tag2,tag3
   --toolforge-deploy-branch [BRANCH]
       Use a specific branch of the "toolforge-deploy" repo to deploy Toolforge
       components. If not specified, it will use the "main" branch.
@@ -37,8 +44,6 @@ Extra args:
     -e EXTRA_VARS, --extra-vars EXTRA_VARS
         set additional variables as key=value or YAML/JSON, if filename prepend with @. This argument may be specified
         multiple times.
-    -t TAGS, --tags TAGS
-        only run plays and tasks tagged with these values. This argument may be specified multiple times.
     -v, --verbose
         Causes Ansible to print more debug messages. Adding multiple -v will increase the verbosity, the builtin
         plugins currently evaluate up to -vvvvvv. A reasonable level to start is -vvv, connection debugging might
@@ -71,6 +76,15 @@ parse_args() {
             --no-cache)
                 use_cache="false"
                 shift
+                ;;
+            --tags)
+                if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
+                    tags="$2"
+                    shift 2
+                else
+                    echo "Error: --tags option requires an argument."
+                    exit 1
+                fi
                 ;;
             --toolforge-deploy-branch)
                 if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
@@ -212,6 +226,7 @@ main() {
     local use_cache="true"
     local response
     local extra_create_opts
+    local tags=""
     declare -a ansible_args
 
     check_limactl_version
@@ -222,6 +237,9 @@ main() {
 
     local toolforge_deploy_branch="${TOOLFORGE_DEPLOY_BRANCH:-main}"
 
+    if [[ "$tags" != "" ]]; then
+        ansible_args+=("--tags" "$tags")
+    fi
     ansible_args+=("--extra-vars" "use_cache=${use_cache}")
     ansible_args+=("--extra-vars" "kind_high_availability=${high_availability}")
     ansible_args+=("--extra-vars" "lima_kilo_toolforge_deploy_branch=${toolforge_deploy_branch}")
@@ -230,6 +248,11 @@ main() {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"
         exit 1
     }
+
+    if [[ "$recreate" == "true" ]] && [[ "$tags" != "" ]]; then
+        echo "You can either specify \"recreate\" or \"tags\" at the same time, not both"
+        exit 1
+    fi
 
     if [[ $(uname -m) == 'arm64' ]]; then
         extra_create_opts=(

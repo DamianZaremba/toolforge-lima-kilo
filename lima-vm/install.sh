@@ -12,7 +12,8 @@ sudo apt install \
   --yes \
   -o Dpkg::Options::="--force-confold" \
   python3.11-venv \
-  moreutils
+  moreutils \
+  yq
 python3 -m venv "$VIRTUALENV_DIR"
 # shellcheck disable=SC1091
 source "$VIRTUALENV_DIR/bin/activate"
