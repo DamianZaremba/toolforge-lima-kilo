@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import platform
 import re
 import shutil
 import subprocess
@@ -88,10 +89,23 @@ def get_chart_job(project: dict[str, Any], pipeline: dict[str, Any]) -> dict[str
     )
 
 
-def get_package_job(project_id: int, pipeline: dict[str, Any]) -> dict[str, Any]:
+def get_package_job(
+    project_id: int, pipeline: dict[str, Any], arch: str
+) -> dict[str, Any]:
     for job in _do_get_list(f"/projects/{project_id}/pipelines/{pipeline['id']}/jobs"):
-        if job["name"] == PACKAGE_JOB_NAME:
-            return job
+        if job["name"].startswith(PACKAGE_JOB_NAME):
+            if (
+                job["name"] == PACKAGE_JOB_NAME
+                or job["name"] == f"{PACKAGE_JOB_NAME}: [{arch}]"
+            ):
+                # The job is either just PACKAGE_JOB_NAME if the package is built for a single arch
+                # or has the arch in as suffix if it was built for a specific arch, currently this only
+                # affects miscools-clli
+                return job
+            else:
+                print(
+                    f"ignoring job '{job['name']}', not '{PACKAGE_JOB_NAME}' or '{PACKAGE_JOB_NAME}: [{arch}]'"
+                )
 
     raise Exception(
         f"Unable to find a package job({PACKAGE_JOB_NAME}) in pipeline {pipeline['web_url']}"
@@ -116,12 +130,14 @@ def get_last_pipeline(project: dict[str, Any], mr_number: int) -> dict[str, Any]
     return mr_data["head_pipeline"]
 
 
-def deploy_package_mr(component: str, mr_number: int) -> None:
+def deploy_package_mr(component: str, mr_number: int, arch: str) -> None:
     project = get_project(component=component)
     pipeline = get_last_pipeline(project=project, mr_number=mr_number)
     # this allows using pipelines for forks
     pipeline_project_id = pipeline["project_id"]
-    package_job = get_package_job(project_id=pipeline_project_id, pipeline=pipeline)
+    package_job = get_package_job(
+        project_id=pipeline_project_id, pipeline=pipeline, arch=arch
+    )
     artifact_response = requests.get(
         f"{GITLAB_API_BASE_URL}/projects/{pipeline_project_id}/jobs/{package_job['id']}/artifacts"
     )
@@ -355,13 +371,16 @@ def _try_mr_number_option(maybe_mr_number: Any) -> Any:
 
 @click.command()
 @click.argument("component", required=True)
+@click.option(
+    "--arch", default="amd64" if platform.machine() in ["x86_64", ""] else "arm64"
+)
 @click.argument(
     "mr_number",
     type=_try_mr_number_option,
     required=False,
     default=None,
 )
-def main(component: str, mr_number: int | str | None = None):
+def main(component: str, mr_number: int | str | None = None, arch: str = "amd64"):
     """
     Deploy a specific version of a toolforge component or client package.
 
@@ -378,7 +397,7 @@ def main(component: str, mr_number: int | str | None = None):
         if mr_number == "restore":
             restore_package(component=component)
         else:
-            deploy_package_mr(component=component, mr_number=int(mr_number))
+            deploy_package_mr(component=component, mr_number=int(mr_number), arch=arch)
     else:
         if mr_number == "restore":
             restore_chart(component=component)
