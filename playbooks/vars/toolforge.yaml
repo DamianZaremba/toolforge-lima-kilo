@@ -76,7 +76,7 @@ toolforge:
     - misctools
     - toolforge-cli
     - toolforge-builds-cli
-    - toolforge-jobs-framework-cli
+    - toolforge-jobs-cli
     - toolforge-envvars-cli
     - toolforge-webservice
     - toolforge-components-cli
