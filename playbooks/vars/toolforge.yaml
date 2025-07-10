@@ -73,7 +73,7 @@ toolforge:
       url: https://deb.svc.toolforge.org/repo
       dist: bookworm-tools
   packages:
-    - misctools
+    - toolforge-misctools-cli
     - toolforge-cli
     - toolforge-builds-cli
     - toolforge-jobs-cli
