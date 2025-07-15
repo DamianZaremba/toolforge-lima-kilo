@@ -20,3 +20,41 @@
   changed_when: foxtrot_ldap_inject_result.rc == 0
   # 68 is when the account already exists. We don't really care
   failed_when: foxtrot_ldap_inject_result.rc not in [0, 68]
+
+- name: Inject developer accounts into foxtrot-ldap
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      tries=0;
+      while ! {{ foxtrot_ldap_add_dev_account }} {{ devel_account }}; do
+        if [[ $tries -gt 3 ]]; then
+          exit 1
+        fi
+        tries=$((tries + 1))
+        sleep 10
+      done
+  loop: "{{ toolforge.developer_accounts }}"
+  loop_control:
+    loop_var: devel_account
+  register: foxtrot_ldap_inject_devel_account_result
+  changed_when: foxtrot_ldap_inject_devel_account_result.rc == 0
+  # 68 is when the account already exists. We don't really care
+  failed_when: foxtrot_ldap_inject_devel_account_result.rc not in [0, 68]
+
+- name: Add maintainers to tool accounts in foxtrot-ldap
+  ansible.builtin.shell:
+    cmd: |
+      set -e
+      tries=0;
+      while ! {{ foxtrot_ldap_add_maintainer }} {{ toolforge.project_name }}.{{ item.0.name }} uid={{item.1}},ou=People,dc=wikimedia,dc=org ; do
+        if [[ $tries -gt 3 ]]; then
+          exit 1
+        fi
+        tries=$((tries + 1))
+        sleep 10
+      done
+  loop: "{{ toolforge.tool_accounts | subelements('maintainers') }}"
+  register: foxtrot_ldap_inject_maint_result
+  changed_when: foxtrot_ldap_inject_maint_result.rc == 0
+  # 68 is when the account already exists. We don't really care
+  failed_when: foxtrot_ldap_inject_maint_result.rc not in [0, 68]
