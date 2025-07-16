@@ -32,7 +32,9 @@
     - role: k8s
       tags: k8s
     - role: foxtrot_ldap
-      tags: foxtrot_ldap
+      tags:
+        - foxtrot_ldap
+        - ldap
     - role: restish
       tags: restish
   environment:
