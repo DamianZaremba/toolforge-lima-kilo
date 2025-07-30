@@ -1,6 +1,3 @@
 ---
 - name: Install toolforge-deploy components
   ansible.builtin.include_tasks: "{{ role_path }}/tasks/toolforge-deploy_components.yaml"
-
-- name: Install custom components
-  ansible.builtin.include_tasks: "{{ role_path }}/tasks/custom_components.yaml"
