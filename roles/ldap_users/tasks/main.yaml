@@ -44,3 +44,11 @@
   changed_when: foxtrot_ldap_inject_result.rc == 0
   # 68 is when the account already exists. We don't really care
   failed_when: foxtrot_ldap_inject_result.rc not in [0, 68]
+
+- name: "Restart maintain-kubeusers to pick the new users up"
+  ansible.builtin.shell:
+    cmd: "kubectl -n maintain-kubeusers rollout restart deployment/maintain-kubeusers"
+  args:
+    executable: /bin/bash
+  register: output
+  changed_when: output.rc == 0

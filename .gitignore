@@ -4,3 +4,4 @@
 artifacts/
 artifacts.zip
 lima-vm/lima-kilo.yaml
+.ansible
