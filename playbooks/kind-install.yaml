@@ -6,6 +6,7 @@
     - vars/kind.yaml
     - vars/kubectl.yaml
     - vars/k9s.yaml
+    - vars/stern.yaml
     - vars/toolforge.yaml
     - vars/helm.yaml
     - vars/restish.yaml
@@ -27,6 +28,8 @@
       tags: helm
     - role: k9s
       tags: k9s
+    - role: stern
+      tags: stern
     - role: harbor
       tags: harbor
     - role: k8s

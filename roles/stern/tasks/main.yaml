@@ -1,0 +1,10 @@
+---
+- name: Install stern binary
+  ansible.builtin.include_tasks: "{{ role_path }}/../utils/tasks/install-binary-from-url.yaml"
+  vars:
+    binary:
+      name: "stern"
+      path: "{{ lima_kilo_bin }}/stern"
+      url: "{{ stern.url }}"
+      checksum: "{{ stern.checksum }}"
+      unpack: "{{ stern.unpack }}"
