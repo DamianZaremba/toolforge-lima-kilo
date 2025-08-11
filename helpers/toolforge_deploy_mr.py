@@ -25,8 +25,9 @@ CHART_JOB_NAME = "publish-devchart-toolsbeta"
 TOOLFORGE_GROUP_ID = 203
 TOOLOFORGE_PACKAGE_REGISTRY_DIR = Path("~/.lima-kilo/installed_packages").expanduser()
 COMPONENT_TO_PACKAGE = {
-    "tools-webservice": "toolforge-webservice",
+    "webservice-cli": "toolforge-webservice",
     "toolforge-weld": "python3-toolforge-weld",
+    "toolforge-cli": "toolforge-cli",
 }
 
 
