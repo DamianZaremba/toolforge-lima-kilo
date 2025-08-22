@@ -3,5 +3,6 @@ kubectl:
   # refresh versions from
   # https://kubernetes.io/docs/tasks/tools/#kubectl
   url: https://dl.k8s.io/release/v1.29.15/bin/linux/amd64/kubectl
-  checksum: sha256:3473e14c7b024a6e5403c6401b273b3faff8e5b1fed022d633815eb3168e4516
+  download_checksum: sha256:3473e14c7b024a6e5403c6401b273b3faff8e5b1fed022d633815eb3168e4516
+  binary_checksum: 3473e14c7b024a6e5403c6401b273b3faff8e5b1fed022d633815eb3168e4516
   unpack: false

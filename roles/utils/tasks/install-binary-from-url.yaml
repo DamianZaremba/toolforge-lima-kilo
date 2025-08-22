@@ -6,58 +6,67 @@
 #   url: string
 #   unpack: bool
 
-- name: Create temp directory for '{{ binary.name }}'
-  ansible.builtin.tempfile:
-    state: directory
-    suffix: -toolforge-lima-kilo
-  register: tempdir
+- name: Check if target file exists for '{{ binary.name }}'
+  ansible.builtin.stat:
+    path: "{{ binary.path }}"
+    checksum_algorithm: sha256
+  register: dest_file
 
-- name: Download '{{ binary.name }}'
-  ansible.builtin.get_url:
-    url: "{{ binary.url }}"
-    dest: "{{ tempdir.path }}"
-    checksum: "{{ binary.checksum }}"
-    mode: "0644"
+- name: Download, extract, install and cleanup for '{{ binary.name }}'
+  when: not dest_file.stat.exists or dest_file.stat.checksum != binary.binary_checksum
+  block:
+    - name: Create temp directory for '{{ binary.name }}'
+      ansible.builtin.tempfile:
+        state: directory
+        suffix: -toolforge-lima-kilo
+      register: tempdir
 
-- name: Unpack '{{ binary.name }}'
-  ansible.builtin.unarchive:
-    src: "{{ tempdir.path }}/{{ src }}"
-    dest: "{{ tempdir.path }}"
-    remote_src: true
-  vars:
-    src: "{{ binary.url.rsplit('/', 1)[-1] }}"
-  when: binary.unpack
+    - name: Download '{{ binary.name }}'
+      ansible.builtin.get_url:
+        url: "{{ binary.url }}"
+        dest: "{{ tempdir.path }}"
+        checksum: "{{ binary.download_checksum }}"
+        mode: "0644"
 
-- name: Find the right file to install for '{{ binary.name }}'
-  become: true
-  # we don't really know where is the file we want to install,
-  # specially if inside an unpacked archive
-  # this search should work for both raw/unpacked binaries
-  ansible.builtin.find:
-    path: "{{ tempdir.path }}"
-    pattern: "*{{ binary.name }}*"
-    recurse: true
-    excludes:
-      - "*tar.gz"
-      - "*tar.bz2"
-      - "*tar"
-  register: find
-  when: tempdir.path is defined
-  # assert: something is really wrong if we couldn't find a file to install
-  failed_when: find.matched < 1
+    - name: Unpack '{{ binary.name }}'
+      ansible.builtin.unarchive:
+        src: "{{ tempdir.path }}/{{ src }}"
+        dest: "{{ tempdir.path }}"
+        remote_src: true
+      vars:
+        src: "{{ binary.url.rsplit('/', 1)[-1] }}"
+      when: binary.unpack
 
-- name: Install '{{ binary.name }}'
-  ansible.builtin.copy:
-    src: "{{ src }}"
-    dest: "{{ binary.path }}"
-    mode: "0755"
-    remote_src: true
-  vars:
-    src: "{{ find.files[0].path }}"
+    - name: Find the right file to install for '{{ binary.name }}'
+      become: true
+      # we don't really know where is the file we want to install,
+      # specially if inside an unpacked archive
+      # this search should work for both raw/unpacked binaries
+      ansible.builtin.find:
+        path: "{{ tempdir.path }}"
+        pattern: "*{{ binary.name }}*"
+        recurse: true
+        excludes:
+          - "*tar.gz"
+          - "*tar.bz2"
+          - "*tar"
+      register: find
+      when: tempdir.path is defined
+      # assert: something is really wrong if we couldn't find a file to install
+      failed_when: find.matched < 1
 
-- name: Remove temp dir
-  ansible.builtin.file:
-    path: "{{ tempdir.path }}"
-    state: absent
-  diff: false
-  no_log: true
+    - name: Install '{{ binary.name }}'
+      ansible.builtin.copy:
+        src: "{{ src }}"
+        dest: "{{ binary.path }}"
+        mode: "0755"
+        remote_src: true
+      vars:
+        src: "{{ find.files[0].path }}"
+
+    - name: Remove temp dir
+      ansible.builtin.file:
+        path: "{{ tempdir.path }}"
+        state: absent
+      diff: false
+      no_log: true

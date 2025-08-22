@@ -6,7 +6,8 @@
       name: "kind"
       path: "{{ lima_kilo_kind_binary_path }}"
       url: "{{ kind.url }}"
-      checksum: "{{ kind.checksum }}"
+      download_checksum: "{{ kind.download_checksum }}"
+      binary_checksum: "{{ kind.binary_checksum }}"
       unpack: "{{ kind.unpack }}"
 
 - name: Ensure containerd hosts config directory exists
