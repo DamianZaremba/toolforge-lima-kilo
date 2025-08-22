@@ -11,6 +11,7 @@
   ansible.builtin.shell:
     chdir: "{{ lima_kilo_harbor_dir }}/builds-builder"
     cmd: "HARBOR_DIR={{ lima_kilo_harbor_dir }} HARBOR_IP={{ lima_kilo_docker_addr }} ./utils/get_harbor.sh"
+    creates: "{{ lima_kilo_harbor_dir }}/harbor"
 
 - name: Add the service file to start harbor on reboot
   become: true
