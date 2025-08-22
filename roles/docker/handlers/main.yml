@@ -1,0 +1,6 @@
+---
+- name: Restart docker to pickup change
+  become: true
+  ansible.builtin.systemd_service:
+    name: docker.service
+    state: restarted

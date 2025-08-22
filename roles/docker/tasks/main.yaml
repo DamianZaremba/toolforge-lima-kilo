@@ -7,9 +7,4 @@
     mode: "0662"
     owner: "root"
     group: "root"
-
-- name: Restart docker to pickup change
-  become: true
-  ansible.builtin.systemd_service:
-    name: docker.service
-    state: restarted
+  notify: Restart docker to pickup change
