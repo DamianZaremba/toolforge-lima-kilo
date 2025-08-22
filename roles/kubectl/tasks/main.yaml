@@ -10,9 +10,10 @@
       unpack: "{{ kubectl.unpack }}"
 
 - name: Append kubectl alias and bash autocompletion to ~/.bashrc
-  ansible.builtin.lineinfile:
+  ansible.builtin.blockinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
-    line: |
+    marker: "# {mark} kubectl alias and auto completion"
+    block: |
       alias k=kubectl
       source <(kubectl completion bash)
       complete -o default -F __start_kubectl k
