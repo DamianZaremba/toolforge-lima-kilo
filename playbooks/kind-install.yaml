@@ -32,14 +32,14 @@
       tags: stern
     - role: harbor
       tags: harbor
-    - role: k8s
-      tags: k8s
     - role: foxtrot_ldap
       tags: foxtrot_ldap
-    - role: restish
-      tags: restish
     - role: ldap_users
       tags: ldap_users
+    - role: k8s
+      tags: k8s
+    - role: restish
+      tags: restish
   environment:
     # add lima-kilo bin/ to path so local binaries (helm, helmfile) are
     # available during component deploy
