@@ -2,5 +2,6 @@
 stern:
   # refresh versions from https://github.com/stern/stern/releases
   url: "https://github.com/stern/stern/releases/download/v1.32.0/stern_1.32.0_linux_amd64.tar.gz"
-  checksum: "sha256:4733268b0e7fea48426c594d186be8cbcdb863858e08910451ebe3b1c8286f44"
+  download_checksum: "sha256:4733268b0e7fea48426c594d186be8cbcdb863858e08910451ebe3b1c8286f44"
+  binary_checksum: 9a7d28967adb754839521d0506ac4c178267ee8c4dc0a084949f5537a7e65f00
   unpack: true

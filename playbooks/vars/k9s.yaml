@@ -2,5 +2,6 @@
 k9s:
   # refresh versions from https://github.com/derailed/k9s/releases
   url: "https://github.com/derailed/k9s/releases/download/v0.50.6/k9s_Linux_amd64.tar.gz"
-  checksum: "sha256:5fc98f2dcf1d8fac6251f5a1ae1dc6fe7fe2b2d43b13bb3039e51ad492e2a70e"
+  download_checksum: "sha256:5fc98f2dcf1d8fac6251f5a1ae1dc6fe7fe2b2d43b13bb3039e51ad492e2a70e"
+  binary_checksum: "a18e8f6d095c2d0a4866649170a2880deb6c3b1fad59dcac60c8cbf14741bff8"
   unpack: true

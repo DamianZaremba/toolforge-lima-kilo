@@ -6,5 +6,6 @@
       name: "k9s"
       path: "{{ lima_kilo_k9s_binary_path }}"
       url: "{{ k9s.url }}"
-      checksum: "{{ k9s.checksum }}"
+      download_checksum: "{{ k9s.download_checksum }}"
+      binary_checksum: "{{ k9s.binary_checksum }}"
       unpack: "{{ k9s.unpack }}"

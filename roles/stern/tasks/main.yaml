@@ -6,5 +6,6 @@
       name: "stern"
       path: "{{ lima_kilo_bin }}/stern"
       url: "{{ stern.url }}"
-      checksum: "{{ stern.checksum }}"
+      download_checksum: "{{ stern.download_checksum }}"
+      binary_checksum: "{{ stern.binary_checksum }}"
       unpack: "{{ stern.unpack }}"
