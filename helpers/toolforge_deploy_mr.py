@@ -114,7 +114,7 @@ def get_package_job(
 
 def get_last_pipeline(project: dict[str, Any], mr_number: int) -> dict[str, Any]:
     mr_data = get_mr(project=project, mr_number=mr_number)
-    while mr_data["head_pipeline"]["status"] == "running":
+    while mr_data["head_pipeline"]["status"] in ["running", "created"]:
         click.echo(
             f"Pipeline {mr_data['head_pipeline']['iid']} is still running, waiting for it to finish...."
         )
