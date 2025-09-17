@@ -30,6 +30,9 @@ toolforge:
     - path: /etc/novaobserver.yaml
       content: |
         # whatever
+    - path: /etc/openstack/clouds.yaml
+      content: |
+        # whatever
   tool_accounts:
     - name: tf-test
       uid: 50001
