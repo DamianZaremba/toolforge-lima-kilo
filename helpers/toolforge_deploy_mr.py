@@ -20,7 +20,8 @@ TOOLFORGE_DEPLOY_REPO = Path("~/toolforge-deploy").expanduser()
 GITLAB_BASE_URL = "https://gitlab.wikimedia.org"
 GITLAB_API_BASE_URL = f"{GITLAB_BASE_URL}/api/v4"
 PACKAGE_JOB_NAME = "package:deb"
-CHART_JOB_NAME = "publish-devchart-toolsbeta"
+CHART_JOB_NAME_TOOLSBETA = "publish-devchart-toolsbeta"
+CHART_JOB_NAME_PUBLIC = "publish-devchart-public"
 # Gotten from the gitlab group page
 TOOLFORGE_GROUP_ID = 203
 TOOLOFORGE_PACKAGE_REGISTRY_DIR = Path("~/.lima-kilo/installed_packages").expanduser()
@@ -81,11 +82,14 @@ def get_chart_job(project: dict[str, Any], pipeline: dict[str, Any]) -> dict[str
     for job in _do_get_list(
         f"/projects/{project['id']}/pipelines/{pipeline['id']}/jobs"
     ):
-        if job["name"] == CHART_JOB_NAME:
+        if job["name"] == CHART_JOB_NAME_PUBLIC:
+            return job
+
+        if job["name"] == CHART_JOB_NAME_TOOLSBETA:
             return job
 
     raise Exception(
-        f"Unable to find a chart job({CHART_JOB_NAME}) in pipeline {pipeline['web_url']}"
+        f"Unable to find a chart job({CHART_JOB_NAME_TOOLSBETA}) or job({CHART_JOB_NAME_PUBLIC}) in pipeline {pipeline['web_url']}"
     )
 
 
@@ -235,6 +239,72 @@ def restore_package(component: str) -> None:
     click.secho(f"Restored {component} to the version in toolforge-deploy", fg="green")
 
 
+def update_chart_repo_for_external_pr(
+    job_name: str,
+    chart_registry: str,
+    chart_version: str,
+    values_file: Path,
+    helm_file: Path,
+) -> None:
+    fixed_lines: list[str] = []
+    # if PR was submitted by external contributor
+    if job_name == CHART_JOB_NAME_PUBLIC:
+        values_data = values_file.read_text()
+        fixed_lines = []
+        for line in values_data.splitlines():
+            if line.startswith("chartVersion"):
+                line = f"chartVersion: {chart_version}"
+            elif line.startswith("chartRepository:"):
+                line = "chartRepository: public"
+            fixed_lines.append(line)
+        values_file.write_text("\n".join(fixed_lines))
+
+        helm_file_data = helm_file.read_text()
+        fixed_lines = []
+        if "- name: public" in helm_file_data and f"url: {chart_registry}":
+            fixed_lines = helm_file_data.splitlines()
+        else:
+            for line in helm_file_data.splitlines():
+                if "- name: toolsbeta" in line:
+                    public_registry_name_line = line.replace(
+                        "- name: toolsbeta", "- name: public"
+                    )
+                    public_registry_url_line = line.replace(
+                        "- name: toolsbeta", f"  url: {chart_registry}"
+                    )
+                    public_registry_oci_line = line.replace(
+                        "- name: toolsbeta", "  oci: true"
+                    )
+                    fixed_lines.append(public_registry_name_line)
+                    fixed_lines.append(public_registry_url_line)
+                    fixed_lines.append(public_registry_oci_line)
+                fixed_lines.append(line)
+        helm_file.write_text("\n".join(fixed_lines))
+
+    return None
+
+
+def update_chart_repo_for_maintainer_pr(
+    job_name: str,
+    chart_version: str,
+    values_file: Path,
+) -> None:
+    fixed_lines: list[str] = []
+    # if PR was submitted by a maintainer
+    if job_name == CHART_JOB_NAME_TOOLSBETA:
+        values_data = values_file.read_text()
+        fixed_lines = []
+        for line in values_data.splitlines():
+            if line.startswith("chartVersion"):
+                line = f"chartVersion: {chart_version}"
+            elif line.startswith("chartRepository:"):
+                line = "chartRepository: toolsbeta"
+            fixed_lines.append(line)
+        values_file.write_text("\n".join(fixed_lines))
+
+    return None
+
+
 def deploy_chart_mr(component: str, mr_number: int) -> None:
     project = get_project(component=component)
     pipeline = get_last_pipeline(project=project, mr_number=mr_number)
@@ -246,18 +316,29 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
         f"{GITLAB_BASE_URL}/repos/cloud/toolforge/{project['path']}/-/jobs/{chart_job['id']}/trace.json"
     )
     logs_response.raise_for_status()
+
+    chart_registry = ""
     chart_version = ""
     for line in logs_response.json()["lines"]:
         for content in line["content"]:
+            # Pushed: toolsbeta-harbor.wmcloud.org/toolforge/jobs-api:0.0.414-dev-mr-213
             if content["text"].startswith("Pushed: "):
-                chart_version = content["text"].rsplit(":", 1)[-1].strip()
+                _, chart_registry, chart_version = content["text"].split(":")
+                chart_registry = chart_registry.rsplit(f"/{component}", 1)[0].strip()
+                chart_version = chart_version.strip()
 
     if chart_version == "":
         message = "Unable to retrieve chart version from logs:\n"
         message += "\n".join(logs_response.json()["lines"])
         raise Exception(message)
 
+    if chart_registry == "":
+        message = "Unable to retrieve chart registry from logs:\n"
+        message += "\n".join(logs_response.json()["lines"])
+        raise Exception(message)
+
     print(f"Found chart version '{chart_version}'")
+    print(f"Found chart registry '{chart_registry}'")
     values_files = [
         TOOLFORGE_DEPLOY_REPO / "components" / component / "values" / "local.yaml",
         TOOLFORGE_DEPLOY_REPO
@@ -266,6 +347,11 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
         / "values"
         / "local.yaml.gotmpl",
     ]
+
+    helm_file = TOOLFORGE_DEPLOY_REPO / "components" / component / "helmfile.yaml"
+    if not helm_file.exists():
+        raise Exception(f"{helm_file} does not exist")
+
     for values_file in values_files:
         if values_file.exists():
             break
@@ -274,17 +360,18 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
             f"Unable to find values file for component {component}, none of {values_files} was found"
         )
 
-    values_data = values_file.read_text()
-    fixed_lines: list[str] = []
-    for line in values_data.splitlines():
-        if line.startswith("chartVersion"):
-            line = f"chartVersion: {chart_version}"
-        elif line.startswith("chartRepository:"):
-            line = "chartRepository: toolsbeta"
-
-        fixed_lines.append(line)
-
-    values_file.write_text("\n".join(fixed_lines))
+    update_chart_repo_for_external_pr(
+        job_name=chart_job["name"],
+        chart_registry=chart_registry,
+        chart_version=chart_version,
+        values_file=values_file,
+        helm_file=helm_file,
+    )
+    update_chart_repo_for_maintainer_pr(
+        job_name=chart_job["name"],
+        chart_version=chart_version,
+        values_file=values_file,
+    )
 
     try:
         output = subprocess.check_output(
