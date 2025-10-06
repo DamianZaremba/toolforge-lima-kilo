@@ -1,17 +1,17 @@
 # Based on https://github.com/lima-vm/lima/blob/master/examples/docker-rootful.yaml
 images:
   # Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
-  - location: "https://cloud.debian.org/images/cloud/bookworm/20250316-2053/debian-12-genericcloud-amd64-20250316-2053.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/trixie/20250924-2245/debian-13-genericcloud-amd64-20250924-2245.qcow2"
     arch: "x86_64"
-    digest: "sha512:0ea74c246c5eb8c6eb5b8e3b8b5268b16a791dfbc8f0bca27d9d787a3f4c50a7830bfc690e6902dfe78031fb2b2c3892349990d6b26b13112252a81d6f20f792"
-  - location: "https://cloud.debian.org/images/cloud/bookworm/20250316-2053/debian-12-genericcloud-arm64-20250316-2053.qcow2"
+    digest: "sha512:25b430e6416b443620fc32975f40effe3d7ae6603060aa9563b80092f0b073734a35a8c56816ae4f4ea395d7e5599de7cba254f92a9465f6ce95b29a03a8e1f5"
+  - location: "https://cloud.debian.org/images/cloud/trixie/20250924-2245/debian-13-genericcloud-arm64-20250924-2245.qcow2"
     arch: "aarch64"
-    digest: "sha512:a6733f7f76ef62706e9e04dbad15d7ca251a2875d31025d9e8893391985b7e0610c96b6133ec5b2fa5fc4426bb3e6dcc91da77d0b3dc59bf4352e30625fc180d"
+    digest: "sha512:e23218e54163a0b4f88a80cdba5c5e84b1d43c19702644baac74f1904c327087032b0a9e77dcb7a4c50cf68850607caf3d3495ec9ca4d19887835dbc802723de"
   # Fallback to the latest release image.
   # Hint: run `limactl prune` to invalidate the cache
-  - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-genericcloud-amd64.qcow2"
     arch: "x86_64"
-  - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-arm64.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/trixie/latest/debian-13-genericcloud-arm64.qcow2"
     arch: "aarch64"
 cpus: 16
 memory: "16GiB"
@@ -19,14 +19,6 @@ disk: "50GiB"
 mounts:
   # If running manually (not using start-devenv.sh), replace this with your path to the lima-kilo directory
   - location: "@@LIMA_KILO_DIR_PLACEHOLDER@@"
-
-# this helps sssd to don't choke on resolving the VM name
-hostResolver:
-  hosts:
-    lima-kilo: 127.0.0.1
-    # same as the toolforge api
-    tf-test.local: 127.0.0.1
-    tf-test2.local: 127.0.0.1
 
 # containerd is managed by Docker, not by Lima, so the values are set to false here.
 containerd:

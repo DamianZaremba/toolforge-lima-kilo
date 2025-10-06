@@ -32,6 +32,14 @@
   loop_control:
     label: "{{ item }}"
 
+- name: Sssd needs to be up and running before kind creates the container
+  become: true
+  ansible.builtin.systemd_service:
+    name: sssd.service
+    daemon_reload: true
+    enabled: true
+    state: started
+
 # Sometimes when running a couple builds at the same time we get out of inode watchers
 # similar to https://phabricator.wikimedia.org/T361519
 - name: Increase inotify user instances
@@ -67,3 +75,5 @@
     state: "present"
   with_items:
     - "127.0.0.1 {{ ansible_hostname }}"
+    - "127.0.0.1 tf-test.local"
+    - "127.0.0.1 tf-test2.local"

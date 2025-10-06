@@ -11,7 +11,7 @@ set -o nounset
 sudo apt install \
   --yes \
   -o Dpkg::Options::="--force-confold" \
-  python3.11-venv \
+  python3-venv \
   moreutils \
   yq
 python3 -m venv "$VIRTUALENV_DIR"

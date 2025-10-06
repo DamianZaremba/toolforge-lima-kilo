@@ -5,7 +5,11 @@ toolforge:
     - /data/
     - /public/
   directories:
+    # this is the sssd socket and db
+    # what allows containers to use the VM users
+    # (we don't use ldap for unix auth currently)
     - /var/lib/sss/pipes/
+    - /etc/pam.d/
     - /data/project/
     - /data/scratch/
     - /mnt/nfs/dumps-clouddumps1001.wikimedia.org/
@@ -63,7 +67,7 @@ toolforge:
           mode: "0755"
           content: |
             - name: contjob
-              image: bookworm
+              image: trixie
               command: ./contjob.sh
               continuous: true
               no-filelog: true
@@ -74,7 +78,7 @@ toolforge:
   repos:
     - name: tools
       url: https://deb.svc.toolforge.org/repo
-      dist: bookworm-tools
+      dist: trixie-tools
   packages:
     - toolforge-misctools-cli
     - toolforge-cli

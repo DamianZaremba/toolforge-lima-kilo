@@ -1,15 +1,17 @@
 ---
 lima_kilo_basic_system_packages:
   - curl
-  - docker-compose
+  - docker-buildx-plugin
+  - docker-compose-plugin
   - fzf
   - git
   - htop
   - jq
-  - python3-distutils
   - python3-kubernetes
   - python3-pip
   - sssd
   - strace
   - tcpdump
   - vim
+  # needed for installing debian repos with ansible
+  - gpg

@@ -50,15 +50,18 @@ node, run:
 $ ./start-devenv.sh --ha
 ```
 
-All container images pulled during setup are mounted to disk and persisted.
-If you don't want that you can use `--no-cache`:
+All container images pulled during setup are mounted to disk and persisted. If
+you don't want that you can use `--no-cache`:
+
 ```bash
 $ ./start-devenv.sh --no-cache
 ```
-The above will pull every image needed for setup from scratch without using the cache.
 
-Run `./start-devenv.sh --help` to see all available option.
-See detailed instructions here: [LimaVM README](./lima-vm/README.md)
+The above will pull every image needed for setup from scratch without using the
+cache.
+
+Run `./start-devenv.sh --help` to see all available option. See detailed
+instructions here: [LimaVM README](./lima-vm/README.md)
 
 ## Usage
 
@@ -114,7 +117,7 @@ This is the Toolforge API gateway!
 Another example, to hit the jobs-api by hand:
 
 ```bash
-local.tf-test@lima-kilo:~$ curl https://localhost:30003/jobs/api/v1/jobs/ --cert .toolskube/client.crt --key .toolskube/client.key -k --header "Content-Type: application/json" -X POST --data '{"name":"test","image":"bookworm","cmd":"./test-cmd.sh"}'
+local.tf-test@lima-kilo:~$ curl https://localhost:30003/jobs/api/v1/jobs/ --cert .toolskube/client.crt --key .toolskube/client.key -k --header "Content-Type: application/json" -X POST --data '{"name":"test","image":"trixie","cmd":"./test-cmd.sh"}'
 ```
 
 ### Tool webservices

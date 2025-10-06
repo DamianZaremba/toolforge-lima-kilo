@@ -38,19 +38,19 @@ nodes:
 {% for file in toolforge.files %}
       - hostPath: {{ file.path }}
         containerPath: {{ file.path }}
-        propagation: Bidirectional
+        propagation: None
 {% endfor %}
 {% if use_cache == "true" %}
       - hostPath: {{ cache_disk_mount }}/{{ node.name }}
         containerPath: /var/lib/containerd
-        propagation: Bidirectional
+        propagation: None
 {% endif %}
       - hostPath: {{ kind.files.containerd_hosts_config.path }}
         containerPath: {{ kind.files.containerd_hosts_config.path }}
-        propagation: Bidirectional
+        propagation: None
       - hostPath: /etc/nsswitch.conf
         containerPath: /etc/nsswitch.conf
-        propagation: Bidirectional
+        propagation: None
 
 {% endif %}
 {% endfor %}
