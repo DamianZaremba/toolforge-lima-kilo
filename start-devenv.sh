@@ -8,7 +8,7 @@ CURDIR="$(realpath "$(dirname "$0")")"
 REPO_DOTFILES="$CURDIR/lima-vm/dotfiles"
 RECURSIVE="false"
 COPY_SRC=""
-NAME="lima-kilo"
+NAME="${LIMA_VM_NAME:-lima-kilo}"
 
 help() {
     cat <<EOH
@@ -17,7 +17,7 @@ Usage: $0 [options] -- [extra_args]
 This script will create, start, and configure a VM running lima-kilo.
 
 Options:
-  --name [NAME]       Specify a name for the VM. Defaults to "lima-kilo".
+  --name [NAME]       Specify a name for the VM. Defaults to "lima-kilo", use LIMA_VM_NAME to set via env.
   --ha                Create a multi-node Kubernetes cluster. This is more
                       similar to the production setup, but uses more resources
                       and is less stable (see T385082).
