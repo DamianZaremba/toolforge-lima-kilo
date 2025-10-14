@@ -69,6 +69,7 @@ Once the installation is finished, you can run commands inside the vm as one of
 the two default users created, tf-test or tf-test2 like this:
 
 ```bash
+$ limactl shell lima-kilo
 user@lima-kilo$ sudo become tf-test
 local.tf-test@lima-kilo:~$ pwd
 /data/project/tf-test
