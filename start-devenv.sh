@@ -50,6 +50,20 @@ Extra args:
         require -vvvv. This argument may be specified multiple times.
     For others check ansible-playbook --help
 
+
+Environment variables:
+    LIMA_VM_NAME
+        If passed, will use this as name for the lima-kilo instanace, see --name also.
+
+    LIMA_KILO_DOTFILES
+        If set to a username, will copy the dotfiles from $REPO_DOTFILES/\$LIMA_KILO_DOTFILES to the VM user home
+        directory. See --dotfiles also.
+        Example:
+            LIMA_KILO_DOTFILES=dcaro
+
+    TOOLFORGE_REPOS_DIR
+        If set to a path, it will add this as a mount under the user \$HOME/toolforge directory, useful if you want to
+        have access to your locally modified code within lima-kilo
 EOH
 }
 
@@ -231,7 +245,15 @@ main() {
 
     check_limactl_version
 
-    sed -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" > "$CURDIR/lima-vm/lima-kilo.yaml"
+    if [[ "${TOOLFORGE_REPOS_DIR:-}" != "" ]]; then
+        toolforge_repos_replace="s|@@TOOLFORGE_REPOS_DIR_PLACEHOLDER@@|$TOOLFORGE_REPOS_DIR|g"
+    else
+        toolforge_repos_replace="s|.*@@TOOLFORGE_REPOS_DIR_PLACEHOLDER@@.*||g"
+    fi
+    sed \
+        -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" \
+        -e "$toolforge_repos_replace" \
+    > "$CURDIR/lima-vm/lima-kilo.yaml"
 
     parse_args "$@"
 
