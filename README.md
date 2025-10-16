@@ -22,6 +22,19 @@ everything should work the same.
 
 Then run `./start-devenv.sh`
 
+### Mounting the toolforge repos within the lima vm
+
+You can specify the environment variable `TOOLFORGE_REPOS_DIR` ponting to a path
+when creating your vm to get that path mounted under `~/toolforge`, for easy
+development.
+
+```bash
+export TOOLFORGE_REPOS_DIR=/home/dcaro/Work/wikimedia
+./start-devenv.sh
+```
+
+### Personal dotfiles deployed inside the VM
+
 There is an option to copy dotfiles from the host to the home directory (~) of
 the lima-kilo VM. Use the command as follows:
 
@@ -42,19 +55,23 @@ LIMA_KILO_DOTFILES environment variable, if set:
 export LIMA_KILO_DOTFILES=user
 ```
 
+### High availability cluster setup
+
 By default running `./start-devenv.sh` creates a single-node Kubernetes cluster.
 To create a multi-node kubernetes cluster with 3 control nodes and 1 worker
 node, run:
 
 ```bash
-$ ./start-devenv.sh --ha
+./start-devenv.sh --ha
 ```
+
+### Skipping cache usage
 
 All container images pulled during setup are mounted to disk and persisted. If
 you don't want that you can use `--no-cache`:
 
 ```bash
-$ ./start-devenv.sh --no-cache
+./start-devenv.sh --no-cache
 ```
 
 The above will pull every image needed for setup from scratch without using the
