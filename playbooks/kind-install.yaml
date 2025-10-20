@@ -33,9 +33,13 @@
     - role: harbor
       tags: harbor
     - role: foxtrot_ldap
-      tags: foxtrot_ldap
+      tags:
+        - foxtrot_ldap
+        - ldap
     - role: ldap_users
-      tags: ldap_users
+      tags:
+        - ldap_users
+        - ldap
     - role: k8s
       tags: k8s
     - role: restish
