@@ -46,7 +46,7 @@
   become: true
   ansible.posix.sysctl:
     name: fs.inotify.max_user_instances
-    value: "1024"
+    value: "2048"
     state: present
 
 - name: Create nodes containerd mount directories on cache disk
