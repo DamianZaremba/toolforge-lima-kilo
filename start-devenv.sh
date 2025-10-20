@@ -251,8 +251,9 @@ main() {
         toolforge_repos_replace="s|.*@@TOOLFORGE_REPOS_DIR_PLACEHOLDER@@.*||g"
     fi
     sed \
-        -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" "$CURDIR/lima-vm/lima-kilo.yaml.tpl" \
+        -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" \
         -e "$toolforge_repos_replace" \
+        "$CURDIR/lima-vm/lima-kilo.yaml.tpl" \
     > "$CURDIR/lima-vm/lima-kilo.yaml"
 
     parse_args "$@"
