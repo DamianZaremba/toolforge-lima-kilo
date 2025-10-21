@@ -26,3 +26,4 @@ lima_kilo_toolforge_deploy_components:
   - name: ingress-nginx
   - name: ingress-admission
   - name: logging
+  - name: logs-api
