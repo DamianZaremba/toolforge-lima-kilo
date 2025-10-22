@@ -7,6 +7,7 @@ import platform
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import time
 from datetime import datetime, timedelta
@@ -118,6 +119,13 @@ def get_package_job(
 
 def get_last_pipeline(project: dict[str, Any], mr_number: int) -> dict[str, Any]:
     mr_data = get_mr(project=project, mr_number=mr_number)
+    if not mr_data["head_pipeline"]:
+        click.echo(
+            f"Unable to find a pipeline for MR {mr_number} ({mr_data['web_url']})",
+            err=True,
+        )
+        sys.exit(2)
+
     while mr_data["head_pipeline"]["status"] in ["running", "created"]:
         click.echo(
             f"Pipeline {mr_data['head_pipeline']['iid']} is still running, waiting for it to finish...."
@@ -126,10 +134,12 @@ def get_last_pipeline(project: dict[str, Any], mr_number: int) -> dict[str, Any]
         mr_data = get_mr(project=project, mr_number=mr_number)
 
     if mr_data["head_pipeline"]["status"] != "success":
-        raise Exception(
+        click.echo(
             f"Unable to find a successful pipeline for MR {mr_number} ({mr_data['web_url']}), last pipeline status: "
-            f"{mr_data['head_pipeline']['status']}"
+            f"{mr_data['head_pipeline']['status']}",
+            err=True,
         )
+        sys.exit(2)
 
     return mr_data["head_pipeline"]
 
