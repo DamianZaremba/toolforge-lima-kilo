@@ -16,13 +16,6 @@
     # mode is enforced by sssd, it will refuse to start otherwise
     mode: "0600"
 
-- name: Install nsswitch.conf to use sssd
-  become: true
-  ansible.builtin.copy:
-    src: "nsswitch.conf"
-    dest: "/etc/nsswitch.conf"
-    mode: "0644"
-
 - name: Install base packages
   become: true
   ansible.builtin.package:
@@ -39,6 +32,18 @@
     daemon_reload: true
     enabled: true
     state: started
+
+# Note: after this sssd package has been installed (part of lima_kilo_basic_system_packages),
+# otherwise the installation changes the config and leaves the state diverged.
+# Due to the file being bind-mounted into the kind container, when ansible replaces it on a second run,
+# it becomes un-readable to the existing process and thus any new pods, breaking services that rely on it e.g. jobs-api
+# x-ref https://phabricator.wikimedia.org/T407931
+- name: Install nsswitch.conf to use sssd
+  become: true
+  ansible.builtin.copy:
+    src: "nsswitch.conf"
+    dest: "/etc/nsswitch.conf"
+    mode: "0644"
 
 # Sometimes when running a couple builds at the same time we get out of inode watchers
 # similar to https://phabricator.wikimedia.org/T361519
