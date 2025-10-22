@@ -78,9 +78,9 @@ def get_mr(project: dict[str, Any], mr_number: int) -> dict[str, Any]:
     return _do_get_dict(f"/projects/{project['id']}/merge_requests/{mr_number}")
 
 
-def get_chart_job(project: dict[str, Any], pipeline: dict[str, Any]) -> dict[str, Any]:
+def get_chart_job(pipeline: dict[str, Any]) -> dict[str, Any]:
     for job in _do_get_list(
-        f"/projects/{project['id']}/pipelines/{pipeline['id']}/jobs"
+        f"/projects/{pipeline['project_id']}/pipelines/{pipeline['id']}/jobs"
     ):
         if job["name"] == CHART_JOB_NAME_PUBLIC:
             return job
@@ -309,12 +309,10 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
     project = get_project(component=component)
     pipeline = get_last_pipeline(project=project, mr_number=mr_number)
     # to be able to use charts built in forks, we will have to re-think how we push images and such
-    chart_job = get_chart_job(project=project, pipeline=pipeline)
+    chart_job = get_chart_job(pipeline=pipeline)
     # for some silly reason the jobs gitlab api needs a token to get the logs
     # but the non-api url is public, so we use the public one
-    logs_response = requests.get(
-        f"{GITLAB_BASE_URL}/repos/cloud/toolforge/{project['path']}/-/jobs/{chart_job['id']}/trace.json"
-    )
+    logs_response = requests.get(f"{chart_job['web_url']}/trace.json")
     logs_response.raise_for_status()
 
     chart_registry = ""
