@@ -46,7 +46,15 @@ def _do_get_list(path: str, **kwargs) -> list[dict[str, Any]]:
     return cast(list[dict[str, Any]], _do_get_dict(path=path, **kwargs))
 
 
-def _register_custom_package(mr_or_action: int | str, component: str) -> None:
+def _check_output(command: list[str], **kwargs) -> str:
+    click.secho(
+        f"  Running: \n    {' '.join(command)}\n    kwargs: {kwargs}",
+        fg="blue",
+    )
+    return subprocess.check_output(command, **kwargs)
+
+
+def _register_custom_package(mr_or_action: int, component: str) -> None:
     """We need this because the package versions don't have the mr information."""
     package = COMPONENT_TO_PACKAGE.get(component, f"toolforge-{component}")
     os.makedirs(TOOLOFORGE_PACKAGE_REGISTRY_DIR, exist_ok=True)
@@ -161,16 +169,18 @@ def deploy_package_mr(component: str, mr_number: int, arch: str) -> None:
         Path(artifacts_path).open("wb").write(artifact_response.content)
         shutil.unpack_archive(artifacts_path, tempdir)
 
-        subprocess.check_call(["ls", "-lR", f"{tempdir}"])
+        _check_output(["ls", "-lR", f"{tempdir}"])
         click.echo(f"Downloaded artifacts at {tempdir}:")
-        debs = list((Path(tempdir) / "debs").glob(pattern="*.deb"))
+        debs = [
+            f"{deb_path}" for deb_path in (Path(tempdir) / "debs").glob(pattern="*.deb")
+        ]
         # Needed as apt install might still not install the file if there's a better alternative in the repos
         install_command = [
             "sudo",
             "dpkg",
             "-i",
         ] + debs
-        subprocess.check_call(install_command)
+        _check_output(install_command)
 
         # Needed as the previous one does not install dependencies
         fix_deps_command = [
@@ -181,7 +191,7 @@ def deploy_package_mr(component: str, mr_number: int, arch: str) -> None:
             "--yes",
             "--fix-missing",
         ]
-        subprocess.check_call(fix_deps_command)
+        _check_output(fix_deps_command)
 
     _register_custom_package(mr_or_action=mr_number, component=component)
     click.secho(f"Deployed {component} from mr {mr_number}", fg="green")
@@ -189,8 +199,12 @@ def deploy_package_mr(component: str, mr_number: int, arch: str) -> None:
 
 def restore_chart(component: str) -> None:
     try:
-        subprocess.check_call(["git", "reset", "--hard"], cwd=TOOLFORGE_DEPLOY_REPO)
-        subprocess.check_call(["./deploy.sh", component], cwd=TOOLFORGE_DEPLOY_REPO)
+        _check_output(["git", "reset", "--hard"], cwd=TOOLFORGE_DEPLOY_REPO)
+        _check_output(
+            ["./deploy.sh", component],
+            cwd=TOOLFORGE_DEPLOY_REPO,
+            stdin=subprocess.DEVNULL,
+        )
     except subprocess.CalledProcessError as error:
         click.secho(f"Failed to restore {component}: {error}", fg="yellow")
         return
@@ -231,16 +245,16 @@ def restore_package(component: str) -> None:
         package,
     ]
 
-    check_output = subprocess.check_output(check_command, cwd=TOOLFORGE_DEPLOY_REPO)
+    check_output = _check_output(check_command, cwd=TOOLFORGE_DEPLOY_REPO)
     if "Unable to locate package" not in check_output.decode("utf-8"):
         try:
-            subprocess.check_call(remove_command, cwd=TOOLFORGE_DEPLOY_REPO)
+            _check_output(remove_command, cwd=TOOLFORGE_DEPLOY_REPO)
         except subprocess.CalledProcessError as error:
             click.secho(f"Failed to restore {component}: {error}", fg="yellow")
             return
 
     try:
-        subprocess.check_call(install_command, cwd=TOOLFORGE_DEPLOY_REPO)
+        _check_output(install_command, cwd=TOOLFORGE_DEPLOY_REPO)
 
     except subprocess.CalledProcessError as error:
         click.secho(f"Failed to restore {component}: {error}", fg="yellow")
@@ -406,8 +420,9 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
 
 
 def run_deploy_sh(component: str, repo_dir: Path) -> None:
-    output = subprocess.check_output(
-        ["./deploy.sh", component],
+    command = ["./deploy.sh", component]
+    output = _check_output(
+        command,
         cwd=repo_dir,
         # avoid interactive mode
         stdin=subprocess.DEVNULL,
@@ -429,13 +444,23 @@ def run_deploy_sh(component: str, repo_dir: Path) -> None:
 
 
 def rollout_reboot_deployments(namespace: str) -> None:
-    deployments = subprocess.check_output(
-        ["kubectl", "get", "deployments", f"--namespace={namespace}", "--output=name"]
-    ).decode("utf-8")
+    command = [
+        "kubectl",
+        "get",
+        "deployments",
+        f"--namespace={namespace}",
+        "--output=name",
+    ]
+    deployments = _check_output(command).decode("utf-8")
     for deployment in deployments.splitlines():
-        subprocess.check_call(
-            ["kubectl", "rollout", "restart", f"--namespace={namespace}", deployment]
-        )
+        command = [
+            "kubectl",
+            "rollout",
+            "restart",
+            f"--namespace={namespace}",
+            deployment,
+        ]
+        _check_output(command)
 
 
 def ask_mr(component: str) -> int:
@@ -493,12 +518,12 @@ def build_local_component(local_path: Path, image_tag: str):
         image_tag,
         f"{local_path}",
     ]
-    subprocess.check_call(command, cwd=local_path)
+    _check_output(command, cwd=local_path)
 
 
 def load_in_kind(image: str) -> None:
     command = ["kind", "load", "docker-image", image, "--name=toolforge"]
-    subprocess.check_call(command)
+    _check_output(command)
 
 
 def deploy_chart_local(component: str) -> None:
@@ -515,7 +540,7 @@ def deploy_chart_local(component: str) -> None:
     "--arch", default="amd64" if platform.machine() in ["x86_64", ""] else "arm64"
 )
 @click.argument(
-    "mr_number",
+    "mr_or_action",
     type=_try_mr_number_option,
     required=False,
     default=None,
