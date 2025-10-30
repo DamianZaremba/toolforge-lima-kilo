@@ -15,7 +15,7 @@
         exec \
         --pod-running-timeout=5m0s \
         --stdin=false \
-        deployment/foxtrot-ldap \
+        statefulset/foxtrot-ldap \
         -- container/utils/add-lima-kilo-tool-account.sh {{ tool_account.name }} $uid_gid $uid_gid \
         && return_code=0 || return_code="$?"
       while [[ $return_code != "$ALREADY_EXISTS_RC" && $return_code != "0" ]]; do
@@ -29,7 +29,7 @@
           exec \
           --pod-running-timeout=5m0s \
           --stdin=false \
-          deployment/foxtrot-ldap \
+          statefulset/foxtrot-ldap \
           -- container/utils/add-lima-kilo-tool-account.sh {{ tool_account.name }} $uid_gid $uid_gid \
         && return_code=0 || return_code="$?"
       done
