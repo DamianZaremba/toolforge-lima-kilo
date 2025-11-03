@@ -9,6 +9,7 @@ kind:
     - 30001 # jobs-api
     - 30002 # ingress-nginx
     - 30003 # api-gateway
+    - 30004 # loki-tracing
   cluster:
     name: toolforge
     images:
