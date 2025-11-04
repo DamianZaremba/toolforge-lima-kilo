@@ -12,7 +12,7 @@ help() {
     Description:
         This restores all the components that have been modified, or out of sync with the toolforge-deploy repository under ~/toolforge-deploy
 
-        It uses toolforge_get_versions.sh and toolforge_deploy_mr.py
+        It uses toolforge_get_versions.sh and toolforge_deploy
 
     Options:
         -h
@@ -43,7 +43,7 @@ main() {
     for component in $(get_modified_k8s_components); do
         echo "### Restoring component $component"
         # the heredoc is to avoid it asking for confirmation
-        toolforge_deploy_mr.py "$component" restore <<<""
+        toolforge_deploy "$component" restore <<<""
     done
 }
 
