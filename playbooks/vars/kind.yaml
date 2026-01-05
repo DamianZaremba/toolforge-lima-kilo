@@ -1,8 +1,8 @@
 ---
 kind:
   # refresh versions from https://github.com/kubernetes-sigs/kind/releases
-  url: https://kind.sigs.k8s.io/dl/v0.29.0/kind-linux-amd64
-  checksum: sha256:c72eda46430f065fb45c5f70e7c957cc9209402ef309294821978677c8fb3284
+  url: https://kind.sigs.k8s.io/dl/v0.31.0/kind-linux-amd64
+  checksum: sha256:eb244cbafcc157dff60cf68693c14c9a75c4e6e6fedaf9cd71c58117cb93e3fa
 
   unpack: false
   extra_forward_ports:
