@@ -1,5 +1,5 @@
 ---
-- name: Enable insecure registry to be able to pull images from harbor
+- name: Configure Docker as required
   become: true
   ansible.builtin.template:
     src: daemon.json.j2
@@ -8,3 +8,24 @@
     owner: "root"
     group: "root"
   notify: Restart docker to pickup change
+# Mounts below require the Docker restart to happen
+- name: Flush handlers before relying on overlay2 being available
+  ansible.builtin.meta: flush_handlers
+
+- name: Create nodes containerd mount directories on cache disk
+  become: true
+  ansible.builtin.command: mkdir -p {{ cache_disk_mount }}/{{ item.name }}
+  args:
+    creates: "{{ cache_disk_mount }}/{{ item.name }}"
+  loop: "{{ nodes + [{'name': 'local'}] }}"
+  when: use_cache == "true"
+
+- name: Mount local containerd directory to cache disk
+  become: true
+  ansible.posix.mount:
+    path: "{{ cache_disk_mount }}/local"
+    src: "/var/lib/docker/overlay2"
+    fstype: none
+    opts: bind
+    state: mounted
+  when: use_cache == "true"
