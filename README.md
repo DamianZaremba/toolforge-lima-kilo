@@ -22,6 +22,9 @@ everything should work the same.
 
 Then run `./start-devenv.sh`
 
+When on an arm platform the installation of the kubernetes stack will be
+automatically forced to use the arm components.
+
 ### Mounting the toolforge repos within the lima vm
 
 You can specify the environment variable `TOOLFORGE_REPOS_DIR` ponting to a path

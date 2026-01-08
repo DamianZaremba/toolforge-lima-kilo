@@ -278,6 +278,7 @@ main() {
     fi
 
     if [[ $(uname -m) == 'arm64' ]]; then
+        ansible_args+=("--extra-vars" "target_arch=arm64")
         extra_create_opts=(
             --vm-type=vz
             --rosetta
