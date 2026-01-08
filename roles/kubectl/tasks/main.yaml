@@ -5,8 +5,8 @@
     binary:
       name: "kubectl"
       path: "{{ lima_kilo_kubectl_binary_path }}"
-      url: "{{ kubectl.url }}"
-      checksum: "{{ kubectl.checksum }}"
+      url: "{{ kubectl.url[install_arch] }}"
+      checksum: "{{ kubectl.checksum[install_arch] }}"
       unpack: "{{ kubectl.unpack }}"
 
 - name: Append kubectl alias and bash autocompletion to ~/.bashrc
