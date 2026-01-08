@@ -22,6 +22,16 @@ everything should work the same.
 
 Then run `./start-devenv.sh`
 
+When on an arm platform, if you want to force the installation of the kubernetes
+stack to use arm too, it's possible using:
+
+`./start-devenv.sh --no-cache -- --extra-vars target_arch=arm64`
+
+pass also something like `--name arm` if you want to create a separate VM in
+parallel with the default one.
+On macos for example this avoids the use of Rosetta for the main stack and hence
+allows to install the arm version of the images that provide one.
+
 ### Mounting the toolforge repos within the lima vm
 
 You can specify the environment variable `TOOLFORGE_REPOS_DIR` ponting to a path

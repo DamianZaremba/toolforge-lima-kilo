@@ -5,8 +5,8 @@
     binary:
       name: "restish"
       path: "{{ lima_kilo_restish_binary_path }}"
-      url: "{{ restish.url }}"
-      checksum: "{{ restish.checksum }}"
+      url: "{{ restish.url[install_arch] }}"
+      checksum: "{{ restish.checksum[install_arch] }}"
       unpack: "{{ restish.unpack }}"
 
 - name: Create restish config dir for tool accounts
