@@ -1,10 +1,4 @@
 ---
-- name: Ensure local dir tree exists for lima-kilo '{{ lima_kilo_local_path }}'
-  ansible.builtin.file:
-    dest: "{{ lima_kilo_local_path }}"
-    state: directory
-    mode: "0775"
-
 - name: Ensure bin dir tree exists for lima-kilo '{{ lima_kilo_bin }}'
   ansible.builtin.file:
     dest: "{{ lima_kilo_bin }}"
