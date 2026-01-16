@@ -27,7 +27,7 @@ kind:
 
   files:
     config:
-      path: "{{ lima_kilo_local_path }}/kind.yaml"
+      path: "{{ ansible_env.HOME }}/kind.yaml"
       src: kind.yaml.j2
     containerd_hosts_config:
       path: /etc/containerd/certs.d/_default/hosts.toml
