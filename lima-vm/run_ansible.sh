@@ -28,7 +28,7 @@ done
 
 # Extract all tags
 # shellcheck disable=SC2207
-ALL_TAGS=( $(yq -r '.[0].roles[].tags' "$HOME/lima-kilo/playbooks/kind-install.yaml") )
+ALL_TAGS=( $(yq -r '.[0].roles[].tags' "/mnt/lima-kilo/playbooks/kind-install.yaml") )
 
 find_index() {
     # Find index of a tag in ALL_TAGS
@@ -60,11 +60,11 @@ expand_tag_range
 VIRTUALENV_DIR="$HOME/env"
 
 export ANSIBLE_PYTHON_INTERPRETER=$VIRTUALENV_DIR/bin/python
-export ANSIBLE_CONFIG="$HOME/lima-kilo/ansible.cfg"
+export ANSIBLE_CONFIG="/mnt/lima-kilo/ansible.cfg"
 # shellcheck disable=SC1091
 source "$VIRTUALENV_DIR/bin/activate"
 
 ansible-playbook \
     --diff \
-    "$HOME/lima-kilo/playbooks/kind-install.yaml" \
+    "/mnt/lima-kilo/playbooks/kind-install.yaml" \
     "${ANSIBLE_ARGS[@]}"
