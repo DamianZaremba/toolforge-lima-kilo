@@ -18,9 +18,9 @@ memory: "16GiB"
 disk: "50GiB"
 mounts:
   # If running manually (not using start-devenv.sh), replace this with your path to the lima-kilo directory
-  - location: "@@LIMA_KILO_DIR_PLACEHOLDER@@"
+  - { location: "@@LIMA_KILO_DIR_PLACEHOLDER@@", mountPoint: "/mnt/lima-kilo" }
   # If running manually (not using start-devenv.sh), replace this with your path to the toolforge repos, or delete
-  - { location: "@@TOOLFORGE_REPOS_DIR_PLACEHOLDER@@", mountPoint: "{{.Home}}/toolforge" }
+  - { location: "@@TOOLFORGE_REPOS_DIR_PLACEHOLDER@@", mountPoint: "/mnt/toolforge" }
 
 # containerd is managed by Docker, not by Lima, so the values are set to false here.
 containerd:

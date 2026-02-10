@@ -20,6 +20,8 @@ source "$VIRTUALENV_DIR/bin/activate"
 pip3 install -r "${LIMA_KILO_DIR}/requirements.txt"
 
 ! [[ -e "${HOME}/lima-kilo" ]] && ln -s "$LIMA_KILO_DIR" "${HOME}/lima-kilo"
+! [[ -e "${HOME}/bin" ]] && ln -s "/opt/bin" "${HOME}/bin"
+! [[ -e "${HOME}/toolforge" ]] && [[ -e "/mnt/toolforge" ]] && ln -s "/mnt/toolforge" "${HOME}/toolforge"
 
 RUN_ANSIBLE="$(dirname "$0")/run_ansible.sh"
 env ANSIBLE_FORCE_COLOR=true "$RUN_ANSIBLE" "$@"

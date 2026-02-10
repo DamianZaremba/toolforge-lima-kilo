@@ -1,5 +1,6 @@
 ---
 - name: Ensure bin dir tree exists for lima-kilo '{{ lima_kilo_bin }}'
+  become: true
   ansible.builtin.file:
     dest: "{{ lima_kilo_bin }}"
     state: directory
