@@ -5,8 +5,8 @@
     binary:
       name: "helm"
       path: "{{ lima_kilo_helm_binary_path }}"
-      url: "{{ helm.url }}"
-      checksum: "{{ helm.checksum }}"
+      url: "{{ helm.url[install_arch] }}"
+      checksum: "{{ helm.checksum[install_arch] }}"
       unpack: "{{ helm.unpack }}"
 
 - name: Install helmfile binary
@@ -15,8 +15,8 @@
     binary:
       name: "helmfile"
       path: "{{ lima_kilo_helmfile_binary_path }}"
-      url: "{{ helmfile.url }}"
-      checksum: "{{ helmfile.checksum }}"
+      url: "{{ helmfile.url[install_arch] }}"
+      checksum: "{{ helmfile.checksum[install_arch] }}"
       unpack: "{{ helmfile.unpack }}"
 
 # this install all helm plugin dependencies

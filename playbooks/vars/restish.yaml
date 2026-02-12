@@ -1,7 +1,11 @@
 ---
 restish:
   # refresh versions from https://github.com/danielgtaylor/restish/releases
-  url: https://github.com/danielgtaylor/restish/releases/download/v0.20.0/restish-0.20.0-linux-amd64.tar.gz
-  checksum: sha256:472bda01903b4dc3751fd7cf037dbdb9362b4173ce362d2246b43a0a45f4c057
+  url:
+    amd64: https://github.com/danielgtaylor/restish/releases/download/v0.20.0/restish-0.20.0-linux-amd64.tar.gz
+    arm64: https://github.com/danielgtaylor/restish/releases/download/v0.20.0/restish-0.20.0-linux-arm64.tar.gz
+  checksum:
+    amd64: sha256:472bda01903b4dc3751fd7cf037dbdb9362b4173ce362d2246b43a0a45f4c057
+    arm64: sha256:eabcc5405d77bc2030c9b2ff18a9632a871e1a3e949d0fb0c07c10729de83e94
   unpack: true
   config_dir: ".config/restish"
