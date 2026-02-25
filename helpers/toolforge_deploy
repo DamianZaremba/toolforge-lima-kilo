@@ -529,8 +529,10 @@ def load_in_kind(image: str) -> None:
 def deploy_chart_local(component: str) -> None:
     image_url = f"toolsbeta-harbor.wmcloud.org/toolforge/{component}:dev"
     local_path = find_component_dir(component)
-    build_local_component(local_path=local_path, image_tag=image_url)
-    load_in_kind(image=image_url)
+    blubber_file_path = local_path / ".pipeline/blubber.yaml"
+    if blubber_file_path.exists():
+        build_local_component(local_path=local_path, image_tag=image_url)
+        load_in_kind(image=image_url)
     run_deploy_sh(component="local", repo_dir=local_path)
 
 
