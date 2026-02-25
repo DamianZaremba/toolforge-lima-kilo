@@ -6,7 +6,7 @@ kind:
 
   unpack: false
   extra_forward_ports:
-    - 30001 # jobs-api
+    - 30000 # istio tool gateway
     - 30002 # ingress-nginx
     - 30003 # api-gateway
     - 30004 # infra-tracing-loki
