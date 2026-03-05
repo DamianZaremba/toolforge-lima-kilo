@@ -12,6 +12,10 @@ lima_kilo_toolforge_deploy_components:
   - name: registry-admission
     wait: true
   - name: volume-admission
+  - name: ingress-admission
+  - name: istio-system
+    wait: true
+  - name: istio-gateway
   - name: jobs-api
   - name: jobs-emailer
   - name: envvars-api
@@ -25,6 +29,5 @@ lima_kilo_toolforge_deploy_components:
   - name: maintain-harbor
   - name: wmcs-k8s-metrics
   - name: ingress-nginx
-  - name: ingress-admission
   - name: logging
   - name: logs-api
