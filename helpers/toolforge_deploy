@@ -536,10 +536,65 @@ def deploy_chart_local(component: str) -> None:
     run_deploy_sh(component="local", repo_dir=local_path)
 
 
+def restore_all() -> None:
+    output_versions = subprocess.check_output(["toolforge_get_versions.sh"])
+    raw_component_lines = [
+        [col.strip() for col in line.split("|")]
+        for line in output_versions.decode("utf8").splitlines()[2:]
+    ]
+    component_name_col = 1
+    mismatch_version_col = -2
+    to_restore = [
+        line[component_name_col]
+        for line in raw_component_lines
+        if line[mismatch_version_col]
+    ]
+
+    if not to_restore:
+        click.echo("All components in the expected version")
+
+    click.echo(
+        f"Restoring {len(to_restore)} component{len(to_restore) > 1 and 's' or ''}:\n    {'\n    '.join(to_restore)}\n"
+    )
+
+    for component in to_restore:
+        if is_package(component):
+            restore_package(component)
+        else:
+            restore_chart(component)
+
+
+def is_package(component: str) -> bool:
+    return component.endswith("-cli") or component in [
+        "tools-webservice",
+        "toolforge-weld",
+    ]
+
+
+def refetch_toolforge_deploy():
+    click.echo(
+        f"Refetching and resetting the toolforge-deploy repo at {TOOLFORGE_DEPLOY_REPO.resolve()}"
+    )
+    subprocess.check_call(
+        ["git", "-C", str(TOOLFORGE_DEPLOY_REPO.resolve()), "fetch", "--all"]
+    )
+    subprocess.check_call(
+        ["git", "-C", str(TOOLFORGE_DEPLOY_REPO.resolve()), "reset", "--hard"]
+    )
+
+
 @click.command()
 @click.argument("component", required=True)
 @click.option(
     "--arch", default="amd64" if platform.machine() in ["x86_64", ""] else "arm64"
+)
+@click.option(
+    "--refetch",
+    "-r",
+    help="If set, will fetch and reset --hard the toolforge-deploy repo first",
+    is_flag=True,
+    required=False,
+    default=False,
 )
 @click.argument(
     "mr_or_action",
@@ -547,21 +602,29 @@ def deploy_chart_local(component: str) -> None:
     required=False,
     default=None,
 )
-def main(component: str, mr_or_action: int | str | None = None, arch: str = "amd64"):
+def main(
+    component: str,
+    mr_or_action: int | str | None = None,
+    arch: str = "amd64",
+    refetch: bool = False,
+):
     """
     Deploy a specific version of a toolforge component or client package.
 
-    MR_NUMBER is the number of the MR to deploy, `restore` to deploy the version from toolforge-deploy or `local` to
-    build and deploy the code from a local directory. If not passed will ask interactively fetching the open MRs list
-    from gitlab.
+    MR_NUMBER is the number of the MR to deploy, `restore` to deploy the version from toolforge-deploy, `restore-all`
+    to restore all the changed components, or `local` to build and deploy the code from a local directory. If not
+    passed will ask interactively fetching the open MRs list from gitlab.
     """
+    if refetch:
+        refetch_toolforge_deploy()
+
+    if component == "restore-all":
+        return restore_all()
+
     if mr_or_action is None:
         mr_or_action = ask_mr(component=component)
 
-    if component.endswith("-cli") or component in [
-        "tools-webservice",
-        "toolforge-weld",
-    ]:
+    if is_package(component):
         match mr_or_action:
             case "restore":
                 restore_package(component=component)
