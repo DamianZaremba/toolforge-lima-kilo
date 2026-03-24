@@ -466,7 +466,7 @@ def rollout_reboot_deployments(namespace: str) -> None:
 def ask_mr(component: str) -> int:
     project = get_project(component=component)
     all_mrs = get_mrs(project=project)
-    choices = ["restore"]
+    choices = ["restore", "local"]
     for mr in all_mrs:
         click.secho(
             f"  * {mr['iid']}: <{mr['author']['username']}> {mr['title']}",
@@ -477,7 +477,7 @@ def ask_mr(component: str) -> int:
     chosen = click.prompt(
         "Which MR do you want to deploy?",
         type=click.Choice(choices=choices),
-        default=choices[1] if all_mrs else choices[0],
+        default=choices[2] if all_mrs else choices[1],
     )
     return chosen
 
