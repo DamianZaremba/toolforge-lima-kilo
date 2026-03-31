@@ -229,8 +229,8 @@ check_limactl_version() {
     local cur_version
     cur_version=$(limactl --version)
 
-    if ! [[ "$cur_version" =~ \ 1\.[[:digit:]]*\.[[:digit:]]* ]]; then
-        echo "WARNING: your version of limactl is a bit old, you should consider upgrading to the latest >1.0.0"
+    if ! [[ "$cur_version" =~ \ 2\.[[:digit:]]*\.[[:digit:]]* ]]; then
+        echo "WARNING: your version of limactl is a bit old, you should consider upgrading to the latest >=2.0.0"
     fi
 }
 
