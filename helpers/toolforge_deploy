@@ -54,7 +54,7 @@ def _check_output(command: list[str], **kwargs) -> str:
     return subprocess.check_output(command, **kwargs)
 
 
-def _register_custom_package(mr_or_action: int, component: str) -> None:
+def _register_custom_package(mr_or_action: int | str, component: str) -> None:
     """We need this because the package versions don't have the mr information."""
     package = COMPONENT_TO_PACKAGE.get(component, f"toolforge-{component}")
     os.makedirs(TOOLOFORGE_PACKAGE_REGISTRY_DIR, exist_ok=True)
@@ -260,6 +260,7 @@ def restore_package(component: str) -> None:
         click.secho(f"Failed to restore {component}: {error}", fg="yellow")
         return
 
+    _register_custom_package(mr_or_action="restore", component=component)
     click.secho(f"Restored {component} to the version in toolforge-deploy", fg="green")
 
 
