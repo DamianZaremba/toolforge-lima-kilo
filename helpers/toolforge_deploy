@@ -498,7 +498,7 @@ def _try_mr_number_option(maybe_mr_number: Any) -> Any:
 def find_component_dir(component_name: str) -> Path:
     toolforge_repos_dir = Path("~/toolforge").expanduser()
     for path in toolforge_repos_dir.rglob(component_name):
-        if path.is_dir() and (path / ".git").is_dir():
+        if path.is_dir() and (path / ".git").exists():
             return path
 
     raise Exception(
