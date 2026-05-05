@@ -28,6 +28,5 @@ lima_kilo_toolforge_deploy_components:
   - name: maintain-kubeusers
   - name: maintain-harbor
   - name: wmcs-k8s-metrics
-  - name: ingress-nginx
   - name: logging
   - name: logs-api
