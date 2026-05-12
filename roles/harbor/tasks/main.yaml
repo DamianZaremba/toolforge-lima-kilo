@@ -6,11 +6,18 @@
       git clone --depth 1 --quiet {{ lima_kilo_builds_builder_repo }} {{ lima_kilo_harbor_dir }}/builds-builder
     creates: "{{ lima_kilo_harbor_dir }}/builds-builder"
 
+- name: Add harbor.local to /etc/hosts
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/hosts
+    line: "{{ lima_kilo_harbor_hostname }}"
+    state: "present"
+
 - name: Run setup # noqa no-changed-when
   become: true
   ansible.builtin.shell:
     chdir: "{{ lima_kilo_harbor_dir }}/builds-builder"
-    cmd: "HARBOR_DIR={{ lima_kilo_harbor_dir }} HARBOR_IP={{ lima_kilo_docker_addr }} ./utils/get_harbor.sh"
+    cmd: "HARBOR_DIR={{ lima_kilo_harbor_dir }} HARBOR_HOSTNAME={{ lima_kilo_harbor_hostname }} ./utils/get_harbor.sh"
     creates: "{{ lima_kilo_harbor_dir }}/harbor"
 
 - name: Add the service file to start harbor on reboot

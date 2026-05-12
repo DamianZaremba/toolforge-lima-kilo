@@ -2,5 +2,6 @@
 lima_kilo_bin: "/opt/bin"
 lima_kilo_repo: "/mnt/lima-kilo"
 lima_kilo_docker_addr: "{{ ansible_default_ipv4.address }}"
+lima_kilo_harbor_hostname: "harbor.local"
 cache_disk_mount: "/mnt/lima-cache"
 use_cache: "true"

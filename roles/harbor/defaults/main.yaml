@@ -1,4 +1,3 @@
 ---
 lima_kilo_builds_builder_repo: https://gitlab.wikimedia.org/repos/cloud/toolforge/builds-builder
-lima_kilo_harbor_ip_for_within_k8s: "{{ lima_kilo_docker_addr }}"
 lima_kilo_harbor_dir: "/srv/ops/harbor"
