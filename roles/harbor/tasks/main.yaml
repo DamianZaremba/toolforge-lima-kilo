@@ -10,7 +10,7 @@
   become: true
   ansible.builtin.lineinfile:
     path: /etc/hosts
-    line: "{{ lima_kilo_harbor_hostname }}"
+    line: "{{ lima_kilo_docker_addr }} {{ lima_kilo_harbor_hostname }}"
     state: "present"
 
 - name: Run setup # noqa no-changed-when
