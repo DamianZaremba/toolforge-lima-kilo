@@ -3,9 +3,9 @@ kubectl:
   # refresh versions from
   # https://kubernetes.io/docs/tasks/tools/#kubectl
   url:
-    amd64: https://dl.k8s.io/release/v1.30.13/bin/linux/amd64/kubectl
-    arm64: https://dl.k8s.io/release/v1.30.13/bin/linux/arm64/kubectl
+    amd64: https://dl.k8s.io/release/v1.32.11/bin/linux/amd64/kubectl
+    arm64: https://dl.k8s.io/release/v1.32.11/bin/linux/arm64/kubectl
   checksum:
-    amd64: sha256:b92bd89b27386b671841d5970b926b645c2ae44e5ca0663cff0f1c836a1530ee
-    arm64: sha256:afed1753b98ab30812203cb469e013082b25502c864f2889e8a0474aac497064
+    amd64: sha256:48581d0e808bd8b7d3c3fc014e86b170e25a987df04c8a879b982b28a5180815
+    arm64: sha256:b1c91c106ec20e61c5dff869e9a39e6af4fb96572bddaac9cce307dfa3ed2348
   unpack: false
