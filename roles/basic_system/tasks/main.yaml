@@ -51,7 +51,19 @@
   become: true
   ansible.posix.sysctl:
     name: fs.inotify.max_user_instances
-    value: "2048"
+    value: "1048576"
+    state: present
+- name: Increase inotify user watches
+  become: true
+  ansible.posix.sysctl:
+    name: fs.inotify.max_user_watches
+    value: "1048576"
+    state: present
+- name: Increase inotify queued events
+  become: true
+  ansible.posix.sysctl:
+    name: fs.inotify.max_queued_events
+    value: "1048576"
     state: present
 
 - name: Add VM name to /etc/hosts
