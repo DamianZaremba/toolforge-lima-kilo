@@ -19,3 +19,4 @@
   loop: "{{ lima_kilo_toolforge_deploy_components }}"
   loop_control:
     label: "{{ item }}"
+  changed_when: false
