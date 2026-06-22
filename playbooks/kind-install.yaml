@@ -22,6 +22,9 @@
       tags: userconfig
     - role: toolforge
       tags: toolforge
+    # This has to come before kind as it will try to pull from it
+    - role: harbor
+      tags: harbor
     - role: kind
       tags: kind
     - role: kubectl
@@ -32,8 +35,6 @@
       tags: k9s
     - role: stern
       tags: stern
-    - role: harbor
-      tags: harbor
     - role: foxtrot_ldap
       tags:
         - foxtrot_ldap
