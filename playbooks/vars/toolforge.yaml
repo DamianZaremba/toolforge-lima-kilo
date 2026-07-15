@@ -14,6 +14,7 @@ toolforge:
     - /data/scratch/
     - /mnt/nfs/dumps-clouddumps1001.wikimedia.org/
     - /mnt/nfs/dumps-clouddumps1002.wikimedia.org/
+    - /mnt/nfs/dumps/
     - /public/dumps/
   files:
     - path: /etc/wmcs-project
