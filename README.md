@@ -98,6 +98,32 @@ local.tf-test@lima-kilo:~$ pwd
 You would be already at the home of the user, and ready to run any toolforge
 commands.
 
+## Env configuration and command shortcuts
+
+For ease of usage, you can setup your lima configuration like:
+
+```shell
+# Somewhere in your shell startup scripts, like .bashrc
+## Dotfiles to select as default install from the lima-kilo repository
+export LIMA_KILO_DOTFILES=dcaro
+## Directory where all your local toolforge repositories are, for `toolforge_deploy <component> local`
+export TOOLFORGE_REPOS_DIR=/home/dcaro/Work/wikimedia
+## Name of the lima VM, will be the default for `lima`
+export LIMA_VM_NAME=toolslocal
+export LIMA_INSTANCE=$LIMA_VM_NAME
+## Default workdir inside the VM (if not set tries to use $HOME, but as it does not exist throws error)
+export LIMA_WORKDIR=/home/$USER.guest
+```
+
+With that, then you can:
+
+```shell
+dcaro@acme$ ./start-devenv.sh  # takes the options from the env
+...
+dcaro@acme$ lima  # takes the vm name, and workdir from the env
+dcaro@toolslocal:~$
+```
+
 ## Extra tools
 
 Some extra tools are also installed:
