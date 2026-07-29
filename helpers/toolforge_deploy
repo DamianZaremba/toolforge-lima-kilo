@@ -597,6 +597,17 @@ def refetch_toolforge_deploy():
     required=False,
     default=False,
 )
+@click.option(
+    "--follow",
+    "-f",
+    help=(
+        "If set, it will start following the logs of the pods for that component "
+        "right after"
+    ),
+    is_flag=True,
+    required=False,
+    default=False,
+)
 @click.argument(
     "mr_or_action",
     type=_try_mr_number_option,
@@ -608,6 +619,7 @@ def main(
     mr_or_action: int | str | None = None,
     arch: str = "amd64",
     refetch: bool = False,
+    follow: bool = False,
 ):
     """
     Deploy a specific version of a toolforge component or client package.
@@ -643,6 +655,9 @@ def main(
                 deploy_chart_local(component=component)
             case _:
                 deploy_chart_mr(component=component, mr_number=int(mr_or_action))
+
+    if follow:
+        subprocess.check_call(["stern", "-s", "1m", "-A", component])
 
 
 if __name__ == "__main__":
