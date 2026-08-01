@@ -56,29 +56,29 @@ if not branch:  # not on any branch
     )
 else:
     remote_name = (
-        Popen(["git", "config", "branch.%s.remote" % branch], stdout=PIPE)
+        Popen(["git", "config", f"branch.{branch}.remote"], stdout=PIPE)
         .communicate()[0]
         .strip()
     )
     if remote_name:
         merge_name = (
-            Popen(["git", "config", "branch.%s.merge" % branch], stdout=PIPE)
+            Popen(["git", "config", f"branch.{branch}.merge"], stdout=PIPE)
             .communicate()[0]
             .strip()
         )
         if remote_name == ".":  # local
             remote_ref = merge_name
         else:
-            remote_ref = "refs/remotes/%s/%s" % (remote_name, merge_name[11:])
+            remote_ref = f"refs/remotes/{remote_name}/{merge_name[11:]}"
         revgit = Popen(
-            ["git", "rev-list", "--left-right", "%s...HEAD" % remote_ref],
+            ["git", "rev-list", "--left-right", f"{remote_ref}...HEAD"],
             stdout=PIPE,
             stderr=PIPE,
         )
         revlist = revgit.communicate()[0]
         if revgit.poll():  # fallback to local
             revlist = Popen(
-                ["git", "rev-list", "--left-right", "%s...HEAD" % merge_name],
+                ["git", "rev-list", "--left-right", f"{merge_name}...HEAD"],
                 stdout=PIPE,
                 stderr=PIPE,
             ).communicate()[0]
@@ -86,9 +86,9 @@ else:
         ahead = len([x for x in behead if x[0] == ">"])
         behind = len(behead) - ahead
         if behind:
-            remote += "%s%s" % (symbols["behind"], behind)
+            remote += f"{symbols['behind']}{behind}"
         if ahead:
-            remote += "%s%s" % (symbols["ahead of"], ahead)
+            remote += f"{symbols['ahead of']}{ahead}"
 
 if remote == "":
     remote = "."
