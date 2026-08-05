@@ -6,7 +6,6 @@ set -o pipefail
 
 CURDIR="$(realpath "$(dirname "$0")")"
 REPO_DOTFILES="$CURDIR/lima-vm/dotfiles"
-RECURSIVE="false"
 COPY_SRC=""
 NAME="${LIMA_VM_NAME:-lima-kilo}"
 
@@ -115,7 +114,6 @@ parse_args() {
                         COPY_SRC="$(realpath "$2")"
                     elif [[ -d "$REPO_DOTFILES/$2" ]]; then
                         COPY_SRC="$REPO_DOTFILES/$2"
-                        RECURSIVE="true"
                     else
                         echo "Error: Directory not found: $2"
                         exit 1
@@ -144,7 +142,6 @@ parse_args() {
     done
 
     if [[ "$COPY_SRC" == "" ]] && [[ "${LIMA_KILO_DOTFILES:-}" != "" ]]; then
-        RECURSIVE="true"
         if [[ -d "$(realpath "$LIMA_KILO_DOTFILES")" ]]; then
             COPY_SRC="$(realpath "$LIMA_KILO_DOTFILES")"
         elif [[ -d "$REPO_DOTFILES/$LIMA_KILO_DOTFILES" ]]; then
@@ -155,50 +152,6 @@ parse_args() {
             ls "$REPO_DOTFILES"
             exit 1
         fi
-    fi
-}
-
-copy_files() {
-    local copy_src="${1?}"
-    local guest_destination="${NAME}:~"
-
-    if [[ -d "$copy_src" ]]; then
-        echo "Copying contents of directory '$copy_src' to the home directory on the ${NAME} VM..."
-
-        shopt -s dotglob
-
-        for file in "$copy_src"/*; do
-            if [[ -f "$file" ]]; then
-                echo "Copying '$file'..."
-                limactl copy "$file" "$guest_destination"
-            fi
-        done
-
-        shopt -u dotglob
-    elif [[ -f "$copy_src" ]]; then
-        echo "Copying file '$copy_src' to the home directory on the ${NAME} VM..."
-        limactl copy "$copy_src" "$guest_destination"
-    else
-        echo "Error: The specified source '$copy_src' is not valid."
-        exit 1
-    fi
-}
-
-
-copy_files_recursive() {
-    local copy_src="${1?}"
-    local guest_destination="${NAME}:~"
-
-    echo "Copying directory '$copy_src' to the home directory on the ${NAME} VM..."
-    if [[ -d "$copy_src" ]]; then
-        shopt -s dotglob
-        for file in "$copy_src"/*; do
-            echo "Copying '$file'..."
-            limactl copy --recursive "$file" "$guest_destination"
-        done
-        shopt -u dotglob
-    else
-        limactl copy --recursive "$copy_src" "$guest_destination"
     fi
 }
 
@@ -322,12 +275,9 @@ main() {
     # override it to remove the duplicated `lima` keyword
     limactl shell "$NAME" -- sudo hostnamectl hostname "$NAME"
     limactl shell "$NAME" -- /mnt/lima-kilo/lima-vm/install.sh "${ansible_args[@]+"${ansible_args[@]}"}"
+
     if [[ "$COPY_SRC" != "" ]]; then
-        if [[ "$RECURSIVE" == "true" ]]; then
-            copy_files_recursive "$COPY_SRC"
-        else
-            copy_files "$COPY_SRC"
-        fi
+        limactl copy --recursive "$COPY_SRC" "${NAME}:~"
     fi
 
     echo "########################################################"
