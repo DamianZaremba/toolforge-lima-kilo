@@ -17,6 +17,6 @@
 
 - name: Set up bash integration for fzf
   ansible.builtin.lineinfile:
-    path: "{{ ansible_env.HOME }}/.bashrc"
+    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
     line: >-
       source /usr/share/doc/fzf/examples/key-bindings.bash

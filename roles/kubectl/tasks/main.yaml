@@ -11,7 +11,7 @@
 
 - name: Append kubectl alias and bash autocompletion to ~/.bashrc
   ansible.builtin.blockinfile:
-    path: "{{ ansible_env.HOME }}/.bashrc"
+    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
     marker: "# {mark} kubectl alias and auto completion"
     block: |
       alias k=kubectl
