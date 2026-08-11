@@ -6,8 +6,8 @@ helm:
     amd64: https://get.helm.sh/helm-v4.1.4-linux-amd64.tar.gz
     arm64: https://get.helm.sh/helm-v4.1.4-linux-arm64.tar.gz
   checksum:
-    amd64: sha256:bd60f567f667631a2c9b698dfabe5e3cd52eaaf4264163c0a9cae566db8560e8
-    arm64: sha256:d0a651026da4a26b28bdfc3d455ce3dfacbc267182dc2225c2172b1dcc549643
+    amd64: sha256:70b2c30a19da4db264dfd68c8a3664e05093a361cefd89572ffb36f8abfa3d09
+    arm64: sha256:13d03672be289045d2ff00e4e345d61de1c6f21c1257a45955a30e8ae036d8f1
   unpack: true
 helmfile:
   # refresh versions from
