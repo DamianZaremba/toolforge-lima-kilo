@@ -49,5 +49,6 @@
       tags: restish
   environment:
     # add lima-kilo bin/ to path so local binaries (helm, helmfile) are
-    # available during component deploy
-    PATH: "{{ lima_kilo_bin }}:{{ ansible_facts['env']['PATH'] }}"
+    # available during component deploy. This play uses a local connection,
+    # and facts are not available when this is applied to fact gathering.
+    PATH: "{{ lima_kilo_bin }}:{{ lookup('ansible.builtin.env', 'PATH') }}"
