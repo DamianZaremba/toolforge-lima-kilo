@@ -73,6 +73,6 @@
     line: "{{ item }}"
     state: "present"
   with_items:
-    - "127.0.0.1 {{ ansible_hostname }}"
+    - "127.0.0.1 {{ ansible_facts['hostname'] }}"
     - "127.0.0.1 tf-test.local"
     - "127.0.0.1 tf-test2.local"
