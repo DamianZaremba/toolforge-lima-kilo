@@ -160,7 +160,7 @@ prompt() {
     local response
 
     while true; do
-        echo -e "$message [y/n]"
+        echo -e "$message [Y/n]"
         read -r response
 
         case "$response" in
