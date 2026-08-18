@@ -3,19 +3,19 @@ helm:
   # refresh versions from
   # https://github.com/helm/helm/releases
   url:
-    amd64: https://get.helm.sh/helm-v4.1.4-linux-amd64.tar.gz
-    arm64: https://get.helm.sh/helm-v4.1.4-linux-arm64.tar.gz
+    amd64: https://get.helm.sh/helm-v3.2.0-linux-amd64.tar.gz
+    arm64: https://get.helm.sh/helm-v3.2.0-linux-arm64.tar.gz
   checksum:
-    amd64: sha256:70b2c30a19da4db264dfd68c8a3664e05093a361cefd89572ffb36f8abfa3d09
-    arm64: sha256:13d03672be289045d2ff00e4e345d61de1c6f21c1257a45955a30e8ae036d8f1
+    amd64: sha256:4c3fd562e64005786ac8f18e7334054a24da34ec04bbd769c206b03b8ed6e457
+    arm64: sha256:cd11f0ed12a658f3b78392528814350a508d2c53d8da7f04145909e94bda10f1
   unpack: true
 helmfile:
   # refresh versions from
   # https://github.com/helmfile/helmfile/releases
   url:
-    amd64: https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_linux_amd64.tar.gz
-    arm64: https://github.com/helmfile/helmfile/releases/download/v1.7.3/helmfile_1.7.3_linux_arm64.tar.gz
+    amd64: https://github.com/helmfile/helmfile/releases/download/v0.171.0/helmfile_0.171.0_linux_amd64.tar.gz
+    arm64: https://github.com/helmfile/helmfile/releases/download/v0.171.0/helmfile_0.171.0_linux_arm64.tar.gz
   checksum:
-    amd64: sha256:23d7df593f704ab1709b3020c8c8083b1517c9e780b5010e756a7d36bd901552
-    arm64: sha256:4a2346df40362f49f395e47d5d6a16a29322b5c6968720c1bde60d101ae97e3b
+    amd64: sha256:c190fd305307ea3fd41a91a95b3341100a1ede239cf32e225564a1ece286fb1b
+    arm64: sha256:9da4295fecd23c2ba2274d7b7aba8ab70fe7c8c425363162efbebd73ed9f92e2
   unpack: true
