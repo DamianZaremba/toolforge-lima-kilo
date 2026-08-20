@@ -580,7 +580,14 @@ def refetch_toolforge_deploy():
         ["git", "-C", str(TOOLFORGE_DEPLOY_REPO.resolve()), "fetch", "--all"]
     )
     subprocess.check_call(
-        ["git", "-C", str(TOOLFORGE_DEPLOY_REPO.resolve()), "reset", "--hard"]
+        [
+            "git",
+            "-C",
+            str(TOOLFORGE_DEPLOY_REPO.resolve()),
+            "reset",
+            "--hard",
+            "FETCH_HEAD",
+        ]
     )
 
 
