@@ -88,3 +88,4 @@ toolforge:
     - toolforge-envvars-cli
     - toolforge-webservice
     - toolforge-components-cli
+    - toolforge-logs-cli
