@@ -53,18 +53,24 @@
     name: fs.inotify.max_user_instances
     value: "1048576"
     state: present
+    # Debian 13 does not read /etc/sysctl.conf at boot, only sysctl.d
+    sysctl_file: /etc/sysctl.d/90-lima-kilo-inotify.conf
 - name: Increase inotify user watches
   become: true
   ansible.posix.sysctl:
     name: fs.inotify.max_user_watches
     value: "1048576"
     state: present
+    # Debian 13 does not read /etc/sysctl.conf at boot, only sysctl.d
+    sysctl_file: /etc/sysctl.d/90-lima-kilo-inotify.conf
 - name: Increase inotify queued events
   become: true
   ansible.posix.sysctl:
     name: fs.inotify.max_queued_events
     value: "1048576"
     state: present
+    # Debian 13 does not read /etc/sysctl.conf at boot, only sysctl.d
+    sysctl_file: /etc/sysctl.d/90-lima-kilo-inotify.conf
 
 - name: Add VM name to /etc/hosts
   become: true
