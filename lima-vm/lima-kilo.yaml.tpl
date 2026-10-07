@@ -27,6 +27,10 @@ containerd:
   system: false
   user: false
 
+ssh:
+  # 0 lets Lima pick a free host port on each create; set LIMA_KILO_SSH_PORT (see start-devenv.sh) to pin it
+  localPort: @@SSH_LOCAL_PORT_PLACEHOLDER@@
+
 portForwards:
   # Harbor
   - guestPort: 80
