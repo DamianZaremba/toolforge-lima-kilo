@@ -60,6 +60,12 @@ Environment variables:
         Example:
             LIMA_KILO_DOTFILES=dcaro
 
+    LIMA_KILO_SSH_PORT
+        If set, pins the host port Lima forwards to the VM's SSH server (ssh.localPort), so it stays the same
+        across VM recreations. Only applies when the VM is created. Defaults to 0 (Lima picks a free port).
+        Example:
+            LIMA_KILO_SSH_PORT=64797
+
     TOOLFORGE_REPOS_DIR
         If set to a path, it will add this as a mount under the user \$HOME/toolforge directory, useful if you want to
         have access to your locally modified code within lima-kilo
@@ -205,6 +211,7 @@ main() {
     fi
     sed \
         -e "s|@@LIMA_KILO_DIR_PLACEHOLDER@@|$CURDIR|g" \
+        -e "s|@@SSH_LOCAL_PORT_PLACEHOLDER@@|${LIMA_KILO_SSH_PORT:-0}|g" \
         -e "$toolforge_repos_replace" \
         "$CURDIR/lima-vm/lima-kilo.yaml.tpl" \
     > "$CURDIR/lima-vm/lima-kilo.yaml"
