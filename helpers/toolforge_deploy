@@ -569,6 +569,7 @@ def is_package(component: str) -> bool:
     return component.endswith("-cli") or component in [
         "tools-webservice",
         "toolforge-weld",
+        "replica-cnf",
     ]
 
 
