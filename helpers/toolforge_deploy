@@ -31,11 +31,15 @@ COMPONENT_TO_PACKAGE = {
     "toolforge-weld": "python3-toolforge-weld",
     "toolforge-cli": "toolforge-cli",
 }
+USER_AGENT = "toolforge_deploy/0.0.1 (https://gitlab.wikimedia.org/repos/cloud/toolforge/lima-kilo)"
 
 
 def _do_get_dict(path: str, **kwargs) -> dict[str, Any]:
     if not path.startswith("http"):
         path = f"{GITLAB_API_BASE_URL}{path}"
+
+    if "headers" not in kwargs:
+        kwargs["headers"] = {"user-agent": ""}
 
     response = requests.get(path, **kwargs)
     response.raise_for_status()
@@ -161,7 +165,8 @@ def deploy_package_mr(component: str, mr_number: int, arch: str) -> None:
         project_id=pipeline_project_id, pipeline=pipeline, arch=arch
     )
     artifact_response = requests.get(
-        f"{GITLAB_API_BASE_URL}/projects/{pipeline_project_id}/jobs/{package_job['id']}/artifacts"
+        f"{GITLAB_API_BASE_URL}/projects/{pipeline_project_id}/jobs/{package_job['id']}/artifacts",
+        headers={"user-agent": USER_AGENT},
     )
     artifact_response.raise_for_status()
     with tempfile.TemporaryDirectory() as tempdir:
@@ -337,7 +342,9 @@ def deploy_chart_mr(component: str, mr_number: int) -> None:
     chart_job = get_chart_job(pipeline=pipeline)
     # for some silly reason the jobs gitlab api needs a token to get the logs
     # but the non-api url is public, so we use the public one
-    logs_response = requests.get(f"{chart_job['web_url']}/trace.json")
+    logs_response = requests.get(
+        f"{chart_job['web_url']}/trace.json", headers={"user-agent": USER_AGENT}
+    )
     logs_response.raise_for_status()
 
     chart_registry = ""
