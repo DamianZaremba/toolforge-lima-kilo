@@ -3,7 +3,7 @@ default_language_version:
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.9
+    rev: v0.17.3
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -30,7 +30,7 @@ repos:
         exclude: lima-vm/dotfiles/
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v26.9.0
+    rev: v26.10.1
     hooks:
       - id: ansible-lint
         language_version: python3
