@@ -15,3 +15,8 @@ lima_kilo_basic_system_packages:
   - vim
   # needed for installing debian repos with ansible
   - gpg
+
+# Upstream DNS servers, used instead of the lima provided resolver
+lima_kilo_basic_system_dns_resolvers:
+  - 8.8.8.8
+  - 1.1.1.1
