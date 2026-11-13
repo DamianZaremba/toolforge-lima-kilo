@@ -52,5 +52,8 @@ nodes:
         containerPath: /etc/nsswitch.conf
         propagation: None
 
+networking:
+  disableDefaultCNI: true
+
 {% endif %}
 {% endfor %}
