@@ -54,3 +54,8 @@ nodes:
 
 {% endif %}
 {% endfor %}
+
+{% if enable_dualstack | bool %}
+networking:
+  ipFamily: dual
+{% endif %}

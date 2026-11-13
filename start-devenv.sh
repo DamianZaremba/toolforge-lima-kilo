@@ -27,6 +27,7 @@ Options:
   --no-cache          Specify this to avoid using container image caches during setup.
                       By default a cache disk is created and all container images
                       directories are mounted to this disk to speed up setup.
+  --enable-dualstack  Enable dual stack ip family support in kind.
   --tags TAGS         Only run plays and tasks tagged with these values.
                       This argument accepts comma seperated or ranged arguments.
                       .e.g.:
@@ -94,6 +95,10 @@ parse_args() {
                 ;;
             --no-cache)
                 use_cache="false"
+                shift
+                ;;
+            --enable-dualstack)
+                enable_dualstack="true"
                 shift
                 ;;
             --tags)
@@ -197,6 +202,7 @@ main() {
     local high_availability="false"
     local recreate="false"
     local use_cache="true"
+    local enable_dualstack="false"
     local response
     local extra_create_opts
     local tags=""
@@ -224,6 +230,7 @@ main() {
         ansible_args+=("--tags" "$tags")
     fi
     ansible_args+=("--extra-vars" "use_cache=${use_cache}")
+    ansible_args+=("--extra-vars" "enable_dualstack=${enable_dualstack}")
     ansible_args+=("--extra-vars" "kind_high_availability=${high_availability}")
     ansible_args+=("--extra-vars" "lima_kilo_toolforge_deploy_branch=${toolforge_deploy_branch}")
 
