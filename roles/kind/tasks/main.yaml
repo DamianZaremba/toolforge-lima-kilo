@@ -22,11 +22,24 @@
     dest: "{{ item.value.path }}"
     mode: "0644"
   with_dict: "{{ kind.files }}"
+  register: kind_files
+
+- name: Check if the kind cluster configuration changed
+  ansible.builtin.set_fact:
+    kind_config_changed: "{{ kind_files.results | selectattr('item.key', 'equalto', 'config') | selectattr('changed') | list | length > 0 }}"
 
 - name: Verify if kind cluster exists
   ansible.builtin.shell: "{{ lima_kilo_kind_binary_path }} get clusters"
   register: kind_get_clusters
   changed_when: false
+
+- name: Remove an existing cluster if the configuration has changed
+  ansible.builtin.shell:
+    cmd: |
+      "{{ lima_kilo_kind_binary_path }}" delete cluster \
+      --name "{{ kind.cluster.name }}"
+  when: kind.cluster.name in kind_get_clusters.stdout and kind_config_changed
+  changed_when: true
 
 - name: Bootstrap kind cluster
   ansible.builtin.shell:
@@ -34,7 +47,7 @@
       "{{ lima_kilo_kind_binary_path }}" create cluster \
       --name "{{ kind.cluster.name }}" \
       --config "{{ kind.files.config.path }}"
-  when: kind.cluster.name not in kind_get_clusters.stdout
+  when: kind.cluster.name not in kind_get_clusters.stdout or kind_config_changed
   # if we execute this task, consider it always changed
   changed_when: true
 
