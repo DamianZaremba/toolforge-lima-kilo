@@ -1,0 +1,3 @@
+---
+- name: Configure IPv6 node routing
+  ansible.builtin.include_tasks: routing.yaml

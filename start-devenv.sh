@@ -28,6 +28,7 @@ Options:
                       By default a cache disk is created and all container images
                       directories are mounted to this disk to speed up setup.
   --enable-dualstack  Enable dual stack ip family support in kind.
+  --ipv6-subnet       Specify an IPv6 supernet which node subnets are allocated out of.
   --tags TAGS         Only run plays and tasks tagged with these values.
                       This argument accepts comma seperated or ranged arguments.
                       .e.g.:
@@ -100,6 +101,10 @@ parse_args() {
             --enable-dualstack)
                 enable_dualstack="true"
                 shift
+                ;;
+            --ipv6-subnet)
+                ipv6_subnet="$2"
+                shift 2
                 ;;
             --tags)
                 if [[ -n "${2:-}" && ! ${2:-} == "--"* ]]; then
@@ -203,6 +208,7 @@ main() {
     local recreate="false"
     local use_cache="true"
     local enable_dualstack="false"
+    local ipv6_subnet=""
     local response
     local extra_create_opts
     local tags=""
@@ -233,6 +239,7 @@ main() {
     ansible_args+=("--extra-vars" "enable_dualstack=${enable_dualstack}")
     ansible_args+=("--extra-vars" "kind_high_availability=${high_availability}")
     ansible_args+=("--extra-vars" "lima_kilo_toolforge_deploy_branch=${toolforge_deploy_branch}")
+    ansible_args+=("--extra-vars" "lima_kilo_ipv6_cluster_subnet=${ipv6_subnet}")
 
     command -v limactl >/dev/null || {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"
