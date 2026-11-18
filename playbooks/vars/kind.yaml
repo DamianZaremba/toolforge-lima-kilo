@@ -39,19 +39,19 @@ kind:
 nodes:
   - name: toolforge-control-plane
     role: control-plane
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_34.name }}@{{ kind.cluster.images.1_34.checksum }}"
     active: "true" # default
   - name: toolforge-control-plane2
     role: control-plane
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_34.name }}@{{ kind.cluster.images.1_34.checksum }}"
     active: "{{ kind_high_availability }}"
   - name: toolforge-control-plane3
     role: control-plane
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_34.name }}@{{ kind.cluster.images.1_34.checksum }}"
     active: "{{ kind_high_availability }}"
   - name: toolforge-worker
     role: worker
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_34.name }}@{{ kind.cluster.images.1_34.checksum }}"
     active: "{{ kind_high_availability }}"
 
 kind_high_availability: "false"
