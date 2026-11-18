@@ -17,8 +17,8 @@ kind:
     name: toolforge
     images:
       1_34:
-        name: kindest/node:v1.34.13
-        checksum: sha256:5fc52d52a7b9574015299724bd68f183702956aa4a2116ae75a63cb574b35af8
+        name: kindest/node:v1.34.11
+        checksum: sha256:44e222ee2132dab25ff87301682f89eb82c7880ea3a1bf543bfe9708fd08d67d
       # add more if you plan to run multiple versions
       # ...
   api:
