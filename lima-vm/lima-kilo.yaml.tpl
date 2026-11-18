@@ -1,10 +1,10 @@
 # Based on https://github.com/lima-vm/lima/blob/master/examples/docker-rootful.yaml
 images:
   # Try to use release-yyyyMMdd image if available. Note that release-yyyyMMdd will be removed after several months.
-  - location: "https://cloud.debian.org/images/cloud/trixie/20261116-2664/debian-13-genericcloud-amd64-20250924-2245.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/trixie/20261116-2664/debian-13-genericcloud-amd64-20261116-2664.qcow2"
     arch: "x86_64"
     digest: "sha512:25b430e6416b443620fc32975f40effe3d7ae6603060aa9563b80092f0b073734a35a8c56816ae4f4ea395d7e5599de7cba254f92a9465f6ce95b29a03a8e1f5"
-  - location: "https://cloud.debian.org/images/cloud/trixie/20261116-2664/debian-13-genericcloud-arm64-20250924-2245.qcow2"
+  - location: "https://cloud.debian.org/images/cloud/trixie/20261116-2664/debian-13-genericcloud-arm64-20261116-2664.qcow2"
     arch: "aarch64"
     digest: "sha512:e23218e54163a0b4f88a80cdba5c5e84b1d43c19702644baac74f1904c327087032b0a9e77dcb7a4c50cf68850607caf3d3495ec9ca4d19887835dbc802723de"
   # Fallback to the latest release image.
