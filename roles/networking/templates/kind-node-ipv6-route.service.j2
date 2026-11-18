@@ -1,0 +1,14 @@
+[Unit]
+Description=Route a specific IPv6 subnet to a given kind node
+After=docker.service
+PartOf=docker.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/node-ipv6-route {{ node_name }} {{ node_subnet }}
+ExecStopPost=-/usr/sbin/ip -6 route del {{ node_subnet }}
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target docker.service

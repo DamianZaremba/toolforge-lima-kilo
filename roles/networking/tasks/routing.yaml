@@ -1,0 +1,52 @@
+---
+- name: Install the node IPv6 route helper script
+  become: true
+  ansible.builtin.copy:
+    src: node-ipv6-route.sh
+    dest: /usr/local/sbin/node-ipv6-route
+    mode: "0755"
+
+- name: Create node routes for their IPv6 subnet
+  become: true
+  vars:
+    node_name: "{{ item.name }}"
+    node_subnet: "{{ lima_kilo_ipv6_cluster_subnet | ansible.utils.ipsubnet(92, node_index) }}"
+    enable: "{{ enable_dualstack | bool and item.active == 'true' }}"
+  when:
+    - lima_kilo_ipv6_cluster_subnet | default("") | length > 0
+  block:
+    - name: Configure a systemd service for the kind node IPv6 route
+      ansible.builtin.template:
+        src: kind-node-ipv6-route.service.j2
+        dest: /etc/systemd/system/kind-ipv6-route@{{ node_name }}.service
+        mode: "0644"
+      register: node_route_units
+      loop: "{{ nodes }}"
+      loop_control:
+        index_var: node_index
+        label: "{{ item.name }}"
+      when: enable
+
+    - name: Start the kind-node-ipv6-route systemd service
+      ansible.builtin.systemd_service:
+        name: kind-ipv6-route@{{ node_name }}.service
+        daemon_reload: true
+        enabled: true
+        state: "{{ 'restarted' if node_route_units.results[node_index] is changed else 'started' }}"
+      loop: "{{ nodes }}"
+      loop_control:
+        index_var: node_index
+        label: "{{ item.name }}"
+      when: enable
+
+    - name: Stop the kind-node-ipv6-route systemd service
+      ansible.builtin.systemd_service:
+        name: kind-ipv6-route@{{ node_name }}.service
+        enabled: false
+        state: stopped
+      loop: "{{ nodes }}"
+      loop_control:
+        index_var: node_index
+        label: "{{ item.name }}"
+      when: not enable
+      failed_when: false
