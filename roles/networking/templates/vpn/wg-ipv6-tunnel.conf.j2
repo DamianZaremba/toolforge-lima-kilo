@@ -1,0 +1,8 @@
+[Interface]
+PrivateKey = {{ lima_kilo_ipv6_tunnel.wireguard.private_key }}
+
+[Peer]
+PublicKey = {{ lima_kilo_ipv6_tunnel.wireguard.public_key }}
+AllowedIPs = ::/1, 8000::/1
+Endpoint = {{ lima_kilo_ipv6_tunnel.wireguard.remote_endpoint }}
+PersistentKeepalive = 15
