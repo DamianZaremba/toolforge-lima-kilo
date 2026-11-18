@@ -1,0 +1,54 @@
+---
+- name: Install WireGuard
+  become: true
+  ansible.builtin.package:
+    name: wireguard
+    state: present
+  when: enable_ipv6_tunnel | bool
+
+- name: Create a WireGuard configuration file the tunnel
+  become: true
+  ansible.builtin.template:
+    src: vpn/wg-ipv6-tunnel.conf.j2
+    dest: /etc/wireguard/wg-ipv6-tunnel.conf
+    mode: "0600"
+  no_log: true
+  when: enable_ipv6_tunnel | bool
+  notify: Reload wg-ipv6-tunnel to pickup change
+
+- name: Configure a systemd service for wg-ipv6-tunnel
+  become: true
+  ansible.builtin.template:
+    src: vpn/wg-ipv6-tunnel.service.j2
+    dest: /etc/systemd/system/wg-ipv6-tunnel.service
+    mode: "0644"
+  when: enable_ipv6_tunnel | bool
+  notify: Restart wg-ipv6-tunnel to pickup change
+
+- name: Start the wg-ipv6-tunnel systemd service
+  become: true
+  ansible.builtin.systemd_service:
+    name: wg-ipv6-tunnel.service
+    daemon_reload: true
+    enabled: true
+    state: started
+  when: enable_ipv6_tunnel | bool
+
+- name: Stop the wg-ipv6-tunnel systemd service
+  become: true
+  ansible.builtin.systemd_service:
+    name: wg-ipv6-tunnel.service
+    enabled: false
+    state: stopped
+  when: not enable_ipv6_tunnel | bool
+  failed_when: false
+
+- name: Remove the wg-ipv6-tunnel service and wireguard configuration
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /etc/systemd/system/wg-ipv6-tunnel.service
+    - /etc/wireguard/wg-ipv6-tunnel.conf
+  when: not enable_ipv6_tunnel | bool

@@ -1,0 +1,11 @@
+---
+lima_kilo_ipv6_tunnel:
+  # Wireguard VPN tunnel carries the IPv6 traffic
+  wireguard:
+    local_address: ""
+    remote_endpoint: ""
+    private_key: ""
+    public_key: ""
+
+  # Subnet routed to our local address - we install a blackhole route on the vm for the covering route
+  subnet: ""

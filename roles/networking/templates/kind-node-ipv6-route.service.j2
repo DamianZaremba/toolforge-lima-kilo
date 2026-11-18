@@ -1,6 +1,10 @@
 [Unit]
 Description=Route a specific IPv6 subnet to a given kind node
 After=docker.service
+{% if enable_ipv6_tunnel | bool %}
+After=wg-ipv6-tunnel.service
+Wants=wg-ipv6-tunnel.service
+{% endif %}
 PartOf=docker.service
 
 [Service]

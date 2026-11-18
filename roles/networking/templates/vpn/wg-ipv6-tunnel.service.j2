@@ -1,0 +1,30 @@
+[Unit]
+Description=Wireguard IPv6 Tunnel
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=-/usr/sbin/ip link del dev wg-ipv6-tunnel
+
+ExecStart=/usr/sbin/ip link add dev wg-ipv6-tunnel type wireguard
+ExecStart=/usr/bin/wg setconf wg-ipv6-tunnel /etc/wireguard/wg-ipv6-tunnel.conf
+ExecStart=/usr/sbin/ip address add {{ lima_kilo_ipv6_tunnel.wireguard.local_address }} dev wg-ipv6-tunnel
+ExecStart=/usr/sbin/ip link set up dev wg-ipv6-tunnel
+
+ExecStartPost=/sbin/ip -6 route replace default dev wg-ipv6-tunnel
+{% if lima_kilo_ipv6_tunnel.subnet %}
+ExecStartPost=/sbin/ip -6 route replace blackhole {{ lima_kilo_ipv6_tunnel.subnet }}
+{% endif %}
+
+ExecReload=/usr/bin/wg syncconf wg-ipv6-tunnel /etc/wireguard/wg-ipv6-tunnel.conf
+
+ExecStop=/usr/sbin/ip link del dev wg-ipv6-tunnel
+ExecStopPost=-/sbin/ip -6 route del default dev wg-ipv6-tunnel
+{% if lima_kilo_ipv6_tunnel.subnet %}
+ExecStopPost=-/sbin/ip -6 route del blackhole {{ lima_kilo_ipv6_tunnel.subnet }}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target
