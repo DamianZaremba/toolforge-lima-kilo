@@ -50,6 +50,24 @@
   # if we execute this task, consider it always changed
   changed_when: true
 
+- name: Annotate nodes with their IPv6 subnet
+  kubernetes.core.k8s:
+    state: patched
+    kind: Node
+    name: "{{ item.name }}"
+    definition:
+      metadata:
+        annotations:
+          ipv6.toolforge.org/subnet: >-
+            {{ (lima_kilo_ipv6_cluster_subnet | ansible.utils.ipsubnet(92, node_index))
+                if enable_dualstack | bool and lima_kilo_ipv6_cluster_subnet | default("") | length > 0 else
+                None }}
+  loop: "{{ nodes }}"
+  loop_control:
+    index_var: node_index
+    label: "{{ item.name }}"
+  when: item.active == "true"
+
 - name: Manage /etc/hosts shortcut for {{ kind.cluster.name }}
   become: true
   ansible.builtin.lineinfile: # noqa args[module]
