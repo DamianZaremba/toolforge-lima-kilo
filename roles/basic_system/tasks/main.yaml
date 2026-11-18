@@ -82,3 +82,41 @@
     - "127.0.0.1 {{ ansible_facts['hostname'] }}"
     - "127.0.0.1 tf-test.local"
     - "127.0.0.1 tf-test2.local"
+
+- name: Create a netplan drop-in directory for eth0
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/network/10-netplan-eth0.network.d
+    state: directory
+    mode: "0755"
+
+- name: Disable static & DHCP based DNS in netplan for eth0
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/systemd/network/10-netplan-eth0.network.d/lima-kilo-dns.conf
+    mode: "0644"
+    content: |
+      [Network]
+      DNS=
+
+      [DHCPv4]
+      UseDNS=false
+  notify: Reconfigure eth0
+
+- name: Create a systemd-resolved drop-in directory
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/resolved.conf.d
+    state: directory
+    mode: "0755"
+
+- name: Configure systemd-resolved to use upstream DNS resolvers
+  become: true
+  ansible.builtin.copy:
+    dest: /etc/systemd/resolved.conf.d/lima-kilo-dns.conf
+    mode: "0644"
+    content: |
+      [Resolve]
+      DNS={{ lima_kilo_basic_system_dns_resolvers | join(' ') }}
+      Domains=~.
+  notify: Restart systemd-resolved
