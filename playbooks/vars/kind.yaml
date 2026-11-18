@@ -16,8 +16,8 @@ kind:
   cluster:
     name: toolforge
     images:
-      1_32:
-        name: kindest/node:v1.32.11
+      1_34:
+        name: kindest/node:v1.34.13
         checksum: sha256:5fc52d52a7b9574015299724bd68f183702956aa4a2116ae75a63cb574b35af8
       # add more if you plan to run multiple versions
       # ...
