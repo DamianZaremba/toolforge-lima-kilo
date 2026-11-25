@@ -67,7 +67,7 @@
 
 - name: "Add toolforge repos"
   become: true
-  ansible.builtin.apt_repository:
+  ansible.builtin.deb822_repository:
     repo: "deb [trusted=yes] {{ item.url }} {{ item.dist }} main"
     filename: "{{ item.name }}"
   loop: "{{ toolforge.repos }}"
