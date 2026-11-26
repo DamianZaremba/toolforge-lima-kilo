@@ -68,9 +68,22 @@
 - name: "Add toolforge repos"
   become: true
   ansible.builtin.deb822_repository:
-    repo: "deb [trusted=yes] {{ item.url }} {{ item.dist }} main"
-    filename: "{{ item.name }}"
+    components:
+      - main
+    types: deb
+    trusted: true
+    uris: "{{ item.url }}"
+    suites: "{{ item.dist }}"
+    name: "{{ item.name }}"
   loop: "{{ toolforge.repos }}"
+  register: toolforge_repos_result
+
+- name: "Update apt cache if the toolforge repos changed"
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+  # A handler runs too late: the next task needs the updated cache.
+  when: toolforge_repos_result is changed # noqa no-handler
 
 - name: "Install toolforge packages"
   become: true
