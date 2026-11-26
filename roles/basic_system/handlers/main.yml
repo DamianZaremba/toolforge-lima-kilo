@@ -1,0 +1,11 @@
+---
+- name: Reconfigure eth0
+  become: true
+  ansible.builtin.shell: networkctl reload && networkctl reconfigure eth0
+  changed_when: true
+
+- name: Restart systemd-resolved
+  become: true
+  ansible.builtin.systemd_service:
+    name: systemd-resolved.service
+    state: restarted
