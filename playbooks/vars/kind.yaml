@@ -16,9 +16,9 @@ kind:
   cluster:
     name: toolforge
     images:
-      1_32:
-        name: kindest/node:v1.32.11
-        checksum: sha256:5fc52d52a7b9574015299724bd68f183702956aa4a2116ae75a63cb574b35af8
+      1_33:
+        name: kindest/node:v1.33.7
+        checksum: sha256:d26ef333bdb2cbe9862a0f7c3803ecc7b4303d8cea8e814b481b09949d353040
       # add more if you plan to run multiple versions
       # ...
   api:
@@ -39,19 +39,19 @@ kind:
 nodes:
   - name: toolforge-control-plane
     role: control-plane
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_33.name }}@{{ kind.cluster.images.1_33.checksum }}"
     active: "true" # default
   - name: toolforge-control-plane2
     role: control-plane
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_33.name }}@{{ kind.cluster.images.1_33.checksum }}"
     active: "{{ kind_high_availability }}"
   - name: toolforge-control-plane3
     role: control-plane
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_33.name }}@{{ kind.cluster.images.1_33.checksum }}"
     active: "{{ kind_high_availability }}"
   - name: toolforge-worker
     role: worker
-    image: "{{ kind.cluster.images.1_32.name }}@{{ kind.cluster.images.1_32.checksum }}"
+    image: "{{ kind.cluster.images.1_33.name }}@{{ kind.cluster.images.1_33.checksum }}"
     active: "{{ kind_high_availability }}"
 
 kind_high_availability: "false"
