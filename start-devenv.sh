@@ -27,6 +27,9 @@ Options:
   --no-cache          Specify this to avoid using container image caches during setup.
                       By default a cache disk is created and all container images
                       directories are mounted to this disk to speed up setup.
+  --enable-dualstack  Enable dual stack ip family support in kind.
+  --ipv6-subnet       Specify an IPv6 supernet which node subnets are allocated out of.
+  --ipv6-tunnel       Setup an IPv6 tunnel inside the VM, providing connectivity for pods.
   --tags TAGS         Only run plays and tasks tagged with these values.
                       This argument accepts comma seperated or ranged arguments.
                       .e.g.:
@@ -94,6 +97,18 @@ parse_args() {
                 ;;
             --no-cache)
                 use_cache="false"
+                shift
+                ;;
+            --enable-dualstack)
+                enable_dualstack="true"
+                shift
+                ;;
+            --ipv6-subnet)
+                ipv6_subnet="$2"
+                shift 2
+                ;;
+            --ipv6-tunnel)
+                enable_ipv6_tunnel="true"
                 shift
                 ;;
             --tags)
@@ -197,6 +212,9 @@ main() {
     local high_availability="false"
     local recreate="false"
     local use_cache="true"
+    local enable_dualstack="false"
+    local ipv6_subnet=""
+    local enable_ipv6_tunnel="false"
     local response
     local extra_create_opts
     local tags=""
@@ -224,8 +242,25 @@ main() {
         ansible_args+=("--tags" "$tags")
     fi
     ansible_args+=("--extra-vars" "use_cache=${use_cache}")
+    ansible_args+=("--extra-vars" "enable_dualstack=${enable_dualstack}")
     ansible_args+=("--extra-vars" "kind_high_availability=${high_availability}")
     ansible_args+=("--extra-vars" "lima_kilo_toolforge_deploy_branch=${toolforge_deploy_branch}")
+    ansible_args+=("--extra-vars" "enable_ipv6_tunnel=${enable_ipv6_tunnel}")
+
+    if [[ -n "$ipv6_subnet" ]];
+    then
+      ansible_args+=("--extra-vars" "lima_kilo_ipv6_cluster_subnet=${ipv6_subnet}")
+    fi
+
+    if [[ "$enable_ipv6_tunnel" == "true" ]];
+    then
+      if [[ ! -f "$CURDIR/ipv6-tunnel.local.yaml" ]];
+      then
+        echo "If --ipv6-tunnel is specified, you must add the tunnel configuration to ipv6-tunnel.local.yaml"
+        exit 1;
+      fi
+      ansible_args+=("--extra-vars" "@ipv6-tunnel.local.yaml")
+    fi
 
     command -v limactl >/dev/null || {
         echo "Limactl does not seem to be installed, you can install it from https://lima-vm.io/"
